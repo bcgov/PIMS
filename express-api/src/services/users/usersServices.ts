@@ -4,9 +4,9 @@ import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { DeepPartial, FindOptionsOrderValue, In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';
-import KeycloakService from '@/services/keycloak/keycloakService';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { UserFiltering } from '@/controllers/users/usersSchema';
+import { validateEmail } from '@/utilities/helperFunctions';
 
 interface NormalizedKeycloakUser {
   first_name: string;
@@ -44,10 +44,11 @@ const normalizeKeycloakUser = (kcUser: SSOUser): NormalizedKeycloakUser => {
 
 /**
  * Adds a user from Keycloak to the system with 'OnHold' status.
- * @param ssoUser The Keycloak user to be added
- * @param agencyId The ID of the agency the user belongs to
- * @param position The position of the user
- * @param note Additional notes about the user
+ * @param {SSOUser} ssoUser The Keycloak user to be added
+ * @param {number} agencyId The ID of the agency the user belongs to
+ * @param {string} position The position of the user
+ * @param {string} note Additional notes about the user
+ * @param {string} email the users email
  * @returns The inserted user
  */
 const addKeycloakUserOnHold = async (
@@ -55,9 +56,13 @@ const addKeycloakUserOnHold = async (
   agencyId: number,
   position: string,
   note: string,
+  email: string,
 ) => {
   if (agencyId == null) {
     throw new Error('Null argument.');
+  }
+  if (!validateEmail(email)) {
+    throw new Error('Invalid email.');
   }
   //Iterating through agencies and roles no longer necessary here?
   const normalizedKc = normalizeKeycloakUser(ssoUser);
@@ -69,7 +74,7 @@ const addKeycloakUserOnHold = async (
     Id: id,
     FirstName: normalizedKc.first_name,
     LastName: normalizedKc.last_name,
-    Email: normalizedKc.email,
+    Email: email,
     DisplayName: normalizedKc.display_name,
     KeycloakUserId: normalizedKc.guid,
     Username: normalizedKc.username,
@@ -208,6 +213,9 @@ const addUser = async (user: User) => {
   if (resource) {
     throw new ErrorWithCode('Resource already exists.', 409);
   }
+  if (!validateEmail(user.Email)) {
+    throw new Error('Invalid email.');
+  }
   const retUser = await AppDataSource.getRepository(User).save(user);
   return retUser;
 };
@@ -219,18 +227,17 @@ const addUser = async (user: User) => {
  * @throws {ErrorWithCode} If the user resource does not exist in the database.
  */
 const updateUser = async (user: DeepPartial<User>) => {
-  const roleName = user.Role?.Name;
   const resource = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   if (!resource) {
     throw new ErrorWithCode('Resource does not exist.', 404);
+  }
+  if (user.Email && !validateEmail(user.Email)) {
+    throw new Error('Invalid email.');
   }
   await AppDataSource.getRepository(User).update(user.Id, {
     ...user,
     DisplayName: `${user.LastName}, ${user.FirstName}`,
   });
-  if (roleName) {
-    await KeycloakService.updateKeycloakUserRoles(resource.Username, [roleName]);
-  }
   const retUser = await AppDataSource.getRepository(User).findOne({ where: { Id: user.Id } });
   return retUser;
 };
@@ -250,37 +257,6 @@ const deleteUser = async (user: User) => {
   return retUser;
 };
 
-/**
- * Asynchronously retrieves roles from Keycloak using the KeycloakService.
- * @returns {Promise<string[]>} An array of role names.
- */
-const getKeycloakRoles = async () => {
-  const roles = await KeycloakService.getKeycloakRoles();
-  return roles.map((a) => a.name);
-};
-
-/**
- * Retrieves the roles of a user from Keycloak.
- * @param {string} username - The username of the user to retrieve roles for.
- * @returns {Promise<string[]>} An array of role names associated with the user.
- */
-const getKeycloakUserRoles = async (username: string) => {
-  const keycloakRoles = await KeycloakService.getKeycloakUserRoles(username);
-  return keycloakRoles.map((a) => a.name);
-};
-
-/**
- * Updates the roles of a user in Keycloak.
- * @param {string} username - The username of the user whose roles are to be updated.
- * @param {string[]} roleNames - An array of role names to assign to the user.
- * @returns {Promise<string[]>} An array of role names assigned to the user after the update.
- */
-const updateKeycloakUserRoles = async (username: string, roleNames: string[]) => {
-  const keycloakRoles = await KeycloakService.updateKeycloakUserRoles(username, roleNames);
-  await KeycloakService.syncKeycloakUser(username);
-  return keycloakRoles.map((a) => a.name);
-};
-
 const userServices = {
   getUser,
   addKeycloakUserOnHold,
@@ -291,9 +267,6 @@ const userServices = {
   addUser,
   updateUser,
   deleteUser,
-  getKeycloakRoles,
-  getKeycloakUserRoles,
-  updateKeycloakUserRoles,
   getUserById,
 };
 

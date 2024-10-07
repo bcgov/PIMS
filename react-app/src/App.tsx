@@ -68,7 +68,7 @@ const Router = () => {
         element={
           auth.keycloak.isAuthenticated &&
           auth.pimsUser.data?.Status === 'Active' &&
-          auth.keycloak.user?.client_roles?.length ? (
+          auth.pimsUser.data?.RoleId ? (
             showMap()
           ) : (
             <BaseLayout displayFooter>

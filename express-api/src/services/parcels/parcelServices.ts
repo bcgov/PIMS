@@ -8,8 +8,9 @@ import { ParcelFiscal } from '@/typeorm/Entities/ParcelFiscal';
 import userServices from '../users/usersServices';
 import logger from '@/utilities/winstonLogger';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
-import { isAdmin } from '@/utilities/authorizationChecks';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { Roles } from '@/constants/roles';
+import { PimsRequestUser } from '@/middleware/userAuthCheck';
+import { User } from '@/typeorm/Entities/User';
 
 const parcelRepo = AppDataSource.getRepository(Parcel);
 
@@ -42,7 +43,7 @@ const addParcel = async (parcel: DeepPartial<Parcel>) => {
  * @returns object with data on number of rows affected.
  * @throws ErrorWithCode if no parcels have the ID sent in
  */
-const deleteParcelById = async (parcelId: number, username: string) => {
+const deleteParcelById = async (parcelId: number, user: User) => {
   const existingParcel = await getParcelById(parcelId);
   if (!existingParcel) {
     throw new ErrorWithCode('Parcel PID was not found.', 404);
@@ -56,7 +57,6 @@ const deleteParcelById = async (parcelId: number, username: string) => {
       403,
     );
   }
-  const user = await userServices.getUser(username);
   const queryRunner = await AppDataSource.createQueryRunner();
   await queryRunner.startTransaction();
   try {
@@ -155,7 +155,7 @@ const getParcels = async (filter: ParcelFilter, includeRelations: boolean = fals
  * @returns updated parcel information and status
  * @throws Error with code if parcel is not found or if an unexpected error is hit on update
  */
-const updateParcel = async (incomingParcel: DeepPartial<Parcel>, ssoUser: SSOUser) => {
+const updateParcel = async (incomingParcel: DeepPartial<Parcel>, user: PimsRequestUser) => {
   if (incomingParcel.PID == null && incomingParcel.PIN == null) {
     throw new ErrorWithCode('Must include PID or PIN in parcel data.', 400);
   }
@@ -163,8 +163,9 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>, ssoUser: SSOUse
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
   }
-  const validUserAgencies = await userServices.getAgencies(ssoUser.preferred_username);
-  if (!isAdmin(ssoUser) && !validUserAgencies.includes(incomingParcel.AgencyId)) {
+  const validUserAgencies = await userServices.getAgencies(user.Username);
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
+  if (!isAdmin && !validUserAgencies.includes(incomingParcel.AgencyId)) {
     throw new ErrorWithCode('This agency change is not permitted.', 403);
   }
   if (incomingParcel.Fiscals && incomingParcel.Fiscals.length) {

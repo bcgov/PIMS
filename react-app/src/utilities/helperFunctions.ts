@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /**
  * Pass an array of some arbitrary type and a function that retrieves the key determining uniqueness.
  * Returns an new array with any duplicate values omitted.
@@ -51,3 +53,26 @@ export const getValueByNestedKey = <T extends Record<string, any>>(obj: T, key: 
   }
   return result;
 };
+
+/**
+ * Returns the provider based on the username and optional BCSC identifier.
+ * @param username The username to check for provider information.
+ * @param bcscIdentifier The optional BCSC identifier to check for BCSC provider.
+ * @returns The provider name ('IDIR', 'BCeID', 'BCSC') based on the username or an empty string if no match.
+ */
+export const getProvider = (username: string, bcscIdentifier?: string) => {
+  if (!username) return '';
+  switch (true) {
+    case username.includes('idir'):
+      return 'IDIR';
+    case username.includes('bceid'):
+      return 'BCeID';
+    case username.includes(bcscIdentifier):
+      return 'BC Services Card';
+    default:
+      return '';
+  }
+};
+
+export const validateEmail = (email: string): boolean =>
+  z.string().email().safeParse(email).success;

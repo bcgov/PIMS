@@ -17,6 +17,7 @@ import { useParams } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Role, Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
+import { getProvider, validateEmail } from '@/utilities/helperFunctions';
 
 interface IUserDetail {
   onClose: () => void;
@@ -28,7 +29,7 @@ interface UserProfile extends User {
 
 const UserDetail = ({ onClose }: IUserDetail) => {
   const { id } = useParams();
-  const { keycloak, pimsUser } = useContext(AuthContext);
+  const { pimsUser } = useContext(AuthContext);
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const api = usePimsApi();
 
@@ -50,8 +51,13 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     Role: lookupData?.Roles?.find((role) => role.Id === data?.RoleId),
   };
 
+  const provider = useMemo(
+    () => getProvider(data?.Username, lookupData?.Config.bcscIdentifier),
+    [data],
+  );
+
   const userProfileData = {
-    Provider: data?.Username.includes('idir') ? 'IDIR' : 'BCeID',
+    Provider: provider,
     Email: data?.Email,
     FirstName: data?.FirstName,
     LastName: data?.LastName,
@@ -94,7 +100,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     mode: 'onBlur',
   });
 
-  const canEdit = keycloak.hasRoles([Roles.ADMIN]);
+  const canEdit = pimsUser.hasOneOfRoles([Roles.ADMIN]);
 
   useEffect(() => {
     refreshData();
@@ -102,7 +108,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
 
   useEffect(() => {
     profileFormMethods.reset({
-      Provider: data?.Username.includes('idir') ? 'IDIR' : 'BCeID',
+      Provider: provider,
       Email: userProfileData.Email,
       FirstName: userProfileData.FirstName,
       LastName: userProfileData.LastName,
@@ -173,7 +179,15 @@ const UserDetail = ({ onClose }: IUserDetail) => {
               <TextFormField fullWidth name={'Provider'} label={'Provider'} disabled />
             </Grid>
             <Grid item xs={6}>
-              <TextFormField required fullWidth name={'Email'} label={'Email'} />
+              <TextFormField
+                required
+                fullWidth
+                name={'Email'}
+                label={'Email'}
+                rules={{
+                  validate: (value: string) => validateEmail(value) || 'Invalid email.',
+                }}
+              />
             </Grid>
             <Grid item xs={6}>
               <TextFormField required fullWidth name={'FirstName'} label={'First Name'} />

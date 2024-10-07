@@ -10,7 +10,7 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
     "check": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "snapshots": "jest --updateSnapshot"
   },
   "dependencies": {
@@ -20,11 +20,11 @@
     "@emotion/styled": "11.13.0",
     "@mdi/js": "7.4.47",
     "@mdi/react": "1.6.1",
-    "@mui/icons-material": "6.0.2",
+    "@mui/icons-material": "6.1.0",
     "@mui/lab": "5.0.0-alpha.170",
-    "@mui/material": "6.0.2",
-    "@mui/x-data-grid": "7.16.0",
-    "@mui/x-date-pickers": "7.16.0",
+    "@mui/material": "6.1.2",
+    "@mui/x-data-grid": "7.18.0",
+    "@mui/x-date-pickers": "7.18.0",
     "@snowplow/browser-plugin-link-click-tracking": "3.24.2",
     "@snowplow/browser-tracker": "3.24.2",
     "@turf/turf": "7.1.0",
@@ -38,8 +38,9 @@
     "react-plugin": "3.0.0-alpha.4",
     "react-router-dom": "6.26.0",
     "supercluster": "8.0.1",
-    "typescript-eslint": "8.4.0",
-    "use-supercluster": "1.2.0"
+    "typescript-eslint": "8.8.0",
+    "use-supercluster": "1.2.0",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@babel/preset-env": "7.25.2",
@@ -52,18 +53,18 @@
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react": "4.3.0",
-    "eslint": "9.9.0",
+    "eslint": "9.11.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
-    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-react": "7.37.1",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "prettier": "3.3.0",
     "react-test-renderer": "18.3.1",
     "ts-jest": "29.2.0",
     "ts-node": "10.9.2",
-    "typescript": "5.5.3",
-    "vite": "5.4.0",
+    "typescript": "5.6.2",
+    "vite": "5.4.6",
     "vite-tsconfig-paths": "5.0.1"
   }
 }

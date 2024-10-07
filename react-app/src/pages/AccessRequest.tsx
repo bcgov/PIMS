@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import pendingImage from '@/assets/images/pending.svg';
-import { Box, Button, Grid, Paper, Typography } from '@mui/material';
+import { Box, Button, Grid, Paper, Tooltip, Typography, useTheme } from '@mui/material';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -18,6 +18,8 @@ import TextFormField from '@/components/form/TextFormField';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
+import { getProvider, validateEmail } from '@/utilities/helperFunctions';
+import InfoIcon from '@mui/icons-material/Info';
 
 interface StatusPageTemplateProps {
   blurb: JSX.Element;
@@ -41,34 +43,73 @@ const StatusPageTemplate = (props: StatusPageTemplateProps) => {
 const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => {
   const keycloak = useSSO();
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  const lookup = useContext(LookupContext);
+  const theme = useTheme();
+
+  const provider = useMemo(
+    () => getProvider(keycloak.user?.preferred_username, lookup?.data?.Config.bcscIdentifier),
+    [keycloak.user, lookup],
+  );
+
+  const userIsIdir = provider === 'IDIR';
 
   const formMethods = useForm({
     defaultValues: {
-      UserName: keycloak.user?.username,
-      FirstName: keycloak.user?.first_name,
-      LastName: keycloak.user?.last_name,
-      Email: keycloak.user?.email,
+      Provider: provider,
+      FirstName: keycloak.user?.first_name || '',
+      LastName: keycloak.user?.last_name || '',
+      Email: userIsIdir ? keycloak.user?.email : '',
       Notes: '',
       Agency: '',
       Position: '',
     },
   });
 
+  useEffect(() => {
+    formMethods.reset({
+      Provider: provider,
+      FirstName: keycloak.user?.first_name || '',
+      LastName: keycloak.user?.last_name || '',
+      Email: userIsIdir ? keycloak.user?.email : '',
+      Notes: '',
+      Agency: '',
+      Position: '',
+    });
+  }, [provider, keycloak.user]);
+
   return (
     <>
       <FormProvider {...formMethods}>
         <Grid spacing={2} container>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'UserName'} label={'IDIR/BCeID'} disabled />
+            <TextFormField fullWidth name={'Provider'} label={'Provider'} disabled />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'Email'} label={'Email'} disabled />
+            <TextFormField
+              fullWidth
+              name={'Email'}
+              label={'Email'}
+              disabled={userIsIdir}
+              required
+              rules={{
+                validate: (value: string) => validateEmail(value) || 'Invalid email.',
+              }}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <Tooltip title="Avoid entering personal emails">
+                      <InfoIcon fontSize="small" sx={{ color: theme.palette.grey[500] }} />
+                    </Tooltip>
+                  ),
+                },
+              }}
+            />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField fullWidth name={'FirstName'} label={'First name'} disabled />
+            <TextFormField fullWidth name={'FirstName'} label={'First name'} disabled required />
           </Grid>
           <Grid item xs={6}>
-            <TextFormField name={'LastName'} fullWidth label={'Last name'} disabled />
+            <TextFormField name={'LastName'} fullWidth label={'Last name'} disabled required />
           </Grid>
           <Grid item xs={12}>
             <AutocompleteFormField
@@ -133,14 +174,14 @@ export const AccessRequest = () => {
 
   if (
     auth.pimsUser?.data?.Status &&
-    auth.pimsUser.data?.Status === 'Active' &&
-    auth.keycloak.user?.client_roles?.length
+    auth.pimsUser?.data?.Status === 'Active' &&
+    auth.pimsUser?.data?.RoleId
   ) {
     return <Navigate replace to={'/'} />;
   }
 
   const selectPageContent = () => {
-    if (auth.pimsUser.data?.Status === 'Active' && !auth.keycloak.user?.client_roles?.length) {
+    if (auth.pimsUser.data?.Status === 'Active' && !auth.pimsUser.data?.RoleId) {
       return (
         <>
           <Typography mb={'2rem'} variant="h2">

@@ -3,10 +3,10 @@ import { Request, Response } from 'express';
 import { SSOUser } from '@bcgov/citz-imb-sso-express';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
-import { isAdmin } from '@/utilities/authorizationChecks';
 import notificationServices from '@/services/notifications/notificationServices';
 import getConfig from '@/constants/config';
 import logger from '@/utilities/winstonLogger';
+import { Roles } from '@/constants/roles';
 
 /**
  * @description Submits a user access request.
@@ -20,6 +20,7 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
     Number(req.body.AgencyId),
     req.body.Position,
     req.body.Note,
+    req.body.Email,
   );
   const config = getConfig();
   const user = await userServices.getUser(req.user.preferred_username);
@@ -33,7 +34,7 @@ export const submitUserAccessRequest = async (req: Request, res: Response) => {
       },
       config.accessRequest.notificationTemplateRPD,
     );
-    await notificationServices.sendNotification(notifRPD, req.user);
+    await notificationServices.sendNotification(notifRPD, req.pimsUser);
   } catch (e) {
     logger.error(`Failed to deliver access request notification: ${e.message}`);
   }
@@ -81,7 +82,7 @@ export const getSelf = async (req: Request, res: Response) => {
  * @returns {Response}        A 200 status with a list of users.
  */
 export const getUsers = async (req: Request, res: Response) => {
-  const ssoUser = req.user as unknown as SSOUser;
+  const user = req.pimsUser;
   const filter = UserFilteringSchema.safeParse(req.query);
   if (!filter.success) {
     return res.status(400).send('Failed to parse filter query.');
@@ -89,11 +90,12 @@ export const getUsers = async (req: Request, res: Response) => {
   const filterResult = filter.data;
 
   let users;
-  if (isAdmin(ssoUser)) {
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
+  if (isAdmin) {
     users = await userServices.getUsers(filterResult as UserFiltering);
   } else {
     // Get agencies associated with the requesting user
-    const usersAgencies = await userServices.getAgencies(ssoUser.preferred_username);
+    const usersAgencies = await userServices.getAgencies(user.Username);
     filterResult.agencyId = usersAgencies;
     users = await userServices.getUsers(filterResult as UserFiltering);
   }
@@ -109,16 +111,14 @@ export const getUsers = async (req: Request, res: Response) => {
 export const getUserById = async (req: Request, res: Response) => {
   const id = req.params.id;
   const uuid = z.string().uuid().safeParse(id);
-  const ssoUser = req.user as unknown as SSOUser;
+  const pimsUser = req.pimsUser;
   if (uuid.success) {
     const user = await userServices.getUserById(uuid.data);
-
     if (user) {
-      if (!isAdmin(ssoUser)) {
+      const isAdmin = pimsUser.hasOneOfRoles([Roles.ADMIN]);
+      if (!isAdmin) {
         // check if user has the correct agencies
-        const usersAgencies = await userServices.hasAgencies(ssoUser.preferred_username, [
-          user.AgencyId,
-        ]);
+        const usersAgencies = await userServices.hasAgencies(user.Username, [user.AgencyId]);
         if (!usersAgencies) {
           return res.status(403).send('User does not have permission to view this user');
         }

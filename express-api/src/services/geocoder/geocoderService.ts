@@ -4,7 +4,6 @@ import constants from '@/constants';
 import { IFeatureModel } from '@/services/geocoder/interfaces/IFeatureModel';
 import { getLongitude, getLatitude, getAddress1 } from './geocoderUtils';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
-import { ISitePidsResponseModel } from './interfaces/ISitePidsResponseModel';
 
 const mapFeatureToAddress = (feature: IFeatureModel): IAddressModel => {
   return {
@@ -55,32 +54,8 @@ export const getSiteAddresses = async (
   return addressInformation;
 };
 
-/**
- * @description Sends a request to Geocoder for all parcel identifiers (PIDs) associated with an individual site.
- * @param siteId a unique identifier assigned to every site in B.C.
- * @returns Valid 'siteId' values for an address
- * @throws ErrorWithCode if result is not 200 OK
- */
-export const getPids = async (siteId: string) => {
-  const url = new URL(`/parcels/pids/${siteId}.json`, constants.GEOCODER.HOSTURI);
-  const result = await fetch(url.toString(), {
-    headers: {
-      apiKey: constants.GEOCODER.KEY,
-    },
-  });
-
-  if (result.status != 200) {
-    throw new ErrorWithCode(result.statusText, result.status);
-  }
-
-  const resultData = await result.json();
-  const pidInformation: ISitePidsResponseModel = resultData;
-  return pidInformation;
-};
-
 const geocoderService = {
   getSiteAddresses,
-  getPids,
 };
 
 export default geocoderService;

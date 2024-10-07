@@ -18,6 +18,7 @@ import {
   MenuItem,
   Select,
   SxProps,
+  Theme,
   Tooltip,
   Typography,
   debounce,
@@ -144,7 +145,9 @@ export const CustomDataGrid = (props: DataGridProps) => {
   );
 };
 
-export const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
+export const CustomMenuItem = (
+  props: PropsWithChildren & { value: string; sx?: SxProps<Theme> },
+) => {
   const theme = useTheme();
   return (
     <MenuItem
@@ -455,8 +458,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
       : `(${props.rowCountProp ?? 0} rows)`;
   }, [props.tableOperationMode, rowCount, props.rowCountProp]);
 
-  const { keycloak } = useContext(AuthContext);
-  const isAuditor = keycloak.hasRoles([Roles.AUDITOR]);
+  const { pimsUser } = useContext(AuthContext);
+  const isAuditor = pimsUser.hasOneOfRoles([Roles.AUDITOR]);
 
   return (
     <>
