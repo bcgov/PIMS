@@ -67,7 +67,7 @@ export const getProvider = (username: string, bcscIdentifier?: string) => {
       return 'IDIR';
     case username.includes('bceid'):
       return 'BCeID';
-    case username.includes(bcscIdentifier):
+    case bcscIdentifier && username.includes(bcscIdentifier):
       return 'BC Services Card';
     default:
       return '';
