@@ -62,7 +62,6 @@ export const getLinkedProjects = async (req: Request, res: Response) => {
  */
 export const getPropertiesForMap = async (req: Request, res: Response) => {
   // parse for filter
-  console.log(req.query);
   const filter = MapFilterSchema.safeParse(req.query);
   if (filter.success == false) {
     return res.status(400).send(filter.error);
