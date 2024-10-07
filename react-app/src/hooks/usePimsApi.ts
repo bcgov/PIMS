@@ -1,5 +1,4 @@
-import { ConfigContext } from '@/contexts/configContext';
-import { useContext } from 'react';
+import { getConfig } from '@/constants/config';
 import useFetch from './useFetch';
 import useUsersApi from './api/useUsersApi';
 import useAgencyApi from './api/useAgencyApi';
@@ -21,7 +20,8 @@ import useProjectNotificationsApi from './api/useProjectNotificationApi';
  * @returns
  */
 const usePimsApi = () => {
-  const config = useContext(ConfigContext);
+  // const config = useContext(ConfigContext);
+  const config = getConfig();
   const fetch = useFetch(config?.API_HOST);
 
   const users = useUsersApi(fetch);

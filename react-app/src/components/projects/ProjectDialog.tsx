@@ -27,7 +27,7 @@ import ProjectNotificationsTable from './ProjectNotificationsTable';
 import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import AutocompleteFormField from '../form/AutocompleteFormField';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { Roles } from '@/constants/roles';
 import BaseDialog from '../dialog/BaseDialog';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
@@ -43,7 +43,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const { open, postSubmit, onCancel, initialValues } = props;
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
-  const { pimsUser } = useContext(AuthContext);
+  const { pimsUser } = useContext(UserContext);
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const [approvedStatus, setApprovedStatus] = useState<number>(null);
   const projectFormMethods = useForm({

@@ -1,7 +1,7 @@
 import MultiselectFormField from '@/components/form/MultiselectFormField';
 import TextFormField from '@/components/form/TextFormField';
 import { Roles } from '@/constants/roles';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { LookupContext } from '@/contexts/lookupContext';
 import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 import { MapFilter } from '@/hooks/api/usePropertiesApi';
@@ -27,7 +27,7 @@ interface FilterControlProps {
 const FilterControl = (props: FilterControlProps) => {
   const { setFilter } = props;
   const api = usePimsApi();
-  const user = useContext(AuthContext);
+  const user = useContext(UserContext);
   const { data: lookupData } = useContext(LookupContext);
 
   // Get lists for dropdowns

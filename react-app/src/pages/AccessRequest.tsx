@@ -12,7 +12,7 @@ import {
 } from '@/constants/jsxSnippets';
 import usePimsApi from '@/hooks/usePimsApi';
 import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { Navigate } from 'react-router-dom';
 import TextFormField from '@/components/form/TextFormField';
 import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
@@ -41,24 +41,24 @@ const StatusPageTemplate = (props: StatusPageTemplateProps) => {
 };
 
 const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => {
-  const keycloak = useSSO();
+  const sso = useSSO();
   const agencyOptions = useGroupedAgenciesApi().agencyOptions;
   const lookup = useContext(LookupContext);
   const theme = useTheme();
 
   const provider = useMemo(
-    () => getProvider(keycloak.user?.preferred_username, lookup?.data?.Config.bcscIdentifier),
-    [keycloak.user, lookup],
+    () => getProvider(sso.user?.preferred_username, lookup?.data?.Config?.bcscIdentifier),
+    [sso.user, lookup],
   );
 
   const userIsIdir = provider === 'IDIR';
 
   const formMethods = useForm({
     defaultValues: {
-      Provider: provider,
-      FirstName: keycloak.user?.first_name || '',
-      LastName: keycloak.user?.last_name || '',
-      Email: userIsIdir ? keycloak.user?.email : '',
+      Provider: provider ?? '',
+      FirstName: sso.user?.first_name || '',
+      LastName: sso.user?.last_name || '',
+      Email: userIsIdir ? sso.user?.email : '',
       Notes: '',
       Agency: '',
       Position: '',
@@ -67,15 +67,15 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 
   useEffect(() => {
     formMethods.reset({
-      Provider: provider,
-      FirstName: keycloak.user?.first_name || '',
-      LastName: keycloak.user?.last_name || '',
-      Email: userIsIdir ? keycloak.user?.email : '',
+      Provider: provider ?? '',
+      FirstName: sso.user?.first_name || '',
+      LastName: sso.user?.last_name || '',
+      Email: userIsIdir ? sso.user?.email : '',
       Notes: '',
       Agency: '',
       Position: '',
     });
-  }, [provider, keycloak.user]);
+  }, [provider, sso.user]);
 
   return (
     <>
@@ -154,14 +154,14 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
 
 export const AccessRequest = () => {
   const api = usePimsApi();
-  const auth = useContext(AuthContext);
+  const auth = useContext(UserContext);
   const snackbar = useContext(SnackBarContext);
   const lookup = useContext(LookupContext);
 
   const onSubmit = (data: AccessRequestType) => {
     api.users.submitAccessRequest(data).then((response) => {
       if (response.status === 201) {
-        auth.pimsUser.refreshData();
+        auth.pimsUser?.refreshData();
       } else {
         snackbar.setMessageState({
           text: `Could not create account. Contact ${lookup.data.Config.contactEmail} for assistance.`,
@@ -181,7 +181,7 @@ export const AccessRequest = () => {
   }
 
   const selectPageContent = () => {
-    if (auth.pimsUser.data?.Status === 'Active' && !auth.pimsUser.data?.RoleId) {
+    if (auth.pimsUser?.data?.Status === 'Active' && !auth.pimsUser?.data?.RoleId) {
       return (
         <>
           <Typography mb={'2rem'} variant="h2">
@@ -191,7 +191,7 @@ export const AccessRequest = () => {
         </>
       );
     }
-    switch (auth.pimsUser.data?.Status) {
+    switch (auth.pimsUser?.data?.Status) {
       case 'OnHold':
         return (
           <>

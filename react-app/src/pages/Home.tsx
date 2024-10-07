@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Box, Typography } from '@mui/material';
 import propertyVector from '@/assets/images/PIMS_logo.svg';
 import { landingPageBottomText, landingPageTopText } from '@/constants/strings';
-import { AuthContext } from '@/contexts/authContext';
 import { Navigate } from 'react-router-dom';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 
 const Landing = () => {
   return (
@@ -26,7 +26,7 @@ const Landing = () => {
 };
 
 export const Home = () => {
-  const auth = useContext(AuthContext);
+  const sso = useSSO();
   return (
     <Box
       flexDirection={'column'}
@@ -36,7 +36,7 @@ export const Home = () => {
       height={'100%'}
       bgcolor={'#F8F8F8'} //In the ticket this was #D2D8D8, but I think it was meant to be #F8F8F8 based on the example.
     >
-      {!auth.keycloak.isAuthenticated ? <Landing /> : <Navigate replace to={'/access-request'} />}
+      {!sso.isAuthenticated ? <Landing /> : <Navigate replace to={'/access-request'} />}
     </Box>
   );
 };
