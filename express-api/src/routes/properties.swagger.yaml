@@ -203,6 +203,18 @@ paths:
           schema: 
             type: string
             example: 19,25
+        - in: query
+          name: ProjectStatusId
+          description: The status of the most recent active project this property was in.
+          schema:
+            type: integer
+            example: 1
+        - in: query
+          name: Polygon
+          desciption: A stringified array of polygons and their coordinates
+          schema: 
+            type: string 
+            example: '[[[1,1], [2,2], [3,3]]]'
       responses:
         '200': 
           description: OK
