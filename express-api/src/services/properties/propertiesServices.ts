@@ -275,17 +275,22 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
  * @param properties - An array of MapProperties objects to filter.
  * @returns An array of MapProperties objects that fall within the specified polygon.
  */
-const filterPropertiesByMultiPolygon = (
+export const filterPropertiesByMultiPolygon = (
   multiPolygon: number[][][],
   properties: MapProperties[],
 ) => {
   const formattedPolygons: { x: number; y: number }[][] = multiPolygon.map((polygon) =>
     polygon.map((point) => ({ x: point.at(1), y: point.at(0) })),
   );
-  // TODO: memoize this so we don't check the same coordinates twice
-  return properties.filter((property) =>
-    isPointInMultiPolygon(property.Location, formattedPolygons),
-  );
+  // Memoizing the points already checked so they are not checked twice
+  const checkedPoints: Record<string, boolean> = {};
+  return properties.filter((property) => {
+    const stringifiedLocation = JSON.stringify(property.Location);
+    if (checkedPoints[stringifiedLocation] != undefined) return checkedPoints[stringifiedLocation];
+    const inPolygon = isPointInMultiPolygon(property.Location, formattedPolygons);
+    checkedPoints[stringifiedLocation] = inPolygon;
+    return inPolygon;
+  });
 };
 
 const numberOrNull = (value: any) => {

@@ -21,7 +21,6 @@ const {
 router.route('/search/fuzzy').get(userAuthCheck(), catchErrors(getPropertiesFuzzySearch));
 
 router.route('/search/geo').get(userAuthCheck(), catchErrors(getPropertiesForMap)); // Formerly wfs route
-// router.route('/search/geo/polygon').get(userAuthCheck(), catchErrors()) // TODO: Write Swagger for this route
 
 router.route('/search/linkedProjects').get(userAuthCheck(), catchErrors(getLinkedProjects));
 
