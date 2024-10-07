@@ -3,7 +3,7 @@ import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import { Marker, useMap, useMapEvents } from 'react-leaflet';
 import useSupercluster from 'use-supercluster';
 import './clusterHelpers/clusters.css';
-import L, { LatLngExpression, Point } from 'leaflet';
+import L, { Point } from 'leaflet';
 import { BBox } from 'geojson';
 import { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
 
@@ -39,26 +39,10 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
 
   const maxZoom = 18;
 
-  // When properties change, set map bounds and remake clusters
+  // When properties change, remake clusters
   useEffect(() => {
     if (properties) {
       if (properties.length) {
-        // Set map bounds based on received data. Eliminate outliers (outside BC)
-        const coordsArray = properties
-          .map((d) => [d.geometry.coordinates[1], d.geometry.coordinates[0]])
-          .filter(
-            (coords) => coords[0] > 40 && coords[0] < 60 && coords[1] > -140 && coords[1] < -110,
-          ) as LatLngExpression[];
-        map.fitBounds(
-          L.latLngBounds(
-            coordsArray.length
-              ? coordsArray
-              : [
-                  [54.2516, -129.371],
-                  [49.129, -117.203],
-                ],
-          ),
-        );
         updateClusters();
       }
     }

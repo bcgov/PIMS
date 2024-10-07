@@ -9,12 +9,10 @@ import React, {
   useState,
 } from 'react';
 import { MapContainer, Polygon, useMapEvents } from 'react-leaflet';
-import { LatLngBoundsExpression, LatLngExpression, Map, Point } from 'leaflet';
+import L, { LatLngBounds, LatLngBoundsExpression, LatLngExpression, Map, Point } from 'leaflet';
 import MapLayers from '@/components/map/MapLayers';
 import { ParcelPopup } from '@/components/map/parcelPopup/ParcelPopup';
 import { InventoryLayer } from '@/components/map/InventoryLayer';
-import ControlsGroup from '@/components/map/controls/ControlsGroup';
-import FilterControl from '@/components/map/controls/FilterControl';
 import useDataLoader from '@/hooks/useDataLoader';
 import { MapFilter, PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -85,7 +83,6 @@ const ParcelMap = (props: ParcelMapProps) => {
 
   // When drawn multipolygon changes, query the new area
   useEffect(() => {
-    console.log(polygonQueryShape);
     const polygonCoordinates = polygonQueryShape.coordinates.map((polygon) =>
       polygon.map((point) => [point.lat, point.lng]),
     );
@@ -93,7 +90,7 @@ const ParcelMap = (props: ParcelMapProps) => {
       ...filter,
       Polygon: polygonCoordinates.length ? JSON.stringify(polygonCoordinates) : undefined,
     });
-  }, [polygonQueryShape, setFilter]);
+  }, [polygonQueryShape]);
 
   // Get properties for map.
   const { data, refreshData, isLoading } = useDataLoader(() =>
@@ -120,7 +117,7 @@ const ParcelMap = (props: ParcelMapProps) => {
   };
 
   // Store polygon overlay data for parcel layer
-  const [polygon, setPolygon] = useState([]);
+  const [parcelPolygon, setParcelPolygon] = useState([]);
 
   // Elevated state for the sidebar
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(true);
@@ -184,7 +181,7 @@ const ParcelMap = (props: ParcelMapProps) => {
   };
 
   const handleDataChange = async () => {
-    setPolygon([]);
+    setParcelPolygon([]);
     if (data.length) {
       setProperties(data as PropertyGeo[]);
       snackbar.setMessageState({
@@ -236,7 +233,7 @@ const ParcelMap = (props: ParcelMapProps) => {
               });
             }
           });
-          setPolygon(polygonShapes);
+          setParcelPolygon(polygonShapes);
           // Centres map to encompass all found features. Accepts flat list of coordinate pairs
           localMapRef.current.fitBounds(extractLowestElements(polygonShapes));
           // Hide the sidebar
@@ -260,17 +257,50 @@ const ParcelMap = (props: ParcelMapProps) => {
     }
   }, [filter]);
 
+  // When properties change, update the zoom
+  useEffect(() => {
+    // Prioritize fitting in the polygon
+    if (polygonQueryShape.coordinates.length) {
+      // Flattening all coordinates from the MultiPolygon
+      const allCoordinates = polygonQueryShape.coordinates.flat(2);
+
+      // Find min and max latitudes and longitudes
+      const latitudes = allCoordinates.map((coord) => coord.lat);
+      const longitudes = allCoordinates.map((coord) => coord.lng);
+
+      const southWest = [Math.min(...latitudes), Math.min(...longitudes)];
+      const northEast = [Math.max(...latitudes), Math.max(...longitudes)];
+
+      // Use fitBounds with the calculated bounding box
+      localMapRef.current.fitBounds([southWest, northEast] as unknown as LatLngBounds, {
+        paddingBottomRight: [500, 0],
+      });
+    } else if (properties.length) {
+      // Set map bounds based on received data. Eliminate outliers (outside BC)
+      const coordsArray = properties
+        .map((d) => [d.geometry.coordinates[1], d.geometry.coordinates[0]])
+        .filter(
+          (coords) => coords[0] > 40 && coords[0] < 60 && coords[1] > -140 && coords[1] < -110,
+        ) as LatLngExpression[];
+      localMapRef.current.fitBounds(
+        L.latLngBounds(
+          coordsArray.length
+            ? coordsArray
+            : [
+                [54.2516, -129.371],
+                [49.129, -117.203],
+              ],
+        ),
+        {
+          paddingBottomRight: [500, 0], // Padding for map sidebar
+        },
+      );
+    }
+  }, [properties]);
+
   return (
     <Box height={height} display={'flex'}>
       {loadProperties ? <LoadingCover show={isLoading} /> : <></>}
-      {/* All map controls fit here */}
-      {!hideControls && loadProperties ? (
-        <ControlsGroup position="topleft">
-          <FilterControl setFilter={setFilter} />
-        </ControlsGroup>
-      ) : (
-        <></>
-      )}
       <MapContainer
         style={{ height: '100%', width: '100%' }}
         ref={localMapRef}
@@ -285,17 +315,21 @@ const ParcelMap = (props: ParcelMapProps) => {
         doubleClickZoom={zoomable}
         preferCanvas
       >
-        <MapLayers />
+        <MapLayers hideControls={hideControls} />
+        {!hideControls && loadProperties ? (
+          <PolygonQuery
+            setPolygons={setPolygonQueryShape}
+            setMapEventsDisabled={setMapEventsDisabled}
+          />
+        ) : (
+          <></>
+        )}
         <ParcelPopup
           size={popupSize}
           scrollOnClick={scrollOnClick}
           mapEventsDisabled={mapEventsDisabled}
         />
         <MapEvents />
-        <PolygonQuery
-          setPolygons={setPolygonQueryShape}
-          setMapEventsDisabled={setMapEventsDisabled}
-        />
         {loadProperties ? (
           <InventoryLayer
             isLoading={isLoading}
@@ -307,7 +341,7 @@ const ParcelMap = (props: ParcelMapProps) => {
         ) : (
           <></>
         )}
-        {polygon.map((coordinates, index) => (
+        {parcelPolygon.map((coordinates, index) => (
           <Polygon key={index} pathOptions={{ color: 'blue' }} positions={coordinates} />
         ))}
         {props.children}
@@ -320,6 +354,7 @@ const ParcelMap = (props: ParcelMapProps) => {
             setFilter={setFilter}
             sidebarOpen={sidebarOpen}
             setSidebarOpen={setSidebarOpen}
+            filter={filter}
           />
           <ClusterPopup popupState={popupState} setPopupState={controlledSetPopupState} />
         </>
