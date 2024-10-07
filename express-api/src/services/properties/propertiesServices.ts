@@ -247,7 +247,7 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
     });
 
     if (filter.Polygon) {
-      return filterPropertiesByPolygon(filter.Polygon, properties);
+      return filterPropertiesByMultiPolygon(JSON.parse(filter.Polygon), properties);
     }
     return properties;
   }
@@ -263,18 +263,28 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
     },
   });
   if (filter.Polygon) {
-    return filterPropertiesByPolygon(filter.Polygon, properties);
+    return filterPropertiesByMultiPolygon(JSON.parse(filter.Polygon), properties);
   }
   return properties;
 };
 
-const filterPropertiesByPolygon = (polygon: string, properties: MapProperties[]) => {
-  const polygonArray = JSON.parse(polygon);
-  const formattedPolygons = (polygonArray as number[][][]).map((polygon) =>
+/**
+ * Filters a list of properties based on whether they are within the given polygons.
+ *
+ * @param multiPolygon - The polygon coordinates in a 3D array.
+ * @param properties - An array of MapProperties objects to filter.
+ * @returns An array of MapProperties objects that fall within the specified polygon.
+ */
+const filterPropertiesByMultiPolygon = (
+  multiPolygon: number[][][],
+  properties: MapProperties[],
+) => {
+  const formattedPolygons: { x: number; y: number }[][] = multiPolygon.map((polygon) =>
     polygon.map((point) => ({ x: point.at(1), y: point.at(0) })),
   );
+  // TODO: memoize this so we don't check the same coordinates twice
   return properties.filter((property) =>
-    isPointInMultiPolygon(property.Location, formattedPolygons as { x: number; y: number }[][]),
+    isPointInMultiPolygon(property.Location, formattedPolygons),
   );
 };
 
