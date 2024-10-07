@@ -1,8 +1,9 @@
-import { AuthContext } from '@/contexts/authContext';
 import { LookupAll } from '@/hooks/api/useLookupApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { createContext, useCallback, useContext, useMemo } from 'react';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
+import { CircularProgress } from '@mui/material';
+import React, { createContext, useCallback, useMemo } from 'react';
 
 type LookupContextValue = {
   data: LookupAll | undefined;
@@ -18,9 +19,9 @@ export const LookupContext = createContext<LookupContextValue>(undefined);
  */
 export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) => {
   const api = usePimsApi();
-  const { data, loadOnce } = useDataLoader(api.lookup.getAll);
-  const { keycloak } = useContext(AuthContext);
-  if (keycloak.isAuthenticated) {
+  const { data, loadOnce, isLoading } = useDataLoader(api.lookup.getAll);
+  const sso = useSSO();
+  if (!data && sso.isAuthenticated) {
     loadOnce();
   }
 
@@ -55,6 +56,7 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
   );
 
   const contextValue = { data, getLookupValueById };
+  if (isLoading) return <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%' }} />;
   return <LookupContext.Provider value={contextValue}>{props.children}</LookupContext.Provider>;
 };
 

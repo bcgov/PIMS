@@ -8,7 +8,7 @@ import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import { User } from '@/hooks/api/useUsersApi';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
@@ -29,7 +29,7 @@ interface UserProfile extends User {
 
 const UserDetail = ({ onClose }: IUserDetail) => {
   const { id } = useParams();
-  const { pimsUser } = useContext(AuthContext);
+  const { pimsUser } = useContext(UserContext);
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const api = usePimsApi();
 
