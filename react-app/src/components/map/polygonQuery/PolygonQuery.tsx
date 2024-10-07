@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { FeatureGroup, Popup } from 'react-leaflet';
+import { FeatureGroup } from 'react-leaflet';
 import { EditControl } from 'react-leaflet-draw';
 
 interface PolygonQueryProps {
@@ -18,7 +18,6 @@ const PolygonQuery = (props: PolygonQueryProps) => {
 
   return (
     <FeatureGroup>
-      <Popup>hi</Popup>
       <EditControl
         draw={{
           polygon: true,
