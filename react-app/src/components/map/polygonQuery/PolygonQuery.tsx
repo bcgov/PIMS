@@ -69,12 +69,21 @@ const PolygonQuery = (props: PolygonQueryProps) => {
         }}
         onEditStart={() => setMapEventsDisabled(true)}
         onEditStop={() => setMapEventsDisabled(false)}
-        onDeleted={() => {
-          setPolygons((original) => ({
-            ...original,
-            coordinates: [],
-            leafletIds: [],
-          }));
+        onDeleted={(e) => {
+          setPolygons((original) => {
+            let replacementCoordinates = original.coordinates;
+            e.layers.eachLayer((layer) => {
+              // Find the index of the original polygon
+              const originalIndex = original.leafletIds.findIndex((id) => id === layer._leaflet_id);
+              // Use original index to remove coordinate set
+              replacementCoordinates = replacementCoordinates.splice(originalIndex, 1);
+            });
+            return {
+              ...original,
+              coordinates: replacementCoordinates.length ? replacementCoordinates : [], // Otherwise doesn't update properly
+              leafletIds: [],
+            };
+          });
           setMapEventsDisabled(false);
         }}
         onDeleteStart={() => setMapEventsDisabled(true)}
