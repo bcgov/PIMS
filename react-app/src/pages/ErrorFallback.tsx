@@ -31,6 +31,15 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   const errorTracker = JSON.parse(sessionStorage.getItem('errorTracker'));
   const { submit, submitting } = useDataSubmitter(api.reports.postErrorReport);
 
+  // Using this instead of Snowplow Error event because Service BC doesn't support it
+  window.snowplow('trackSelfDescribingEvent', {
+    schema: 'iglu:ca.bc.gov.pims/error/jsonschema/1-0-0',
+    data: {
+      source: 'fallback',
+      error_message: error.message,
+    },
+  });
+
   // If errorTracker changes, we navigate to home if an error has occurred more than 0 times on this page.
   // The first time, it's okay to show this page.
   useEffect(() => {

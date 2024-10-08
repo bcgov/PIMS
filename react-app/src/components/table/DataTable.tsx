@@ -367,10 +367,26 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     if (props.dataSource) {
       dataSourceUpdate(model);
     }
+
+    // Send search params to snowplow
+    window.snowplow('trackSelfDescribingEvent', {
+      schema: 'iglu:ca.bc.gov.pims/table/jsonschema/1-0-0',
+      data: {
+        name: props.name,
+        columnSortValue: getSearchParamsKey('columnSortValue'),
+        columnSortName: getSearchParamsKey('columnSortName'),
+        columnFilterName: getSearchParamsKey('columnFilterName'),
+        columnFilterValue: getSearchParamsKey('columnFilterValue'),
+        columnFilterMode: getSearchParamsKey('columnFilterMode'),
+        keywordFilter: getSearchParamsKey('keywordFilter'),
+        selectFilter: selectValue,
+        pageSize: model.pagination?.pageSize,
+      },
+    });
   }, [searchParams]);
 
   /**
-   * @description Hook that runs after render. Looks to query strings to set filter. If none are found, then looks to state cookie.
+   * @description Hook that runs after render. Looks to query strings to set filter.
    */
   useEffect(() => {
     if (Boolean(searchParams.size)) {

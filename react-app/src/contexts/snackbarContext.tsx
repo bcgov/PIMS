@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ReactNode,
   SyntheticEvent,
@@ -84,6 +84,20 @@ const SnackBarContextProvider = (props: ISnackBarContext) => {
     }),
     [messageState],
   );
+
+  useEffect(() => {
+    // If it was a warning/error.
+    if (messageState.style === snackbarStyles.warning) {
+      // Using this instead of Snowplow Error event because Service BC doesn't support it
+      window.snowplow('trackSelfDescribingEvent', {
+        schema: 'iglu:ca.bc.gov.pims/error/jsonschema/1-0-0',
+        data: {
+          source: 'snackbar',
+          error_message: messageState.text,
+        },
+      });
+    }
+  }, [messageState.text]);
 
   const { children } = props;
 
