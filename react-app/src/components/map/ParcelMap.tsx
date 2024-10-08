@@ -13,6 +13,7 @@ import MapSidebar from '@/components/map/sidebar/MapSidebar';
 import ClusterPopup, { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
 import { ParcelLayerFeature } from '@/hooks/api/useParcelLayerApi';
 import { LookupContext } from '@/contexts/lookupContext';
+
 import PolygonQuery, { LeafletMultiPolygon } from '@/components/map/polygonQuery/PolygonQuery';
 
 type ParcelMapProps = {
