@@ -22,7 +22,7 @@ export interface PopupState {
 
 interface ClusterPopupProps {
   popupState: PopupState;
-  setPopupState: React.Dispatch<React.SetStateAction<PopupState>>;
+  setPopupState: (stateUpdates: Partial<PopupState>) => void;
 }
 
 /**
@@ -90,7 +90,6 @@ const ClusterPopup = (props: ClusterPopupProps) => {
         popupState.pageSize * popupState.pageIndex, // offset
       );
       setPopupState({
-        ...popupState,
         properties: newClusterProperties,
       });
     }
@@ -112,7 +111,6 @@ const ClusterPopup = (props: ClusterPopupProps) => {
       borderRadius={'10px'}
       onMouseLeave={() =>
         setPopupState({
-          ...popupState,
           properties: [],
           open: false,
         })
@@ -125,7 +123,6 @@ const ClusterPopup = (props: ClusterPopupProps) => {
             onClick={() => {
               if (popupState.pageIndex > 0) {
                 setPopupState({
-                  ...popupState,
                   pageIndex: popupState.pageIndex - 1,
                 });
               }
@@ -142,7 +139,6 @@ const ClusterPopup = (props: ClusterPopupProps) => {
             onClick={() => {
               if (popupState.pageIndex + 1 < Math.ceil(popupState.total / popupState.pageSize)) {
                 setPopupState({
-                  ...popupState,
                   pageIndex: popupState.pageIndex + 1,
                 });
               }

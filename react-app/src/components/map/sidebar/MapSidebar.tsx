@@ -1,4 +1,4 @@
-import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
+import { MapFilter, PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import { formatNumber, pidFormatter } from '@/utilities/formatters';
 import { FilterList, ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-material';
 import { Box, Paper, Grid, IconButton, Typography, Icon, useTheme } from '@mui/material';
@@ -21,7 +21,8 @@ import { LookupContext } from '@/contexts/lookupContext';
 interface MapSidebarProps {
   properties: PropertyGeo[];
   map: React.MutableRefObject<Map>;
-  setFilter: Dispatch<SetStateAction<object>>;
+  filter: MapFilter;
+  setFilter: Dispatch<SetStateAction<MapFilter>>;
   sidebarOpen: boolean;
   setSidebarOpen: Dispatch<React.SetStateAction<boolean>>;
 }
@@ -33,7 +34,7 @@ interface MapSidebarProps {
  * @returns {JSX.Element} The MapSidebar component.
  */
 const MapSidebar = (props: MapSidebarProps) => {
-  const { properties, map, setFilter, sidebarOpen, setSidebarOpen } = props;
+  const { properties, map, setFilter, sidebarOpen, setSidebarOpen, filter } = props;
   const [propertiesInBounds, setPropertiesInBounds] = useState<PropertyGeo[]>(properties ?? []);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
@@ -217,7 +218,7 @@ const MapSidebar = (props: MapSidebarProps) => {
           transition: 'ease-in-out 0.5s',
         }}
       >
-        <FilterControl setFilter={setFilter} />
+        <FilterControl setFilter={setFilter} filter={filter} />
       </Box>
     </>
   );

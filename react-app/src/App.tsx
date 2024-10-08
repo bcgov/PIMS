@@ -51,13 +51,7 @@ const Router = () => {
   const showMap = () => (
     <BaseLayout>
       <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
-        <ParcelMap
-          height="100%"
-          loadProperties={true}
-          popupSize="large"
-          scrollOnClick
-          hideControls
-        />
+        <ParcelMap height="100%" loadProperties={true} popupSize="large" scrollOnClick />
       </AuthRouteGuard>
     </BaseLayout>
   );
