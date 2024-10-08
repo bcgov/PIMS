@@ -71,17 +71,23 @@ const PolygonQuery = (props: PolygonQueryProps) => {
         onEditStop={() => setMapEventsDisabled(false)}
         onDeleted={(e) => {
           setPolygons((original) => {
-            let replacementCoordinates = original.coordinates;
+            const replacementCoordinates = original.coordinates;
+            const replacementIds = original.leafletIds;
             e.layers.eachLayer((layer) => {
               // Find the index of the original polygon
               const originalIndex = original.leafletIds.findIndex((id) => id === layer._leaflet_id);
               // Use original index to remove coordinate set
-              replacementCoordinates = replacementCoordinates.splice(originalIndex, 1);
+              // Must not accept -1 from findIndex or it will remove last element
+              if (originalIndex >= 0) {
+                // These calls affect the array directly. They would return the removed elements if assigned.
+                replacementCoordinates.splice(originalIndex, 1);
+                replacementIds.splice(originalIndex, 1);
+              }
             });
             return {
               ...original,
-              coordinates: replacementCoordinates.length ? replacementCoordinates : [], // Otherwise doesn't update properly
-              leafletIds: [],
+              coordinates: replacementCoordinates,
+              leafletIds: replacementIds,
             };
           });
           setMapEventsDisabled(false);
