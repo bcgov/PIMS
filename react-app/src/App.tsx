@@ -263,7 +263,6 @@ const Router = () => {
 const App = () => {
   useEffect(() => {
     // Track page view in Snowplow Analytics.
-    // @ts-ignore
     window.snowplow('trackPageView');
   }, [location.pathname]);
 
