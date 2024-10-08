@@ -38,6 +38,7 @@ import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/Project
 import { parentPort } from 'worker_threads';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { PimsRequestUser } from '@/middleware/userAuthCheck';
+import { isPointInMultiPolygon } from '@/utilities/polygonMath';
 
 /**
  * Perform a fuzzy search for properties based on the provided keyword.
@@ -244,6 +245,10 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
             },
           ],
     });
+
+    if (filter.Polygon) {
+      return filterPropertiesByMultiPolygon(JSON.parse(filter.Polygon), properties);
+    }
     return properties;
   }
   /**
@@ -257,7 +262,35 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
       AgencyId: filter.AgencyIds ? In(filter.AgencyIds) : undefined,
     },
   });
+  if (filter.Polygon) {
+    return filterPropertiesByMultiPolygon(JSON.parse(filter.Polygon), properties);
+  }
   return properties;
+};
+
+/**
+ * Filters a list of properties based on whether they are within the given polygons.
+ *
+ * @param multiPolygon - The polygon coordinates in a 3D array.
+ * @param properties - An array of MapProperties objects to filter.
+ * @returns An array of MapProperties objects that fall within the specified polygon.
+ */
+export const filterPropertiesByMultiPolygon = (
+  multiPolygon: number[][][],
+  properties: MapProperties[],
+) => {
+  const formattedPolygons: { x: number; y: number }[][] = multiPolygon.map((polygon) =>
+    polygon.map((point) => ({ x: point.at(1), y: point.at(0) })),
+  );
+  // Memoizing the points already checked so they are not checked twice
+  const checkedPoints: Record<string, boolean> = {};
+  return properties.filter((property) => {
+    const stringifiedLocation = JSON.stringify(property.Location);
+    if (checkedPoints[stringifiedLocation] != undefined) return checkedPoints[stringifiedLocation];
+    const inPolygon = isPointInMultiPolygon(property.Location, formattedPolygons);
+    checkedPoints[stringifiedLocation] = inPolygon;
+    return inPolygon;
+  });
 };
 
 const numberOrNull = (value: any) => {
