@@ -11,6 +11,7 @@ import propertyServices, {
   setNewBool,
   checkForHeaders,
   getAdministrativeAreaOrThrow,
+  filterPropertiesByMultiPolygon,
 } from '@/services/properties/propertiesServices';
 import userServices from '@/services/users/usersServices';
 import { AdministrativeArea } from '@/typeorm/Entities/AdministrativeArea';
@@ -50,6 +51,7 @@ import {
   produceProjectProperty,
   produceImportRow,
   producePimsRequestUser,
+  producePropertyForMap,
 } from 'tests/testUtils/factories';
 import { DeepPartial, EntityTarget, ObjectLiteral } from 'typeorm';
 import xlsx, { WorkSheet } from 'xlsx';
@@ -159,15 +161,15 @@ jest
   .mockImplementation(() => _buildingsCreateQueryBuilder);
 
 jest.spyOn(AppDataSource.getRepository(MapProperties), 'find').mockImplementation(async () => [
-  {
+  producePropertyForMap({
     Id: 1,
     Location: {
-      x: -122.873862825,
-      y: 49.212751465,
+      x: 1,
+      y: 1,
     },
     PropertyTypeId: 0,
     ClassificationId: 3,
-  } as MapProperties,
+  }),
 ]);
 
 jest
@@ -367,6 +369,14 @@ describe('UNIT - Property Services', () => {
     it('should return a list of map property objects', async () => {
       const result = await propertyServices.getPropertiesForMap({
         Name: 'some name',
+        Polygon: JSON.stringify([
+          [
+            [3, 3],
+            [3, 0],
+            [0, 0],
+            [0, 3],
+          ],
+        ]),
       });
       expect(Array.isArray(result)).toBe(true);
       expect(result.at(0)).toHaveProperty('Id');
@@ -395,6 +405,27 @@ describe('UNIT - Property Services', () => {
         Name: 'some name',
         UserAgencies: [1],
         AgencyIds: [1],
+      });
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.at(0)).toHaveProperty('Id');
+      expect(result.at(0)).toHaveProperty('Location');
+      expect(result.at(0)).toHaveProperty('PropertyTypeId');
+      expect(result.at(0)).toHaveProperty('ClassificationId');
+    });
+
+    it('should return a list of map property objects, following the UserAgencies filter path with polygon filter', async () => {
+      const result = await propertyServices.getPropertiesForMap({
+        Name: 'some name',
+        UserAgencies: [1],
+        AgencyIds: [1],
+        Polygon: JSON.stringify([
+          [
+            [3, 3],
+            [3, 0],
+            [0, 0],
+            [0, 3],
+          ],
+        ]),
       });
       expect(Array.isArray(result)).toBe(true);
       expect(result.at(0)).toHaveProperty('Id');
@@ -721,6 +752,45 @@ describe('UNIT - Property Services', () => {
       const result = await propertyServices.findLinkedProjectsForProperty(1);
       expect(Array.isArray(result)).toBe(true);
       expect((result as unknown as any[])[0].StatusName).toBe('test');
+    });
+  });
+
+  describe('filterPropertiesByMultiPolygon', () => {
+    const _isPointInMultiPolygonSpy = jest.fn();
+    jest.mock('@/utilities/polygonMath', () => ({
+      isPointInMultiPolygon: _isPointInMultiPolygonSpy,
+    }));
+    const multiPolygon = [
+      [
+        [0, 0],
+        [0, 3],
+        [3, 3],
+        [3, 0],
+      ],
+      [
+        [5, 0],
+        [5, 3],
+        [8, 3],
+        [8, 0],
+      ],
+    ];
+
+    it('should remove properties outside of the polygons', () => {
+      // Three properties, last one shouldn't pass, so true, true, false
+      _isPointInMultiPolygonSpy
+        .mockReturnValueOnce(true)
+        .mockReturnValueOnce(true)
+        .mockReturnValueOnce(false);
+
+      const properties = [
+        producePropertyForMap({ Location: { x: 1, y: 1 } }),
+        producePropertyForMap({ Location: { x: 1, y: 1 } }),
+        producePropertyForMap({ Location: { x: 10, y: 1 } }),
+      ];
+      const result = filterPropertiesByMultiPolygon(multiPolygon, properties);
+      expect(result.length).toEqual(2);
+      expect(result.at(0).Location.x).toEqual(1);
+      expect(result.at(1).Location.x).toEqual(1);
     });
   });
 });

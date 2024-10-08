@@ -52,6 +52,7 @@ import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 import { ImportRow } from '@/services/properties/propertiesServices';
 import { PimsRequestUser } from '@/middleware/userAuthCheck';
+import { MapProperties } from '@/typeorm/Entities/views/MapPropertiesView';
 
 export class MockRes {
   statusValue: any;
@@ -997,6 +998,29 @@ export const produceAgencyResponse = (props?: Partial<ProjectAgencyResponse>) =>
   };
 
   return response;
+};
+
+export const producePropertyForMap = (props?: Partial<MapProperties>) => {
+  const propertyTypeId = faker.number.int({ min: 0, max: 1 });
+  const property: MapProperties = {
+    Id: faker.number.int(),
+    PID: faker.number.int({ max: 999999999 }),
+    PIN: faker.number.int({ max: 999999999 }),
+    PropertyTypeId: propertyTypeId,
+    AgencyId: faker.number.int(),
+    ClassificationId: faker.number.int(),
+    AdministrativeAreaId: faker.number.int(),
+    ProjectStatusId: faker.number.int(),
+    Address1: faker.location.streetAddress(),
+    RegionalDistrictId: faker.number.int(),
+    Name: faker.location.streetAddress(),
+    Location: {
+      x: faker.number.int(),
+      y: faker.number.int(),
+    },
+    ...props,
+  };
+  return property;
 };
 
 export const producePropertyUnion = (props?: Partial<PropertyUnion>) => {
