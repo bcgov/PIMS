@@ -31,8 +31,6 @@ import ParcelMap from '@/components/map/ParcelMap';
 import LookupContextProvider from '@/contexts/lookupContext';
 import BulkUpload from './pages/BulkUpload';
 import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
-import { newTracker, enableActivityTracking, trackPageView } from '@snowplow/browser-tracker';
-import { refreshLinkClickTracking } from '@snowplow/browser-plugin-link-click-tracking';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 
 /**
@@ -263,36 +261,11 @@ const Router = () => {
 };
 
 const App = () => {
-  /** START SNOWPLOW SETUP */
-  // Snowplow Mini for temporary testing, Snowplow Tracker for long-term records
-  const connectorEndpoint = window.location.href.includes('localhost')
-    ? 'spm.apps.gov.bc.ca'
-    : 'spt.apps.gov.bc.ca';
-  newTracker('rt', connectorEndpoint, {
-    appId: 'Snowplow_standalone_PIMS',
-    cookieLifetime: 60 * 60 * 24, // Time in seconds.
-    platform: 'web',
-    cookieSecure: true,
-    eventMethod: 'post',
-    contexts: {
-      webPage: true,
-      browser: true,
-    },
-  });
-
-  enableActivityTracking({
-    minimumVisitLength: 30,
-    heartbeatDelay: 30,
-  });
-
-  refreshLinkClickTracking();
-
   useEffect(() => {
-    // Idea is to track the page view each time the url changes
-    trackPageView();
+    // Track page view in Snowplow Analytics.
+    // @ts-ignore
+    window.snowplow('trackPageView');
   }, [location.pathname]);
-
-  /** END SNOWPLOW SETUP */
 
   return (
     <ThemeProvider theme={appTheme}>

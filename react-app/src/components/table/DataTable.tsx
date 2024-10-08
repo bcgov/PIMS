@@ -48,7 +48,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { CommonFiltering } from '@/interfaces/ICommonFiltering';
 import { useSearchParams } from 'react-router-dom';
 import { Roles } from '@/constants/roles';
-import { trackSelfDescribingEvent } from '@snowplow/browser-tracker';
 import { UserContext } from '@/contexts/userContext';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 
@@ -370,20 +369,18 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
     }
 
     // Send search params to snowplow
-    trackSelfDescribingEvent({
-      event: {
-        schema: 'iglu:ca.bc.gov.pims/table/jsonschema/1-0-0',
-        data: {
-          name: props.name,
-          columnSortValue: getSearchParamsKey('columnSortValue'),
-          columnSortName: getSearchParamsKey('columnSortName'),
-          columnFilterName: getSearchParamsKey('columnFilterName'),
-          columnFilterValue: getSearchParamsKey('columnFilterValue'),
-          columnFilterMode: getSearchParamsKey('columnFilterMode'),
-          keywordFilter: getSearchParamsKey('keywordFilter'),
-          selectFilter: selectValue,
-          pageSize: model.pagination?.pageSize,
-        },
+    window.snowplow('trackSelfDescribingEvent', {
+      schema: 'iglu:ca.bc.gov.pims/table/jsonschema/1-0-0',
+      data: {
+        name: props.name,
+        columnSortValue: getSearchParamsKey('columnSortValue'),
+        columnSortName: getSearchParamsKey('columnSortName'),
+        columnFilterName: getSearchParamsKey('columnFilterName'),
+        columnFilterValue: getSearchParamsKey('columnFilterValue'),
+        columnFilterMode: getSearchParamsKey('columnFilterMode'),
+        keywordFilter: getSearchParamsKey('keywordFilter'),
+        selectFilter: selectValue,
+        pageSize: model.pagination?.pageSize,
       },
     });
   }, [searchParams]);

@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { FetchResponse } from '@/hooks/useFetch';
-import { trackSelfDescribingEvent } from '@snowplow/browser-tracker';
 
 /**
  * Renders an error fallback component that displays an error message and provides options for handling the error.
@@ -33,12 +32,11 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   const { submit, submitting } = useDataSubmitter(api.reports.postErrorReport);
 
   // Using this instead of Snowplow Error event because Service BC doesn't support it
-  trackSelfDescribingEvent({
-    event: {
-      schema: 'iglu:ca.bc.gov.pims/error/jsonschema/1-0-0',
-      data: {
-        error_message: error.message,
-      },
+  window.snowplow('trackSelfDescribingEvent', {
+    schema: 'iglu:ca.bc.gov.pims/error/jsonschema/1-0-0',
+    data: {
+      source: 'fallback',
+      error_message: error.message,
     },
   });
 

@@ -12,7 +12,6 @@ import { SnackBarContext } from '@/contexts/snackbarContext';
 import MapSidebar from '@/components/map/sidebar/MapSidebar';
 import ClusterPopup, { PopupState } from '@/components/map/clusterPopup/ClusterPopup';
 import { ParcelLayerFeature } from '@/hooks/api/useParcelLayerApi';
-import { trackSelfDescribingEvent } from '@snowplow/browser-tracker';
 import { LookupContext } from '@/contexts/lookupContext';
 import PolygonQuery, { LeafletMultiPolygon } from '@/components/map/polygonQuery/PolygonQuery';
 
@@ -247,45 +246,46 @@ const ParcelMap = (props: ParcelMapProps) => {
   useEffect(() => {
     if (loadProperties) {
       // Track search in snowplow
-      trackSelfDescribingEvent({
-        event: {
-          schema: 'iglu:ca.bc.gov.pims/map/jsonschema/1-0-0',
-          data: {
-            pid: filter.PID,
-            pin: filter.PIN,
-            address: filter.Address,
-            property_name: filter.Name,
-            agencies: filter.AgencyIds
-              ? filter.AgencyIds.map((id) => lookup.getLookupValueById('Agencies', id)?.Name)
-              : undefined,
-            administrative_areas: filter.AdministrativeAreaIds
-              ? filter.AdministrativeAreaIds.map(
-                  (id) => lookup.getLookupValueById('AdministrativeAreas', id)?.Name,
-                )
-              : undefined,
-            regional_districts: filter.RegionalDistrictIds
-              ? filter.RegionalDistrictIds.map(
-                  (id) => lookup.getLookupValueById('RegionalDistricts', id)?.Name,
-                )
-              : undefined,
-            classifications: filter.ClassificationIds
-              ? filter.ClassificationIds.map(
-                  (id) => lookup.getLookupValueById('Classifications', id)?.Name,
-                )
-              : undefined,
-            property_types: filter.PropertyTypeIds
-              ? filter.PropertyTypeIds.map(
-                  (id) => lookup.getLookupValueById('PropertyTypes', id)?.Name,
-                )
-              : undefined,
-            project_statuses: filter.ProjectStatusIds
-              ? filter.ProjectStatusIds.map(
-                  (id) => lookup.getLookupValueById('ProjectStatuses', id)?.Name,
-                )
-              : undefined,
-          },
+      // Send data to SnowPlow.
+      window.snowplow('trackSelfDescribingEvent', {
+        schema: 'iglu:ca.bc.gov.pims/map/jsonschema/1-0-0',
+        data: {
+          pid: filter.PID,
+          pin: filter.PIN,
+          address: filter.Address,
+          property_name: filter.Name,
+          agencies: filter.AgencyIds?.length
+            ? filter.AgencyIds.map((id) => lookup.getLookupValueById('Agencies', id)?.Name)
+            : undefined,
+          administrative_areas: filter.AdministrativeAreaIds?.length
+            ? filter.AdministrativeAreaIds.map(
+                (id) => lookup.getLookupValueById('AdministrativeAreas', id)?.Name,
+              )
+            : undefined,
+          regional_districts: filter.RegionalDistrictIds?.length
+            ? filter.RegionalDistrictIds.map(
+                (id) => lookup.getLookupValueById('RegionalDistricts', id)?.Name,
+              )
+            : undefined,
+          classifications: filter.ClassificationIds?.length
+            ? filter.ClassificationIds.map(
+                (id) => lookup.getLookupValueById('Classifications', id)?.Name,
+              )
+            : undefined,
+          property_types: filter.PropertyTypeIds?.length
+            ? filter.PropertyTypeIds.map(
+                (id) => lookup.getLookupValueById('PropertyTypes', id)?.Name,
+              )
+            : undefined,
+          project_statuses: filter.ProjectStatusIds?.length
+            ? filter.ProjectStatusIds.map(
+                (id) => lookup.getLookupValueById('ProjectStatuses', id)?.Name,
+              )
+            : undefined,
+          polygon: filter.Polygon,
         },
       });
+
       refreshData();
     }
   }, [filter]);

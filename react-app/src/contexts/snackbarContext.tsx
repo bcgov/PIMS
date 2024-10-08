@@ -13,7 +13,6 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { SnackbarContent, useTheme } from '@mui/material';
-import { trackSelfDescribingEvent } from '@snowplow/browser-tracker';
 
 /**
  * @interface
@@ -90,16 +89,15 @@ const SnackBarContextProvider = (props: ISnackBarContext) => {
     // If it was a warning/error.
     if (messageState.style === snackbarStyles.warning) {
       // Using this instead of Snowplow Error event because Service BC doesn't support it
-      trackSelfDescribingEvent({
-        event: {
-          schema: 'iglu:ca.bc.gov.pims/error/jsonschema/1-0-0',
-          data: {
-            error_message: messageState.text,
-          },
+      window.snowplow('trackSelfDescribingEvent', {
+        schema: 'iglu:ca.bc.gov.pims/error/jsonschema/1-0-0',
+        data: {
+          source: 'snackbar',
+          error_message: messageState.text,
         },
       });
     }
-  }, [messageState]);
+  }, [messageState.text]);
 
   const { children } = props;
 
