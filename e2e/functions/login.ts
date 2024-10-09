@@ -1,5 +1,10 @@
+/**
+ * Functions for automating user logins. 
+ */
+
 import {BASE_URL, BCEID_PASSWORD, BCEID_USERNAME, BCSC_PASSWORD, BCSC_USERNAME} from '../env';
 
+// Will only work in DEV/TEST environments
 export const loginBCServicesCard = async ({ page }) => {
   await page.goto(BASE_URL);
   await page.getByRole('button', { name: 'Login' }).click();

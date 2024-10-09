@@ -21,6 +21,12 @@ interface User {
   RoleId: string | undefined;
   Status: string;
 }
+
+/**
+ * For creating a user object normally returned by the /self route
+ * @param props A Partial user object
+ * @returns 
+ */
 const createSelfResponse = (props?: Partial<User>): User => ({
   "CreatedById": "00000000-0000-0000-0000-000000000000",
   "CreatedOn": "2023-07-25T00:32:41.938Z",
@@ -44,6 +50,13 @@ const createSelfResponse = (props?: Partial<User>): User => ({
   ...props,
 })
 
+/**
+ * Use this at the start of a test to set your user information if needed.
+ * Otherwise, your user information will reflect the actual user credentials used in testing.
+ * @param page Page of e2e test.
+ * @param self A partial object with user attributes.
+ * @param status An optional status number. Defaults to 200.
+ */
 export const mockSelf = async (page: Page, self?: Partial<User>, status: number = 200) => {
   await page.route('**/users/self', route => route.fulfill({
     status,

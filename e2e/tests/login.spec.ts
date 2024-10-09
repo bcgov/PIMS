@@ -1,3 +1,7 @@
+/**
+ * Testing login options. 
+ */
+
 import { test, expect } from '@playwright/test';
 import { loginBCServicesCard, loginBCeID } from '../functions/login';
 
