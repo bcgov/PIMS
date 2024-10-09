@@ -10,7 +10,7 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import './parcelPopup.css';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import useDataLoader from '@/hooks/useDataLoader';
-import { AuthContext } from '@/contexts/authContext';
+import { UserContext } from '@/contexts/userContext';
 import { Roles } from '@/constants/roles';
 import BCAssessmentDetails from '@/components/map/parcelPopup/BCAssessmentDetails';
 import LtsaDetails from '@/components/map/parcelPopup/LtsaDetails';
@@ -20,6 +20,7 @@ import ParcelPopupSelect from '@/components/map/parcelPopup/ParcelPopupSelect';
 interface ParcelPopupProps {
   size?: 'small' | 'large';
   scrollOnClick?: boolean;
+  mapEventsDisabled?: boolean;
 }
 
 const POPUP_WIDTH = '500px';
@@ -36,9 +37,9 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
   const [clickPosition, setClickPosition] = useState<LatLng>(null);
   const [parcelIndex, setParcelIndex] = useState<number>(0); // If multiple, which parcel to show info for.
   const [tabValue, setTabValue] = useState<string>('0');
-  const { size = 'large', scrollOnClick } = props;
+  const { size = 'large', scrollOnClick, mapEventsDisabled } = props;
 
-  const { pimsUser } = useContext(AuthContext);
+  const { pimsUser } = useContext(UserContext);
 
   const {
     data: ltsaData,
@@ -73,14 +74,16 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
 
   useMapEvents({
     click: (e) => {
-      setClickPosition(e.latlng);
+      if (!mapEventsDisabled) {
+        setClickPosition(e.latlng);
+      }
     },
   });
 
   const getParcelData = useCallback(() => {
     //zoom check here since I don't think it makes sense to allow this at anything more zoomed out than this
     //can't really click on any parcel with much accurancy beyond that point
-    if (map.getZoom() > 10 && clickPosition) {
+    if (!mapEventsDisabled && map.getZoom() > 10 && clickPosition) {
       api.parcelLayer.getParcelByLatLng(clickPosition).then((response) => {
         if (response.features.length) {
           setParcelData(

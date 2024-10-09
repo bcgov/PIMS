@@ -5,8 +5,7 @@ import '@/App.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from './themes/appTheme';
 import Dev from './pages/DevZone';
-import { ConfigContextProvider } from './contexts/configContext';
-import AuthContextProvider, { AuthContext } from './contexts/authContext';
+import UserContextProvider, { UserContext } from './contexts/userContext';
 import AuthRouteGuard from './guards/AuthRouteGuard';
 import BaseLayout from './components/layout/BaseLayout';
 import { AccessRequest } from './pages/AccessRequest';
@@ -32,6 +31,7 @@ import ParcelMap from '@/components/map/ParcelMap';
 import LookupContextProvider from '@/contexts/lookupContext';
 import BulkUpload from './pages/BulkUpload';
 import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
+import { useSSO } from '@bcgov/citz-imb-sso-react';
 
 /**
  * Renders the main router component for the application.
@@ -41,20 +41,15 @@ import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
  * @returns JSX element representing the main router component
  */
 const Router = () => {
-  const auth = useContext(AuthContext);
+  const sso = useSSO();
+  const auth = useContext(UserContext);
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
 
   // Reusable piece to show map on many routes
   const showMap = () => (
     <BaseLayout>
       <AuthRouteGuard permittedRoles={[Roles.ADMIN, Roles.AUDITOR, Roles.GENERAL_USER]}>
-        <ParcelMap
-          height="100%"
-          loadProperties={true}
-          popupSize="large"
-          scrollOnClick
-          hideControls
-        />
+        <ParcelMap height="100%" loadProperties={true} popupSize="large" scrollOnClick />
       </AuthRouteGuard>
     </BaseLayout>
   );
@@ -64,9 +59,9 @@ const Router = () => {
       <Route
         index
         element={
-          auth.keycloak.isAuthenticated &&
-          auth.pimsUser.data?.Status === 'Active' &&
-          auth.pimsUser.data?.RoleId ? (
+          sso.isAuthenticated &&
+          auth.pimsUser?.data?.Status === 'Active' &&
+          auth.pimsUser?.data?.RoleId ? (
             showMap()
           ) : (
             <BaseLayout displayFooter>
@@ -268,17 +263,15 @@ const Router = () => {
 const App = () => {
   return (
     <ThemeProvider theme={appTheme}>
-      <ConfigContextProvider>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <AuthContextProvider>
-            <LookupContextProvider>
-              <SnackBarContextProvider>
-                <Router />
-              </SnackBarContextProvider>
-            </LookupContextProvider>
-          </AuthContextProvider>
-        </ErrorBoundary>
-      </ConfigContextProvider>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <UserContextProvider>
+          <LookupContextProvider>
+            <SnackBarContextProvider>
+              <Router />
+            </SnackBarContextProvider>
+          </LookupContextProvider>
+        </UserContextProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };

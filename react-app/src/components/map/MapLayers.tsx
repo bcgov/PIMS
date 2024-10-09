@@ -90,82 +90,98 @@ const LAYER_CONFIGS = {
   ],
 };
 
-const MapLayers = () => (
-  <LayersControl position="topleft">
-    <LayersControl.BaseLayer checked name="Street Map">
+interface MapLayersProps {
+  hideControls: boolean;
+}
+
+const MapLayers = (props: MapLayersProps) => {
+  const { hideControls } = props;
+  // If layer control is hidden, must still return a default tileset to use
+  if (hideControls) {
+    return (
       <TileLayer
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors'
       />
-    </LayersControl.BaseLayer>
-
-    <LayersControl.BaseLayer name="Satellite">
-      <TileLayer
-        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-        attribution="Tiles &copy; Esri &mdash; Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community"
-      />
-    </LayersControl.BaseLayer>
-
-    {LAYER_CONFIGS.administrativeBoundaries.map(({ name, url, layers }) => (
-      <LayersControl.Overlay key={name} name={name}>
-        <WMSTileLayer
-          url={url}
-          format="image/png"
-          transparent={true}
-          layers={layers}
-          opacity={0.5}
+    );
+  }
+  return (
+    <LayersControl position="topleft">
+      <LayersControl.BaseLayer checked name="Street Map">
+        <TileLayer
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors'
         />
-      </LayersControl.Overlay>
-    ))}
+      </LayersControl.BaseLayer>
 
-    {LAYER_CONFIGS.firstNations.map(({ name, url, layers }) => (
-      <LayersControl.Overlay key={name} name={name}>
-        <WMSTileLayer
-          url={url}
-          format="image/png"
-          transparent={true}
-          layers={layers}
-          opacity={0.5}
+      <LayersControl.BaseLayer name="Satellite">
+        <TileLayer
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          attribution="Tiles &copy; Esri &mdash; Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community"
         />
-      </LayersControl.Overlay>
-    ))}
+      </LayersControl.BaseLayer>
 
-    {LAYER_CONFIGS.landOwnership.map(({ name, url, layers }) => (
-      <LayersControl.Overlay key={name} name={name} checked={name === 'Parcel Boundaries'}>
-        <WMSTileLayer
-          url={url}
-          format="image/png"
-          transparent={true}
-          layers={layers}
-          opacity={0.5}
-        />
-      </LayersControl.Overlay>
-    ))}
+      {LAYER_CONFIGS.administrativeBoundaries.map(({ name, url, layers }) => (
+        <LayersControl.Overlay key={name} name={name}>
+          <WMSTileLayer
+            url={url}
+            format="image/png"
+            transparent={true}
+            layers={layers}
+            opacity={0.5}
+          />
+        </LayersControl.Overlay>
+      ))}
 
-    {LAYER_CONFIGS.zoning.map(({ name, url, layers }) => (
-      <LayersControl.Overlay key={name} name={name}>
-        <WMSTileLayer
-          url={url}
-          format="image/png"
-          transparent={true}
-          layers={layers}
-          opacity={0.5}
-        />
-      </LayersControl.Overlay>
-    ))}
+      {LAYER_CONFIGS.firstNations.map(({ name, url, layers }) => (
+        <LayersControl.Overlay key={name} name={name}>
+          <WMSTileLayer
+            url={url}
+            format="image/png"
+            transparent={true}
+            layers={layers}
+            opacity={0.5}
+          />
+        </LayersControl.Overlay>
+      ))}
 
-    {LAYER_CONFIGS.disturbances.map(({ name, url, layers }) => (
-      <LayersControl.Overlay key={name} name={name}>
-        <WMSTileLayer
-          url={url}
-          format="image/png"
-          transparent={true}
-          layers={layers}
-          opacity={0.5}
-        />
-      </LayersControl.Overlay>
-    ))}
-  </LayersControl>
-);
+      {LAYER_CONFIGS.landOwnership.map(({ name, url, layers }) => (
+        <LayersControl.Overlay key={name} name={name} checked={name === 'Parcel Boundaries'}>
+          <WMSTileLayer
+            url={url}
+            format="image/png"
+            transparent={true}
+            layers={layers}
+            opacity={0.5}
+          />
+        </LayersControl.Overlay>
+      ))}
+
+      {LAYER_CONFIGS.zoning.map(({ name, url, layers }) => (
+        <LayersControl.Overlay key={name} name={name}>
+          <WMSTileLayer
+            url={url}
+            format="image/png"
+            transparent={true}
+            layers={layers}
+            opacity={0.5}
+          />
+        </LayersControl.Overlay>
+      ))}
+
+      {LAYER_CONFIGS.disturbances.map(({ name, url, layers }) => (
+        <LayersControl.Overlay key={name} name={name}>
+          <WMSTileLayer
+            url={url}
+            format="image/png"
+            transparent={true}
+            layers={layers}
+            opacity={0.5}
+          />
+        </LayersControl.Overlay>
+      ))}
+    </LayersControl>
+  );
+};
 
 export default MapLayers;

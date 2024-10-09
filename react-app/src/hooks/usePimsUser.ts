@@ -18,11 +18,11 @@ export interface IPimsUser {
  * @returns Object containing the user's database record and functions related to the loading of this data.
  */
 const usePimsUser = () => {
-  const keycloak = useSSO();
+  const sso = useSSO();
   const api = usePimsApi();
   const { data, refreshData, isLoading, loadOnce } = useDataLoader(api.users.getSelf, () => {});
 
-  if (!data && keycloak.isAuthenticated) {
+  if (!data && sso.isAuthenticated) {
     loadOnce();
   }
 
