@@ -2,7 +2,7 @@
  * Functions for automating user logins. 
  */
 
-import {BASE_URL, BCEID_PASSWORD, BCEID_USERNAME, BCSC_PASSWORD, BCSC_USERNAME} from '../env';
+import {BASE_URL, BCEID_PASSWORD, BCEID_USERNAME, BCSC_PASSWORD, BCSC_USERNAME, IDIR_PASSWORD, IDIR_USERNAME} from '../env';
 
 // Will only work in DEV/TEST environments
 export const loginBCServicesCard = async ({ page }) => {
@@ -24,5 +24,15 @@ export const loginBCeID = async ({ page }) => {
   await page.locator('#user').fill(BCEID_USERNAME);
   await page.getByLabel('Password').click();
   await page.getByLabel('Password').fill(BCEID_PASSWORD);
+  await page.getByRole('button', { name: 'Continue' }).click();
+};
+
+export const loginIDIR = async ({ page }) => {
+  await page.goto(BASE_URL);
+  await page.getByRole('button', { name: 'Login' }).click();
+  await page.getByRole('link', { name: 'IDIR' }).click();
+  await page.locator('#user').fill(IDIR_USERNAME);
+  await page.getByLabel('Password').click();
+  await page.getByLabel('Password').fill(IDIR_PASSWORD);
   await page.getByRole('button', { name: 'Continue' }).click();
 };
