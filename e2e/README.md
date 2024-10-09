@@ -8,7 +8,7 @@ These tests should focus on user paths and should mimic how the user navigates t
 
 1. Run `npm i` to install dependencies.
 2. Run `npx playwright install` to install Playwright browsers.
-3. Create and populate a `.env` file based on the `.env-template` file. 
+3. Create and populate a `.env` file based on the `.env-template` file.
 
 For the `BASE_URL`, start with `localhost:<port>` for local testing.
 

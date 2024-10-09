@@ -302,6 +302,7 @@ const ParcelMap = (props: ParcelMapProps) => {
     <Box height={height} display={'flex'}>
       {loadProperties ? <LoadingCover show={isLoading} /> : <></>}
       <MapContainer
+        id="parcel-map"
         style={{ height: '100%', width: '100%' }}
         ref={localMapRef}
         bounds={defaultBounds as LatLngBoundsExpression}

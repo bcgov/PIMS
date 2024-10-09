@@ -100,6 +100,7 @@ const MapSidebar = (props: MapSidebarProps) => {
           </Grid>
           <Grid item xs={8} display={'flex'} justifyContent={'center'} alignItems={'center'}>
             <IconButton
+              id="sidebar-decrement"
               size="small"
               onClick={() => {
                 if (pageIndex > 0) {
@@ -114,6 +115,7 @@ const MapSidebar = (props: MapSidebarProps) => {
               fontSize={'0.8em'}
             >{`${pageIndex + 1} of ${formatNumber(Math.max(Math.ceil(propertiesInBounds.length / propertyPageSize), 1))} (${formatNumber(propertiesInBounds.length)} items)`}</Typography>
             <IconButton
+              id="sidebar-increment"
               size="small"
               onClick={() => {
                 if (pageIndex + 1 < Math.ceil(propertiesInBounds.length / propertyPageSize)) {
@@ -125,7 +127,7 @@ const MapSidebar = (props: MapSidebarProps) => {
             </IconButton>
           </Grid>
           <Grid item xs={2} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-            <IconButton onClick={() => setSidebarOpen(false)}>
+            <IconButton onClick={() => setSidebarOpen(false)} id="sidebar-button-close">
               <Icon sx={{ mb: '2px' }}>
                 <img height={18} width={18} src={sideBarIcon} />
               </Icon>
