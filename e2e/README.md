@@ -18,3 +18,4 @@ Change BASE_URL to target other environments as needed.
 
 - `npx playwright test`: Runs tests in headless mode.
 - `npx playwright test --ui`: Starts the Playwright UI.
+- `npx playwright codegen <url>`: Starts the Codegen test maker. You can use this to capture movements in a browser and construct tests.
