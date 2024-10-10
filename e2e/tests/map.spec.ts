@@ -46,9 +46,9 @@ test('sidebar controls work as expected (not filter)', async ({ page }) => {
 })
 
 test('user can filter map properties', async ({ page }) => {
-  const getSnackbarCount = async () => {
-    const snackbarCount = await page.locator('#snackbar-popup').textContent()
-    return parseInt(snackbarCount?.split(' ').at(0)!)
+  const getPropertyCount = async () => {
+    const sidebarCount = await page.locator('#sidebar-count').textContent();
+    return parseInt(sidebarCount?.match(/\((.+)\)/)?.at(1)?.split(' ').at(0)?.replaceAll(',', '')!)
   }
 
   await page.goto(BASE_URL);
@@ -58,7 +58,7 @@ test('user can filter map properties', async ({ page }) => {
   // Sidebar has properties (also ensures that properties were loaded first)
   await expect(page.locator('.property-row').first()).toBeVisible();
   // Get starting number of properties
-  const startingNumber = await getSnackbarCount()
+  const startingNumber = await getPropertyCount()
 
   // Open filter
   await page.locator('#map-filter-open').click();
@@ -72,8 +72,9 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
+    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
   ]);
-  const afterAgencies = await getSnackbarCount();
+  const afterAgencies = await getPropertyCount();
   expect(afterAgencies).toBeLessThan(startingNumber);
 
   await page.locator('div').filter({ hasText: /^Property Types$/ }).getByLabel('Open').click();
@@ -81,7 +82,8 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
-  ]);  const afterPropertyTypes = await getSnackbarCount();
+    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
+  ]);  const afterPropertyTypes = await getPropertyCount();
   expect(afterPropertyTypes).toBeLessThan(afterAgencies);
 
   await page.locator('div').filter({ hasText: /^Regional Districts$/ }).getByLabel('Open').click();
@@ -90,7 +92,8 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
-  ]);  const afterRegionalDistricts = await getSnackbarCount();
+    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
+  ]);  const afterRegionalDistricts = await getPropertyCount();
   expect(afterRegionalDistricts).toBeLessThan(afterPropertyTypes);
 
   await page.locator('div').filter({ hasText: /^Administrative Areas$/ }).getByLabel('Open').click();
@@ -99,7 +102,8 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
-  ]);  const afterAdminAreas = await getSnackbarCount();
+    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
+  ]);  const afterAdminAreas = await getPropertyCount();
   expect(afterAdminAreas).toBeLessThan(afterRegionalDistricts);
 
   await page.getByLabel('Classifications').click();
@@ -107,7 +111,8 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
-  ]);  const afterClassifications = await getSnackbarCount();
+    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
+  ]);  const afterClassifications = await getPropertyCount();
   expect(afterClassifications).toBeLessThan(afterAdminAreas);
 
   // Clear and get back original number
@@ -116,7 +121,7 @@ test('user can filter map properties', async ({ page }) => {
     page.getByRole('button', { name: 'Clear' }).click(),
     new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
   ]);  
-  const afterClear = await getSnackbarCount();
+  const afterClear = await getPropertyCount();
   expect(afterClear).toEqual(startingNumber);
 
   // Check visibility of filter when opening and closing sidebar
