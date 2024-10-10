@@ -111,6 +111,7 @@ const SnackBarContextProvider = (props: ISnackBarContext) => {
       {children}
       <Snackbar open={messageState.open} autoHideDuration={6000} onClose={handleClose}>
         <SnackbarContent
+          id="snackbar-popup"
           sx={messageState.style || snackbarStyles.warning}
           message={messageState.text}
           action={action}
