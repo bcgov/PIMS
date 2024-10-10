@@ -1,3 +1,8 @@
+/**
+ * Testing navigating to Agency Table and using some filter functions.
+ * There are some assumptions that you will have some standard agencies populated.
+ */
+
 import { test, expect, Page } from '@playwright/test'
 import { BASE_URL } from '../env';
 import { loginIDIR } from '../functions/login';
@@ -25,6 +30,7 @@ test('user can filter using the keyword search', async ({ page }) => {
   await page.getByPlaceholder('Search...').click();
   await page.getByPlaceholder('Search...').fill('real');
   await expect(page.getByRole('gridcell', { name: 'Real Property Division' })).toBeVisible();
+  // Clear filter and make sure it is empty
   await page.getByLabel('Clear Filter').click();
   await expect(page.getByPlaceholder('Search...')).toBeEmpty();
   await expect(page.getByLabel('Clear Filter')).not.toBeVisible();
@@ -35,6 +41,7 @@ test('user can filter using the select dropdown', async ({ page }) => {
 
   await page.getByText('All Agencies').click();
   await page.getByRole('option', { name: 'Disabled', exact: true }).click();
+  // Not clear what to look for here to guarantee that only Disabled agencies show
   await expect(page.getByTestId('FilterAltIcon')).toBeVisible(); // The icon in the column header
   await expect(page.getByLabel('Clear Filter')).toBeVisible();
   await page.getByLabel('Clear Filter').click();
@@ -57,6 +64,7 @@ test('user select a row and go to that agency', async ({ page }) => {
   await getToAgencies(page);
 
   await page.getByRole('gridcell', { name: 'Advanced Education & Skills' }).first().click();
+  // These two expects together should confirm user is on correct details page
   await expect(page.getByText('Agency Details')).toBeVisible();
   await expect(page.getByText('Advanced Education & Skills')).toBeVisible();
 })
