@@ -94,7 +94,7 @@ const MapSidebar = (props: MapSidebarProps) => {
         {/* Sidebar Header */}
         <Grid container height={50} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
           <Grid item xs={2} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-            <IconButton onClick={() => setFilterOpen(!filterOpen)}>
+            <IconButton onClick={() => setFilterOpen(!filterOpen)} id="map-filter-open">
               <FilterList />
             </IconButton>
           </Grid>
@@ -111,6 +111,7 @@ const MapSidebar = (props: MapSidebarProps) => {
               <ArrowCircleLeft fontSize="small" />
             </IconButton>
             <Typography
+              id="sidebar-count"
               margin={'0 0.5em'}
               fontSize={'0.8em'}
             >{`${pageIndex + 1} of ${formatNumber(Math.max(Math.ceil(propertiesInBounds.length / propertyPageSize), 1))} (${formatNumber(propertiesInBounds.length)} items)`}</Typography>
