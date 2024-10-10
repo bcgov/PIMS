@@ -10,6 +10,7 @@ import { dateColumnType } from '../table/CustomColumns';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 import { LookupContext } from '@/contexts/lookupContext';
+import { makeDateOrUndefined } from '@/utilities/helperFunctions';
 
 interface IAgencyTable {
   rowClickHandler: GridEventListener<'rowClick'>;
@@ -142,8 +143,8 @@ const AgencyTable = (props: IAgencyTable) => {
         Disabled: agency.IsDisabled,
         Notifications: agency.SendEmail,
         SendTo: agency.Email,
-        Created: agency.CreatedOn,
-        Updated: agency.UpdatedOn,
+        Created: makeDateOrUndefined(agency.CreatedOn),
+        Updated: makeDateOrUndefined(agency.UpdatedOn),
       };
     });
   };
