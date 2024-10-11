@@ -19,8 +19,9 @@ import {
   Typography,
 } from '@mui/material';
 import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
-import React, { useEffect, useMemo, useState } from 'react';
-import xlsx from 'node-xlsx';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import sheetjs from 'xlsx';
+import { SnackBarContext } from '@/contexts/snackbarContext';
 
 const ResultsPaper = (props: {
   results: ImportResult[];
@@ -96,6 +97,7 @@ const BulkUpload = () => {
   const [file, setFile] = useState<File>();
   const [fileProgress, setFileProgress] = useState(0);
   const api = usePimsApi();
+  const snackbar = useContext(SnackBarContext);
   const { submit } = useDataSubmitter(api.properties.uploadBulkSpreadsheet);
   const { refreshData: refreshResults, data: importResults } = useDataLoader(() =>
     api.properties.getImportResults({ quantity: 1, sortKey: 'CreatedOn', sortOrder: 'DESC' }),
@@ -128,24 +130,9 @@ const BulkUpload = () => {
   ];
   const resultRows = useMemo(() => {
     if (importResults?.length && importResults.at(0).Results != null)
-      return importResults
-        .at(0)
-        .Results.slice()
-        .sort((a, b) => a.rowNumber - b.rowNumber);
+      return importResults.at(0).Results.sort((a, b) => a.rowNumber - b.rowNumber);
     else return [];
   }, [importResults]);
-
-  const buildXlsxBuffer = (result: ImportResult) => {
-    const rows = [];
-    if (!result?.Results?.length) {
-      return xlsx.build([{ name: `Results`, data: [], options: {} }]);
-    }
-    rows.push(['Row No.', 'Action', 'Reason']);
-    for (const item of result.Results) {
-      rows.push([item.rowNumber, item.action, item.reason ?? '']);
-    }
-    return xlsx.build([{ name: `Results`, data: rows, options: {} }]);
-  };
 
   return (
     <Box
@@ -295,16 +282,27 @@ const BulkUpload = () => {
       </Box>
       <ResultsPaper
         onDownloadClick={() => {
-          const buffer = buildXlsxBuffer(importResults?.at(0));
-          const blob = new Blob([buffer]);
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          document.body.appendChild(a);
-          a.href = url;
-          a.download = `Result_${importResults?.at(0)?.FileName}_${importResults?.at(0)?.CreatedOn}.xlsx`;
-          a.click();
-          window.URL.revokeObjectURL(url);
-          a.remove();
+          if (importResults?.at(0)) {
+            const columnHeaders = ['Row No.', 'Action', 'Reason'];
+            const fileName = `Result_${importResults?.at(0)?.FileName}_${new Date(importResults?.at(0)?.CreatedOn).toLocaleDateString('iso')}.xlsx`;
+
+            // Build xlsx file
+            const worksheet = sheetjs.utils.aoa_to_sheet([
+              columnHeaders,
+              ...resultRows.map((result) => [result.rowNumber, result.action, result.reason ?? '']),
+            ]);
+            const workbook = sheetjs.utils.book_new();
+            sheetjs.utils.book_append_sheet(workbook, worksheet, 'Bulk Upload Results');
+            // Download the file
+            sheetjs.writeFile(workbook, fileName);
+          } else {
+            // Should never hit this point based on UI, but just in case.
+            snackbar.setMessageState({
+              style: snackbar.styles.warning,
+              open: true,
+              text: 'No results available for export.',
+            });
+          }
         }}
         rows={resultRows}
         results={importResults}

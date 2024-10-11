@@ -76,3 +76,14 @@ export const getProvider = (username: string, bcscIdentifier?: string) => {
 
 export const validateEmail = (email: string): boolean =>
   z.string().email().safeParse(email).success;
+
+/**
+ * SheetJS does not like to receive invalid dates. Use this function to avoid that if value is unpopulated.
+ * @param date
+ * @returns Date or undefined
+ */
+export const makeDateOrUndefined = (date: unknown | undefined) => {
+  if (!date) return undefined;
+  if (typeof date == 'string' && (date as string).length === 0) return undefined;
+  return new Date(date as string | number | Date);
+};

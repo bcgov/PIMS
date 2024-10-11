@@ -9,6 +9,7 @@ import { Box } from '@mui/material';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
+import { makeDateOrUndefined } from '@/utilities/helperFunctions';
 
 const AdministrativeAreasTable = () => {
   const api = usePimsApi();
@@ -110,7 +111,7 @@ const AdministrativeAreasTable = () => {
           'RegionalDistricts',
           adminArea.RegionalDistrictId,
         )?.Name,
-        'Created On': adminArea.CreatedOn,
+        'Created On': makeDateOrUndefined(adminArea.CreatedOn),
         Disabled: adminArea.IsDisabled,
       };
     });
