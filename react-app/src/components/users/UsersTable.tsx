@@ -11,7 +11,7 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { User } from '@/hooks/api/useUsersApi';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Role } from '@/constants/roles';
-import { getProvider } from '@/utilities/helperFunctions';
+import { getProvider, makeDateOrUndefined } from '@/utilities/helperFunctions';
 
 const CustomMenuItem = (props: PropsWithChildren & { value: string }) => {
   const theme = useTheme();
@@ -227,9 +227,9 @@ const UsersTable = (props: IUsersTable) => {
         Email: user.Email,
         Status: user.Status,
         Agency: user.Agency?.Name,
-        'Last Login': user.LastLogin,
+        'Last Login': makeDateOrUndefined(user.LastLogin),
         Role: user.Role?.Name,
-        'Created On': user.CreatedOn,
+        'Created On': makeDateOrUndefined(user.CreatedOn),
         Position: user.Position,
       };
     });
