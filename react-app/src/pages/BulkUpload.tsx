@@ -53,7 +53,7 @@ const ResultsPaper = (props: {
           <Box display={'flex'} flexDirection={'column'} gap={'1rem'} height={'38rem'}>
             <Typography variant="h4">Recent upload result</Typography>
             <Typography>{`Filename: ${results.at(0).FileName}`}</Typography>
-            <Typography>{`Uploaded at: ${results.at(0).CreatedOn}`}</Typography>
+            <Typography>{`Uploaded at: ${new Date(results.at(0).CreatedOn).toLocaleString()}`}</Typography>
             <Button
               onClick={onDownloadClick}
               sx={{ width: '10rem' }}
