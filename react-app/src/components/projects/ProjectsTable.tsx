@@ -149,7 +149,7 @@ const ProjectsTable = () => {
           : lookup.getLookupValueById('Agencies', project.AgencyId)?.Name,
         Agency: lookup.getLookupValueById('Agencies', project.AgencyId)?.Name,
         'Created By': `${project.CreatedBy?.FirstName} ${project.CreatedBy?.LastName}`,
-        'Created On': new Date(project.CreatedOn),
+        'Created On': makeDateOrUndefined(project.CreatedOn),
         'Exemption Requested': project.Tasks?.find(
           (task) => task.TaskId === ProjectTask.EXEMPTION_REQUESTED,
         )?.IsCompleted,
