@@ -25,7 +25,10 @@ import {
 import { ProjectFilter } from '@/services/projects/projectSchema';
 import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
-import notificationServices, { AgencyResponseType } from '../notifications/notificationServices';
+import notificationServices, {
+  AgencyResponseType,
+  NotificationStatus,
+} from '../notifications/notificationServices';
 import {
   constructFindOptionFromQuery,
   constructFindOptionFromQuerySingleSelect,
@@ -411,6 +414,29 @@ const handleProjectNotifications = async (
       Id: projectId,
     },
   });
+
+  // If the project is cancelled, cancel pending notifications
+  if (projectWithRelations.CancelledOn) {
+    const pendingNotifications = await queryRunner.manager.find(NotificationQueue, {
+      where: [
+        {
+          ProjectId: projectWithRelations.Id,
+          Status: NotificationStatus.Accepted,
+        },
+        {
+          ProjectId: projectWithRelations.Id,
+          Status: NotificationStatus.Pending,
+        },
+      ],
+    });
+    await Promise.allSettled(
+      pendingNotifications.map(async (notification) => {
+        await notificationServices.cancelNotificationById(notification.Id, user);
+      }),
+    );
+    return [];
+  }
+
   const projectAgency = await queryRunner.manager.findOne(Agency, {
     where: { Id: projectWithRelations.AgencyId },
   });
@@ -436,12 +462,12 @@ const handleProjectNotifications = async (
       (record: ProjectStatusHistory) => record.StatusId === projectWithRelations.StatusId,
     );
     if (!statusPreviouslyVisited) {
-    const statusChangeNotifs = await notificationServices.generateProjectNotifications(
-      projectWithRelations,
-      previousStatus,
-      queryRunner,
-    );
-    notifsToSend.push(...statusChangeNotifs);
+      const statusChangeNotifs = await notificationServices.generateProjectNotifications(
+        projectWithRelations,
+        previousStatus,
+        queryRunner,
+      );
+      notifsToSend.push(...statusChangeNotifs);
     }
   }
 
