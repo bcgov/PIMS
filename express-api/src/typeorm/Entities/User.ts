@@ -76,7 +76,7 @@ export class User extends BaseEntity {
 
   @ManyToOne(() => Agency, (agency) => agency.Users, { nullable: true })
   @JoinColumn({ name: 'agency_id' })
-  Agency: Relation<Agency>;
+  Agency?: Relation<Agency>;
 
   // Role Relations
   @Column({ name: 'role_id', type: 'uuid', nullable: true })
@@ -84,7 +84,7 @@ export class User extends BaseEntity {
 
   @ManyToOne(() => Role, (role) => role.Users, { nullable: true })
   @JoinColumn({ name: 'role_id' })
-  Role: Relation<Role>;
+  Role?: Relation<Role>;
 
   @Column({ type: 'enum', enum: UserStatus })
   Status: UserStatus;

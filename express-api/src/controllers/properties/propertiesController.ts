@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Request, Response } from 'express';
 import propertyServices from '@/services/properties/propertiesServices';
 import {
@@ -131,7 +130,7 @@ export const importProperties = async (req: Request, res: Response) => {
   const filePath = req.file.path;
   const fileName = req.file.originalname;
   const user = req.pimsUser;
-  const role = user.Role?.Name;
+  delete user.hasOneOfRoles; // Because Node worker cannot pass functions.
   try {
     readFile(filePath, { WTF: true }); //With this read option disabled it will throw if unexpected data is present.
   } catch (e) {
@@ -151,7 +150,7 @@ export const importProperties = async (req: Request, res: Response) => {
   });
   const workerPath = `../../services/properties/propertyWorker.${process.env.NODE_ENV === 'production' ? 'js' : 'ts'}`;
   const worker = new Worker(path.resolve(__dirname, workerPath), {
-    workerData: { filePath, resultRowId: resultRow.Id, user, roles: role },
+    workerData: { filePath, resultRowId: resultRow.Id, user, roles: [user.RoleId] },
     execArgv: [
       '--require',
       'ts-node/register',
@@ -175,7 +174,7 @@ export const importProperties = async (req: Request, res: Response) => {
     logger.info(`Worker hit exit code ${code}`);
 
     fs.unlink(filePath, (err) => {
-      if (err) console.error('Failed to cleanup file from file upload.');
+      if (err) logger.error('Failed to cleanup file from file upload.');
     });
   });
   return res.status(200).send(resultRow);
