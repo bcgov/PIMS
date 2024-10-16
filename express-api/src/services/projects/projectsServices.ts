@@ -426,13 +426,23 @@ const handleProjectNotifications = async (
 
   const notifsToSend: Array<NotificationQueue> = [];
 
+  // If the status has been changed
   if (previousStatus !== projectWithRelations.StatusId) {
+    // Has the project previously been to this status? If so, don't re-queue notifications.
+    const previousStatuses = await queryRunner.manager.find(ProjectStatusHistory, {
+      where: { ProjectId: projectWithRelations.Id },
+    });
+    const statusPreviouslyVisited = previousStatuses.some(
+      (record: ProjectStatusHistory) => record.StatusId === projectWithRelations.StatusId,
+    );
+    if (!statusPreviouslyVisited) {
     const statusChangeNotifs = await notificationServices.generateProjectNotifications(
       projectWithRelations,
       previousStatus,
       queryRunner,
     );
     notifsToSend.push(...statusChangeNotifs);
+    }
   }
 
   if (projectAgencyResponses.length) {
