@@ -4,8 +4,9 @@ import { loginIDIR } from "../functions/login";
 
 test('user can view all parts of map', async ({ page }) => {
   await page.goto(BASE_URL);
-  await loginIDIR({ page });
+  await loginIDIR(page);
   // Leaflet map is visible
+  await page.waitForLoadState();
   await expect(page.locator('#parcel-map')).toBeVisible();
   // Controls on map are visible
   await expect(page.getByRole('link', { name: 'Draw a polygon' })).toBeVisible();
@@ -16,8 +17,9 @@ test('user can view all parts of map', async ({ page }) => {
 
 test('sidebar controls work as expected (not filter)', async ({ page }) => {
   await page.goto(BASE_URL);
-  await loginIDIR({ page });
+  await loginIDIR(page);
   // Leaflet map is visible
+  await page.waitForLoadState();
   await expect(page.locator('#parcel-map')).toBeVisible();
   // Sidebar is visible
   await expect(page.locator('#map-sidebar')).toBeVisible();
@@ -28,12 +30,15 @@ test('sidebar controls work as expected (not filter)', async ({ page }) => {
   await expect(page.locator('#sidebar-count')).toContainText('1 of');
   // Up
   await page.locator('#sidebar-increment').click();
+  await page.waitForLoadState('networkidle');
   await expect(page.locator('#sidebar-count')).toContainText('2 of');
   // Down
   await page.locator('#sidebar-decrement').click();
+  await page.waitForLoadState('networkidle');
   await expect(page.locator('#sidebar-count')).toContainText('1 of');
   // Down again
   await page.locator('#sidebar-decrement').click();
+  await page.waitForLoadState('networkidle');
   await expect(page.locator('#sidebar-count')).toContainText('1 of');
 
   // Can hide and unhide sidebar
@@ -52,8 +57,9 @@ test('user can filter map properties', async ({ page }) => {
   }
 
   await page.goto(BASE_URL);
-  await loginIDIR({ page });
+  await loginIDIR(page);
   // Leaflet map is visible
+  await page.waitForLoadState();
   await expect(page.locator('#parcel-map')).toBeVisible();
   // Sidebar has properties (also ensures that properties were loaded first)
   await expect(page.locator('.property-row').first()).toBeVisible();
@@ -72,7 +78,7 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
-    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
+    page.waitForTimeout(1000) // Otherwise counter doesn't update in time
   ]);
   const afterAgencies = await getPropertyCount();
   expect(afterAgencies).toBeLessThan(startingNumber);
@@ -82,8 +88,9 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
-    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
-  ]);  const afterPropertyTypes = await getPropertyCount();
+    page.waitForTimeout(1000) // Otherwise counter doesn't update in time
+  ]);  
+  const afterPropertyTypes = await getPropertyCount();
   expect(afterPropertyTypes).toBeLessThan(afterAgencies);
 
   await page.locator('div').filter({ hasText: /^Regional Districts$/ }).getByLabel('Open').click();
@@ -92,7 +99,7 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
-    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
+    page.waitForTimeout(1000) // Otherwise counter doesn't update in time
   ]);  const afterRegionalDistricts = await getPropertyCount();
   expect(afterRegionalDistricts).toBeLessThan(afterPropertyTypes);
 
@@ -102,7 +109,7 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
-    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
+    page.waitForTimeout(1000) // Otherwise counter doesn't update in time
   ]);  const afterAdminAreas = await getPropertyCount();
   expect(afterAdminAreas).toBeLessThan(afterRegionalDistricts);
 
@@ -111,7 +118,7 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
-    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
+    page.waitForTimeout(1000) // Otherwise counter doesn't update in time
   ]);  const afterClassifications = await getPropertyCount();
   expect(afterClassifications).toBeLessThan(afterAdminAreas);
 
@@ -119,7 +126,7 @@ test('user can filter map properties', async ({ page }) => {
   await Promise.all([
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Clear' }).click(),
-    new Promise(resolve => setTimeout(resolve, 1000)) // Otherwise snackbar doesn't open in time
+    page.waitForTimeout(1000) // Otherwise counter doesn't update in time
   ]);  
   const afterClear = await getPropertyCount();
   expect(afterClear).toEqual(startingNumber);
