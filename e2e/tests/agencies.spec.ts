@@ -12,7 +12,7 @@ const getToAgencies = async (page: Page) => {
   await page.goto(BASE_URL);
   await mockSelf(page, { RoleId: "00000000-0000-0000-0000-000000000000" }); // guarantee admin status
   await loginIDIR(page);
-
+  await page.getByRole('heading', { name: 'Administration' }).waitFor();
   await page.getByRole('heading', { name: 'Administration' }).click();
   await page.getByRole('menuitem', { name: 'Agencies' }).click();
   await page.getByText('Agencies Overview');

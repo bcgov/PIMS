@@ -134,7 +134,7 @@ test('user can filter map properties', async ({ page }) => {
 
   // Check visibility of filter when opening and closing sidebar
   await page.locator('#sidebar-button-close').click();
-  await page.locator('#map-filter-container').waitFor();
+  await page.waitForTimeout(500);
   await expect(page.locator('#map-filter-container')).not.toBeInViewport();
   // Return sidebar/filter
   await page.locator('#sidebar-button').getByRole('img').click();
@@ -142,6 +142,6 @@ test('user can filter map properties', async ({ page }) => {
   // Close filter
   await page.locator('#map-sidebar').getByRole('button').first().waitFor();
   await page.locator('#map-sidebar').getByRole('button').first().click();
-  await page.locator('#map-filter-container').waitFor();
+  await page.waitForTimeout(500);
   await expect(page.locator('#map-filter-container')).not.toBeInViewport();
 })
