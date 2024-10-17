@@ -44,7 +44,7 @@
     "zod": "3.23.3"
   },
   "devDependencies": {
-    "@eslint/js": "9.10.0",
+    "@eslint/js": "9.11.1",
     "@faker-js/faker": "9.0.1",
     "@types/compression": "1.7.4",
     "@types/cookie-parser": "1.4.5",
@@ -53,7 +53,7 @@
     "@types/jest": "29.5.10",
     "@types/morgan": "1.9.9",
     "@types/multer": "1.4.11",
-    "@types/node": "22.6.1",
+    "@types/node": "22.7.4",
     "@types/nunjucks": "3.2.6",
     "@types/supertest": "6.0.2",
     "@types/swagger-jsdoc": "6.0.4",

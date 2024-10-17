@@ -14,6 +14,7 @@ import { ProjectTask } from '@/constants/projectTasks';
 import { NotificationType } from '@/constants/notificationTypes';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import { LookupContext } from '@/contexts/lookupContext';
+import { makeDateOrUndefined } from '@/utilities/helperFunctions';
 
 const ProjectsTable = () => {
   const [totalCount, setTotalCount] = useState(0);
@@ -148,7 +149,7 @@ const ProjectsTable = () => {
           : lookup.getLookupValueById('Agencies', project.AgencyId)?.Name,
         Agency: lookup.getLookupValueById('Agencies', project.AgencyId)?.Name,
         'Created By': `${project.CreatedBy?.FirstName} ${project.CreatedBy?.LastName}`,
-        'Created On': project.CreatedOn,
+        'Created On': makeDateOrUndefined(project.CreatedOn),
         'Exemption Requested': project.Tasks?.find(
           (task) => task.TaskId === ProjectTask.EXEMPTION_REQUESTED,
         )?.IsCompleted,
@@ -186,32 +187,48 @@ const ProjectsTable = () => {
         AgencyResponseNote: project.Notes?.find(
           (note) => note.NoteTypeId === NoteTypes.AGENCY_INTEREST,
         )?.Note,
-        'Submitted On': project.SubmittedOn,
-        'Approved On': project.ApprovedOn,
-        'ERP Initial Notification Sent On': project.Notifications.find(
-          (n) => n.TemplateId === NotificationType.NEW_PROPERTIES_ON_ERP,
-        )?.SendOn,
-        'ERP Thirty Day Notification Sent On': project.Notifications.find(
-          (n) => n.TemplateId === NotificationType.THIRTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
-        )?.SendOn,
-        'ERP Sixty Day Notification Sent On': project.Notifications.find(
-          (n) => n.TemplateId === NotificationType.SIXTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
-        )?.SendOn,
-        'ERP Ninety Day Notification Sent On': project.Notifications.find(
-          (n) => n.TemplateId === NotificationType.NINTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
-        )?.SendOn,
-        'Transferred Within GRE On': project.Timestamps.find(
-          (timestamp) => timestamp.TimestampTypeId === TimestampType.TRANSFERRED_WITHIN_GRE_ON,
-        )?.Date,
-        'ERP Clearance Notification Sent On': project.Timestamps.find(
-          (timestamp) => timestamp.TimestampTypeId === TimestampType.CLEARANCE_NOTIFICATION_SENT_ON,
-        )?.Date,
-        'Disposed On': project.Timestamps.find(
-          (timestamp) => timestamp.TimestampTypeId === TimestampType.DISPOSED_ON,
-        )?.Date,
-        'Marketed On': project.Timestamps.find(
-          (timestamp) => timestamp.TimestampTypeId === TimestampType.MARKETED_ON,
-        )?.Date,
+        'Submitted On': makeDateOrUndefined(project.SubmittedOn),
+        'Approved On': makeDateOrUndefined(project.ApprovedOn),
+        'ERP Initial Notification Sent On': makeDateOrUndefined(
+          project.Notifications.find((n) => n.TemplateId === NotificationType.NEW_PROPERTIES_ON_ERP)
+            ?.SendOn,
+        ),
+        'ERP Thirty Day Notification Sent On': makeDateOrUndefined(
+          project.Notifications.find(
+            (n) => n.TemplateId === NotificationType.THIRTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
+          )?.SendOn,
+        ),
+        'ERP Sixty Day Notification Sent On': makeDateOrUndefined(
+          project.Notifications.find(
+            (n) => n.TemplateId === NotificationType.SIXTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
+          )?.SendOn,
+        ),
+        'ERP Ninety Day Notification Sent On': makeDateOrUndefined(
+          project.Notifications.find(
+            (n) => n.TemplateId === NotificationType.NINTY_DAY_ERP_NOTIFICATION_PARENT_AGENCIES,
+          )?.SendOn,
+        ),
+        'Transferred Within GRE On': makeDateOrUndefined(
+          project.Timestamps.find(
+            (timestamp) => timestamp.TimestampTypeId === TimestampType.TRANSFERRED_WITHIN_GRE_ON,
+          )?.Date,
+        ),
+        'ERP Clearance Notification Sent On': makeDateOrUndefined(
+          project.Timestamps.find(
+            (timestamp) =>
+              timestamp.TimestampTypeId === TimestampType.CLEARANCE_NOTIFICATION_SENT_ON,
+          )?.Date,
+        ),
+        'Disposed On': makeDateOrUndefined(
+          project.Timestamps.find(
+            (timestamp) => timestamp.TimestampTypeId === TimestampType.DISPOSED_ON,
+          )?.Date,
+        ),
+        'Marketed On': makeDateOrUndefined(
+          project.Timestamps.find(
+            (timestamp) => timestamp.TimestampTypeId === TimestampType.MARKETED_ON,
+          )?.Date,
+        ),
         'Offers Note': project.Notes?.find((note) => note.NoteTypeId === NoteTypes.OFFER)?.Note,
         Purchaser: project.Notes?.find((note) => note.NoteTypeId === NoteTypes.PURCHASER)?.Note,
       };

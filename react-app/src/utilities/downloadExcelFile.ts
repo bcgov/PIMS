@@ -1,5 +1,5 @@
 import { GridRowId, GridValidRowModel } from '@mui/x-data-grid';
-import xlsx from 'node-xlsx';
+import sheetjs from 'xlsx';
 
 /**
  * @interface
@@ -25,30 +25,18 @@ export const downloadExcelFile = (props: IExcelDownloadProps) => {
   if (data.length > 0) {
     // Extract column headers
     const columnHeaders = Object.keys(data.at(0).model);
-    // Build xlsx file as bit array buffer
-    const bitArray = xlsx.build([
-      {
-        name: tableName,
-        data: [columnHeaders, ...data.map((row) => Object.values(row.model))],
-        options: {}, // Required even if empty
-      },
-    ]);
-    // Combine into one string of data
-    const binaryString = bitArray.reduce((acc, cur) => (acc += String.fromCharCode(cur)), '');
-    // Convert data into file
-    const file = window.btoa(binaryString);
-    const url = `data:application/xlsx;base64,${file}`;
     // Create file name
-    const fileName = `${includeDate ? new Date().toISOString().substring(0, 10) : ''}_${tableName}${
+    const fileName = `${includeDate ? new Date().toLocaleDateString('iso') : ''}_${tableName}${
       '-' + filterName || ''
-    }`;
-    // Download file
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${fileName}.xlsx`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+    }.xlsx`;
+    // Build xlsx file
+    const worksheet = sheetjs.utils.aoa_to_sheet(
+      [columnHeaders, ...data.map((row) => Object.values(row.model))],
+      { cellDates: true },
+    );
+    const workbook = sheetjs.utils.book_new();
+    sheetjs.utils.book_append_sheet(workbook, worksheet, tableName);
+    // Download the file
+    sheetjs.writeFile(workbook, fileName);
   }
 };
