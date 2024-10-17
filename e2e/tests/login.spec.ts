@@ -12,6 +12,7 @@ test('log in with BC Services Card', async ({ page }) => {
 
 test('log in with BCeID', async ({ page }) => {
   await loginBCeID(page);
+  await page.getByRole('button', { name: 'Logout' }).waitFor();
   await expect(page.getByRole('button', { name: 'Logout' })).toBeVisible();
 });
 

@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import { BASE_URL } from "../env";
 import { loginIDIR } from "../functions/login";
 
@@ -51,7 +51,8 @@ test('sidebar controls work as expected (not filter)', async ({ page }) => {
 })
 
 test('user can filter map properties', async ({ page }) => {
-  const getPropertyCount = async () => {
+  const getPropertyCount = async (page: Page) => {
+    await page.locator('#sidebar-count').waitFor();
     const sidebarCount = await page.locator('#sidebar-count').textContent();
     return parseInt(sidebarCount?.match(/\((.+)\)/)?.at(1)?.split(' ').at(0)?.replaceAll(',', '')!)
   }
@@ -64,7 +65,7 @@ test('user can filter map properties', async ({ page }) => {
   // Sidebar has properties (also ensures that properties were loaded first)
   await expect(page.locator('.property-row').first()).toBeVisible();
   // Get starting number of properties
-  const startingNumber = await getPropertyCount()
+  const startingNumber = await getPropertyCount(page)
 
   // Open filter
   await page.locator('#map-filter-open').click();
@@ -80,7 +81,7 @@ test('user can filter map properties', async ({ page }) => {
     page.getByRole('button', { name: 'Filter' }).click(),
     page.waitForTimeout(1000) // Otherwise counter doesn't update in time
   ]);
-  const afterAgencies = await getPropertyCount();
+  const afterAgencies = await getPropertyCount(page);
   expect(afterAgencies).toBeLessThan(startingNumber);
 
   await page.locator('div').filter({ hasText: /^Property Types$/ }).getByLabel('Open').click();
@@ -89,8 +90,8 @@ test('user can filter map properties', async ({ page }) => {
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
     page.waitForTimeout(1000) // Otherwise counter doesn't update in time
-  ]);  
-  const afterPropertyTypes = await getPropertyCount();
+  ]);
+  const afterPropertyTypes = await getPropertyCount(page);
   expect(afterPropertyTypes).toBeLessThan(afterAgencies);
 
   await page.locator('div').filter({ hasText: /^Regional Districts$/ }).getByLabel('Open').click();
@@ -100,7 +101,7 @@ test('user can filter map properties', async ({ page }) => {
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
     page.waitForTimeout(1000) // Otherwise counter doesn't update in time
-  ]);  const afterRegionalDistricts = await getPropertyCount();
+  ]); const afterRegionalDistricts = await getPropertyCount(page);
   expect(afterRegionalDistricts).toBeLessThan(afterPropertyTypes);
 
   await page.locator('div').filter({ hasText: /^Administrative Areas$/ }).getByLabel('Open').click();
@@ -110,7 +111,7 @@ test('user can filter map properties', async ({ page }) => {
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
     page.waitForTimeout(1000) // Otherwise counter doesn't update in time
-  ]);  const afterAdminAreas = await getPropertyCount();
+  ]); const afterAdminAreas = await getPropertyCount(page);
   expect(afterAdminAreas).toBeLessThan(afterRegionalDistricts);
 
   await page.getByLabel('Classifications').click();
@@ -119,7 +120,7 @@ test('user can filter map properties', async ({ page }) => {
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Filter' }).click(),
     page.waitForTimeout(1000) // Otherwise counter doesn't update in time
-  ]);  const afterClassifications = await getPropertyCount();
+  ]); const afterClassifications = await getPropertyCount(page);
   expect(afterClassifications).toBeLessThan(afterAdminAreas);
 
   // Clear and get back original number
@@ -127,17 +128,20 @@ test('user can filter map properties', async ({ page }) => {
     page.waitForResponse(resp => resp.url().includes('/search/geo')),
     page.getByRole('button', { name: 'Clear' }).click(),
     page.waitForTimeout(1000) // Otherwise counter doesn't update in time
-  ]);  
-  const afterClear = await getPropertyCount();
+  ]);
+  const afterClear = await getPropertyCount(page);
   expect(afterClear).toEqual(startingNumber);
 
   // Check visibility of filter when opening and closing sidebar
   await page.locator('#sidebar-button-close').click();
+  await page.locator('#map-filter-container').waitFor();
   await expect(page.locator('#map-filter-container')).not.toBeInViewport();
   // Return sidebar/filter
   await page.locator('#sidebar-button').getByRole('img').click();
   await expect(page.locator('#map-filter-container')).toBeInViewport();
   // Close filter
+  await page.locator('#map-sidebar').getByRole('button').first().waitFor();
   await page.locator('#map-sidebar').getByRole('button').first().click();
+  await page.locator('#map-filter-container').waitFor();
   await expect(page.locator('#map-filter-container')).not.toBeInViewport();
 })
