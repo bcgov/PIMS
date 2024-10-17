@@ -2,6 +2,7 @@ import { AppDataSource } from '@/appDataSource';
 import { ProjectStatus } from '@/constants/projectStatus';
 import { ProjectType } from '@/constants/projectType';
 import { Roles } from '@/constants/roles';
+import { NotificationStatus } from '@/services/notifications/notificationServices';
 import projectServices from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
 import { Agency } from '@/typeorm/Entities/Agency';
@@ -244,8 +245,9 @@ jest
   .mockImplementation(() => projectJoinQueryBuilder);
 
 const _generateProjectWatchNotifications = jest.fn(async () => [produceNotificationQueue()]);
+const _generateProjectNotifications = jest.fn(async () => [produceNotificationQueue()]);
 jest.mock('@/services/notifications/notificationServices', () => ({
-  generateProjectNotifications: jest.fn(async () => [produceNotificationQueue()]),
+  generateProjectNotifications: async () => _generateProjectNotifications(),
   sendNotification: jest.fn(async () => produceNotificationQueue()),
   generateProjectWatchNotifications: async () => _generateProjectWatchNotifications(),
   NotificationStatus: { Accepted: 0, Pending: 1, Cancelled: 2, Failed: 3, Completed: 4 },
@@ -616,70 +618,96 @@ describe('UNIT - Project Services', () => {
       );
       expect(_generateProjectWatchNotifications).toHaveBeenCalled();
     });
+  });
 
-    describe('getProjects', () => {
-      beforeEach(() => {
-        jest.clearAllMocks();
+  describe('handleProjectNotifications', () => {
+    it('should not send notifications when status becomes Cancelled', async () => {
+      const project = produceProject({
+        AgencyResponses: [produceAgencyResponse()],
+        StatusId: ProjectStatus.CANCELLED,
+        CancelledOn: new Date(),
       });
-      it('should return projects based on filter conditions', async () => {
-        const filter = {
-          statusId: 1,
-          agencyId: [3],
-          quantity: 10,
-          page: 1,
-          market: '$12',
-          netBook: '$12',
-          agency: 'contains,aaa',
-          status: 'contains,aaa',
-          projectNumber: 'contains,aaa',
-          name: 'contains,Project',
-          updatedOn: 'before,' + new Date(),
-          updatedBy: 'Jane',
-          sortOrder: 'asc',
-          sortKey: 'Status',
-          quickFilter: 'hi',
-        };
-
-        // Call the service function
-        const projectsResponse = await projectServices.getProjects(filter); // Pass the mocked projectRepo
-        // Returned project should be the one based on the agency and status id in the filter
-        expect(projectsResponse.totalCount).toEqual(1);
-        expect(projectsResponse.data.length).toEqual(1);
-      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const queryRunner: any = {
+        manager: {
+          findOne: async () => project,
+          find: () => [produceNotificationQueue({ Status: NotificationStatus.Pending })],
+        },
+      };
+      await projectServices.handleProjectNotifications(
+        project.Id,
+        ProjectStatus.ON_HOLD,
+        [produceAgencyResponse()],
+        producePimsRequestUser(),
+        queryRunner,
+      );
+      expect(_generateProjectWatchNotifications).not.toHaveBeenCalled();
+      expect(_generateProjectNotifications).not.toHaveBeenCalled();
     });
+  });
 
-    describe('getProjectsForExport', () => {
-      beforeEach(() => {
-        jest.clearAllMocks();
+  describe('getProjects', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should return projects based on filter conditions', async () => {
+      const filter = {
+        statusId: 1,
+        agencyId: [3],
+        quantity: 10,
+        page: 1,
+        market: '$12',
+        netBook: '$12',
+        agency: 'contains,aaa',
+        status: 'contains,aaa',
+        projectNumber: 'contains,aaa',
+        name: 'contains,Project',
+        updatedOn: 'before,' + new Date(),
+        updatedBy: 'Jane',
+        sortOrder: 'asc',
+        sortKey: 'Status',
+        quickFilter: 'hi',
+      };
+
+      // Call the service function
+      const projectsResponse = await projectServices.getProjects(filter); // Pass the mocked projectRepo
+      // Returned project should be the one based on the agency and status id in the filter
+      expect(projectsResponse.totalCount).toEqual(1);
+      expect(projectsResponse.data.length).toEqual(1);
+    });
+  });
+
+  describe('getProjectsForExport', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should return projects based on filter conditions', async () => {
+      const filter = {
+        statusId: 1,
+        agencyId: [3],
+        quantity: 10,
+        page: 0,
+      };
+
+      _projectFind.mockImplementationOnce(async () => {
+        const mockProjects: Project[] = [
+          produceProject({ Id: 1, Name: 'Project 1', StatusId: 1, AgencyId: 3 }),
+          produceProject({ Id: 2, Name: 'Project 2', StatusId: 4, AgencyId: 14 }),
+        ];
+        // Check if the project matches the filter conditions
+        return mockProjects.filter(
+          (project) =>
+            filter.statusId === project.StatusId && filter.agencyId.includes(project.AgencyId),
+        );
       });
-      it('should return projects based on filter conditions', async () => {
-        const filter = {
-          statusId: 1,
-          agencyId: [3],
-          quantity: 10,
-          page: 0,
-        };
 
-        _projectFind.mockImplementationOnce(async () => {
-          const mockProjects: Project[] = [
-            produceProject({ Id: 1, Name: 'Project 1', StatusId: 1, AgencyId: 3 }),
-            produceProject({ Id: 2, Name: 'Project 2', StatusId: 4, AgencyId: 14 }),
-          ];
-          // Check if the project matches the filter conditions
-          return mockProjects.filter(
-            (project) =>
-              filter.statusId === project.StatusId && filter.agencyId.includes(project.AgencyId),
-          );
-        });
+      // Call the service function
+      const projects = await projectServices.getProjectsForExport(filter); // Pass the mocked projectRepo
 
-        // Call the service function
-        const projects = await projectServices.getProjectsForExport(filter); // Pass the mocked projectRepo
-
-        // Assertions
-        expect(_projectFind).toHaveBeenCalled();
-        // Returned project should be the one based on the agency and status id in the filter
-        expect(projects.length).toEqual(1);
-      });
+      // Assertions
+      expect(_projectFind).toHaveBeenCalled();
+      // Returned project should be the one based on the agency and status id in the filter
+      expect(projects.length).toEqual(1);
     });
   });
 });

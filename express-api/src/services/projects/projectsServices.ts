@@ -416,7 +416,7 @@ const handleProjectNotifications = async (
   });
 
   // If the project is cancelled, cancel pending notifications
-  if (projectWithRelations.CancelledOn) {
+  if (projectWithRelations.StatusId === ProjectStatus.CANCELLED) {
     const pendingNotifications = await queryRunner.manager.find(NotificationQueue, {
       where: [
         {
@@ -1084,6 +1084,7 @@ const projectServices = {
   updateProject,
   getProjects,
   getProjectsForExport,
+  handleProjectNotifications,
 };
 
 export default projectServices;
