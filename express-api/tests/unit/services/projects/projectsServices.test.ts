@@ -246,11 +246,13 @@ jest
 
 const _generateProjectWatchNotifications = jest.fn(async () => [produceNotificationQueue()]);
 const _generateProjectNotifications = jest.fn(async () => [produceNotificationQueue()]);
+const _cancelNotificationById = jest.fn(async () => produceNotificationQueue());
 jest.mock('@/services/notifications/notificationServices', () => ({
   generateProjectNotifications: async () => _generateProjectNotifications(),
   sendNotification: jest.fn(async () => produceNotificationQueue()),
   generateProjectWatchNotifications: async () => _generateProjectWatchNotifications(),
   NotificationStatus: { Accepted: 0, Pending: 1, Cancelled: 2, Failed: 3, Completed: 4 },
+  cancelNotificationById: async () => _cancelNotificationById,
 }));
 
 describe('UNIT - Project Services', () => {
@@ -634,7 +636,7 @@ describe('UNIT - Project Services', () => {
           find: () => [produceNotificationQueue({ Status: NotificationStatus.Pending })],
         },
       };
-      await projectServices.handleProjectNotifications(
+      const result = await projectServices.handleProjectNotifications(
         project.Id,
         ProjectStatus.ON_HOLD,
         [produceAgencyResponse()],
@@ -642,7 +644,8 @@ describe('UNIT - Project Services', () => {
         queryRunner,
       );
       expect(_generateProjectWatchNotifications).not.toHaveBeenCalled();
-      expect(_generateProjectNotifications).not.toHaveBeenCalled();
+      expect(_generateProjectNotifications).toHaveBeenCalled();
+      expect(result).toHaveLength(1);
     });
   });
 

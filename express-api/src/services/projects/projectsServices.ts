@@ -417,28 +417,6 @@ const handleProjectNotifications = async (
     },
   });
 
-  // If the project is cancelled, cancel pending notifications
-  if (projectWithRelations.StatusId === ProjectStatus.CANCELLED) {
-    const pendingNotifications = await queryRunner.manager.find(NotificationQueue, {
-      where: [
-        {
-          ProjectId: projectWithRelations.Id,
-          Status: NotificationStatus.Accepted,
-        },
-        {
-          ProjectId: projectWithRelations.Id,
-          Status: NotificationStatus.Pending,
-        },
-      ],
-    });
-    await Promise.allSettled(
-      pendingNotifications.map(async (notification) => {
-        await notificationServices.cancelNotificationById(notification.Id, user);
-      }),
-    );
-    return [];
-  }
-
   const projectAgency = await queryRunner.manager.findOne(Agency, {
     where: { Id: projectWithRelations.AgencyId },
   });
@@ -453,33 +431,65 @@ const handleProjectNotifications = async (
   projectWithRelations.Notes = projectNotes;
 
   const notifsToSend: Array<NotificationQueue> = [];
+  const queueNotifications = async () => {
+    // If the status has been changed
+    if (previousStatus !== projectWithRelations.StatusId) {
+      // Has the project previously been to this status? If so, don't re-queue notifications.
+      const previousStatuses = await queryRunner.manager.find(ProjectStatusHistory, {
+        where: { ProjectId: projectWithRelations.Id },
+      });
+      const statusPreviouslyVisited = previousStatuses.some(
+        (record: ProjectStatusHistory) => record.StatusId === projectWithRelations.StatusId,
+      );
+      if (!statusPreviouslyVisited) {
+        const statusChangeNotifs = await notificationServices.generateProjectNotifications(
+          projectWithRelations,
+          previousStatus,
+          queryRunner,
+        );
+        return statusChangeNotifs;
+      }
+    }
+    return [];
+  };
 
-  // If the status has been changed
-  if (previousStatus !== projectWithRelations.StatusId) {
-    // Has the project previously been to this status? If so, don't re-queue notifications.
-    const previousStatuses = await queryRunner.manager.find(ProjectStatusHistory, {
-      where: { ProjectId: projectWithRelations.Id },
-    });
-    const statusPreviouslyVisited = previousStatuses.some(
-      (record: ProjectStatusHistory) => record.StatusId === projectWithRelations.StatusId,
-    );
-    if (!statusPreviouslyVisited) {
-      const statusChangeNotifs = await notificationServices.generateProjectNotifications(
+  const queueWatchNotifications = async () => {
+    if (projectAgencyResponses.length) {
+      const agencyResponseNotifs = await notificationServices.generateProjectWatchNotifications(
         projectWithRelations,
-        previousStatus,
+        responses,
         queryRunner,
       );
-      notifsToSend.push(...statusChangeNotifs);
+      return agencyResponseNotifs;
     }
-  }
+    return [];
+  };
 
-  if (projectAgencyResponses.length) {
-    const agencyResponseNotifs = await notificationServices.generateProjectWatchNotifications(
-      projectWithRelations,
-      responses,
-      queryRunner,
+  // If the project is cancelled, cancel pending notifications
+  if (projectWithRelations.StatusId === ProjectStatus.CANCELLED) {
+    const pendingNotifications = await queryRunner.manager.find(NotificationQueue, {
+      where: [
+        {
+          ProjectId: projectWithRelations.Id,
+          Status: NotificationStatus.Accepted,
+        },
+        {
+          ProjectId: projectWithRelations.Id,
+          Status: NotificationStatus.Pending,
+        },
+      ],
+    });
+
+    await Promise.all(
+      pendingNotifications.map((notification) => {
+        notificationServices.cancelNotificationById(notification.Id, user);
+      }),
     );
-    notifsToSend.push(...agencyResponseNotifs);
+    // Queue cancellation notifications
+    notifsToSend.push(...(await queueNotifications()));
+  } else {
+    notifsToSend.push(...(await queueNotifications()));
+    notifsToSend.push(...(await queueWatchNotifications()));
   }
 
   return Promise.all(
@@ -817,8 +827,10 @@ const updateProject = async (
     const returnProject = await projectRepo.findOne({ where: { Id: originalProject.Id } });
     return returnProject;
   } catch (e) {
-    await queryRunner.rollbackTransaction();
     logger.warn(e.message);
+    if (queryRunner.isTransactionActive) {
+      await queryRunner.rollbackTransaction();
+    }
     if (e instanceof ErrorWithCode) throw e;
     throw new ErrorWithCode(`Error updating project: ${e.message}`, 500);
   } finally {
