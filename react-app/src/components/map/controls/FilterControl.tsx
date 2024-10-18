@@ -58,6 +58,8 @@ const FilterControl = (props: FilterControlProps) => {
     <Box
       sx={{
         padding: '1em',
+        overflowY: 'scroll',
+        scrollbarWidth: 'none',
       }}
     >
       <FormProvider {...formMethods}>
