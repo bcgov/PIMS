@@ -37,3 +37,22 @@ export enum ProjectStatus {
  * Adding new statuses to this list will reveal them to outside agencies.
  */
 export const exposedProjectStatuses = [ProjectStatus.APPROVED_FOR_ERP];
+
+/**
+ * A list of statuses that are active/non-final projects.
+ * For example, a project in pre-marketing is ongoing,
+ * but a project with status Cancelled would not be.
+ */
+export const activeProjectStatuses = [
+  ProjectStatus.SUBMITTED,
+  ProjectStatus.SUBMITTED_EXEMPTION,
+  ProjectStatus.APPROVED_FOR_ERP,
+  ProjectStatus.APPROVED_FOR_EXEMPTION,
+  ProjectStatus.APPROVED_FOR_SPL,
+  ProjectStatus.NOT_IN_SPL,
+  ProjectStatus.ON_HOLD,
+  ProjectStatus.PRE_MARKETING,
+  ProjectStatus.ON_MARKET,
+  ProjectStatus.CONTRACT_IN_PLACE,
+  ProjectStatus.CLOSE_OUT,
+];
