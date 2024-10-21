@@ -3,6 +3,7 @@ import constants from '@/constants';
 
 const { timestamp, combine, json, prettyPrint } = format;
 const { TESTING } = constants;
+const { CONTAINERIZED } = process.env;
 
 /**
  * Creates a logger object that can be called to generate log messages.
@@ -19,9 +20,8 @@ const logger = createLogger({
     timestamp({
       format: 'YYYY-MM-DD hh:mm:ss.SSS A',
     }),
-    json(),
+    CONTAINERIZED ? json() : prettyPrint(),
     format.errors({ stack: true }),
-    prettyPrint(),
   ),
   transports: [new transports.Console()],
   silent: TESTING,
