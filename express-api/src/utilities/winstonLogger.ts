@@ -1,7 +1,7 @@
 import { format, createLogger, transports } from 'winston';
 import constants from '@/constants';
 
-const { timestamp, combine, json } = format;
+const { timestamp, combine, json, prettyPrint } = format;
 const { TESTING } = constants;
 
 /**
@@ -20,6 +20,8 @@ const logger = createLogger({
       format: 'YYYY-MM-DD hh:mm:ss.SSS A',
     }),
     json(),
+    format.errors({ stack: true }),
+    prettyPrint(),
   ),
   transports: [new transports.Console()],
   silent: TESTING,
