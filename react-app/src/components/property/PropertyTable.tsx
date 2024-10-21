@@ -254,7 +254,7 @@ const PropertyTable = (props: IPropertyTable) => {
     }
   };
 
-  const excelDataMap = (data: (Parcel | Building)[]) => {
+  const excelDataMap = (data: ((Parcel | Building) & { ProjectNumber: string })[]) => {
     return data.map((property) => {
       return {
         Type: propertyTypeMapper(property.PropertyTypeId),
@@ -329,6 +329,9 @@ const PropertyTable = (props: IPropertyTable) => {
           property.PropertyTypeId === PropertyTypes.BUILDING
             ? (property as Building).BuildingTenancy
             : '',
+        Latitude: property.Location.y, // This seems backwards, but it's how the database stores it.
+        Longitude: property.Location.x,
+        'Active Project Number': property.ProjectNumber,
       };
     });
   };

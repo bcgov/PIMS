@@ -17,6 +17,7 @@
                     {% if property.PropertyType == PropertyTypes.Land %}
                         <span>
                             Site Address: {{ property.Address1 }}<br>
+                            Site Location: {{ property.AdministrativeArea.Name }}<br>
                             Site Description: {{ property.Name }}<br>
                             Site Size: {{ property.LandArea }} ha<br>
                             Zoned: {{ property.Zoning }}<br>
@@ -31,6 +32,7 @@
                     {% else %}
                         <span>
                             Site Address: {{ property.Address1 }}<br>
+                            Site Location: {{ property.AdministrativeArea.Name }}<br>
                             Site Description: {{ property.Name }}<br>
                             Rentable Area: {{ property.RentableArea }} Sq. M<br>
                             Building Floors: {{ property.BuildingFloorCount }} <br>
