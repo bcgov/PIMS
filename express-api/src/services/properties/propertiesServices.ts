@@ -32,7 +32,11 @@ import {
 import userServices from '../users/usersServices';
 import { Brackets, FindOptionsWhere, ILike, In, QueryRunner } from 'typeorm';
 import { PropertyType } from '@/constants/propertyType';
-import { exposedProjectStatuses, ProjectStatus } from '@/constants/projectStatus';
+import {
+  activeProjectStatuses,
+  exposedProjectStatuses,
+  ProjectStatus,
+} from '@/constants/projectStatus';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { ProjectStatus as ProjectStatusEntity } from '@/typeorm/Entities/ProjectStatus';
 import { parentPort } from 'worker_threads';
@@ -999,6 +1003,13 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   ongoingFinds.push(
     AppDataSource.getRepository(BuildingFiscal).find({ order: { FiscalYear: 'DESC' } }),
   );
+  ongoingFinds.push(
+    AppDataSource.getRepository(ProjectProperty).find({
+      order: { CreatedOn: 'DESC' },
+      relations: { Project: true },
+      where: { Project: { StatusId: In(activeProjectStatuses) } },
+    }),
+  );
 
   // Wait for all database requests to resolve, then build the parcels and buildings lists
   // Use IDs from filtered properties above to filter lists
@@ -1007,6 +1018,7 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   const parcelFiscals = resolvedFinds.at(3) as ParcelFiscal[];
   const buildingEvaluations = resolvedFinds.at(4) as BuildingEvaluation[];
   const buildingFiscals = resolvedFinds.at(5) as BuildingFiscal[];
+  const projectProperties = resolvedFinds.at(6) as ProjectProperty[];
   const parcels: Parcel[] = (resolvedFinds.at(0) as Parcel[])
     .filter((p: Parcel) => parcelIds.includes(p.Id))
     .map((p: Parcel) => {
@@ -1016,6 +1028,8 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
         ...p,
         Evaluations: evaluation ? [evaluation] : undefined,
         Fiscals: fiscal ? [fiscal] : undefined,
+        ProjectNumber:
+          projectProperties.find((pp) => pp.ParcelId === p.Id)?.Project.ProjectNumber ?? undefined,
       };
     });
   const buildings: Building[] = (resolvedFinds.at(1) as Building[])
@@ -1027,6 +1041,9 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
         ...b,
         Evaluations: evaluation ? [evaluation] : undefined,
         Fiscals: fiscal ? [fiscal] : undefined,
+        ProjectNumber:
+          projectProperties.find((pp) => pp.BuildingId === b.Id)?.Project.ProjectNumber ??
+          undefined,
       };
     });
 
