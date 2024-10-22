@@ -30,6 +30,7 @@ export const MapFilterSchema = z.object({
   AdministrativeAreaIds: arrayFromString(numberSchema),
   ClassificationIds: arrayFromString(numberSchema),
   PropertyTypeIds: arrayFromString(numberSchema),
+  ProjectStatusId: z.coerce.number().optional(),
   Name: z.string().optional(),
   RegionalDistrictIds: arrayFromString(numberSchema),
   UserAgencies: z.array(z.number().int()).optional(),

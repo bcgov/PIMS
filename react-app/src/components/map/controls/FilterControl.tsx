@@ -10,6 +10,8 @@ import usePimsApi from '@/hooks/usePimsApi';
 import { Box, Typography, Grid, Button } from '@mui/material';
 import React, { Dispatch, SetStateAction, useContext } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { ProjectStatus } from '@/constants/projectStatuses';
+import ToggleSwitch from '@/components/form/ToggleSwitch';
 
 interface FilterControlProps {
   setFilter: Dispatch<SetStateAction<MapFilter>>;
@@ -51,6 +53,7 @@ const FilterControl = (props: FilterControlProps) => {
       PropertyTypes: [],
       RegionalDistricts: [],
       Name: '',
+      InERP: false,
     },
   });
 
@@ -131,6 +134,7 @@ const FilterControl = (props: FilterControlProps) => {
               })) ?? []
             }
           />
+          <ToggleSwitch name={'InERP'} label="In ERP" />
           <Grid item xs={12} justifyContent={'space-between'} display={'inline-flex'} gap={1}>
             <Button
               variant="outlined"
@@ -167,6 +171,7 @@ const FilterControl = (props: FilterControlProps) => {
                     (option) => option.value,
                   ),
                   RegionalDistrictIds: formValues.RegionalDistricts.map((option) => option.value),
+                  ProjectStatusId: formValues.InERP ? ProjectStatus.APPROVED_FOR_ERP : undefined,
                 };
                 setFilter({
                   Polygon: filter.Polygon,
