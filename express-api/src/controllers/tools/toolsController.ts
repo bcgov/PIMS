@@ -94,7 +94,7 @@ export const searchGeocoderAddresses = async (req: Request, res: Response) => {
 };
 
 export const getJurisdictionRollNumberByPid = async (req: Request, res: Response) => {
-  const pidQuery = String(req.query.pid);
+  const pidQuery = req.query.pid as string;
   if (parseInt(pidQuery)) {
     const result = await AppDataSource.getRepository(JurRollPidXref).findOne({
       where: { PID: parseInt(pidQuery) },
@@ -104,5 +104,5 @@ export const getJurisdictionRollNumberByPid = async (req: Request, res: Response
     }
     return res.status(200).send(result);
   }
-  return res.status(400).send('Invalid PID value');
+  return res.status(400).send('Invalid PID value.');
 };
