@@ -97,11 +97,19 @@ const sendAsync = async (endpoint: string, method: string, data: Record<string, 
     body: data ? JSON.stringify(data) : undefined,
   });
 
+  if (!response.ok) {
+    logger.error({
+      message: 'CHES Error',
+      chesResponse: JSON.parse(await response.text()),
+    });
+    return null;
+  }
+
   const text = await response.text();
   if (text.length) {
     return JSON.parse(text);
   } else {
-    return {};
+    return null;
   }
 };
 
