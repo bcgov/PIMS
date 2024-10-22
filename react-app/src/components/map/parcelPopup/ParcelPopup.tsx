@@ -3,7 +3,7 @@ import { ParcelData } from '@/hooks/api/useParcelLayerApi';
 import usePimsApi from '@/hooks/usePimsApi';
 import { Box, Grid, IconButton, Typography, Tab, SxProps } from '@mui/material';
 import { LatLng } from 'leaflet';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Popup, useMap, useMapEvents } from 'react-leaflet';
 import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
@@ -16,6 +16,7 @@ import BCAssessmentDetails from '@/components/map/parcelPopup/BCAssessmentDetail
 import LtsaDetails from '@/components/map/parcelPopup/LtsaDetails';
 import ParcelLayerDetails from '@/components/map/parcelPopup/ParcelLayerDeatils';
 import ParcelPopupSelect from '@/components/map/parcelPopup/ParcelPopupSelect';
+import { JurRollPidXref } from '@/hooks/api/useBCAssessmentApi';
 
 interface ParcelPopupProps {
   size?: 'small' | 'large';
@@ -55,6 +56,14 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
     api.bcAssessment.getBCAssessmentByLocation(clickPosition.lng, clickPosition.lat),
   );
 
+  const {
+    data: xrefData,
+    refreshData: refreshXref,
+    isLoading: xrefLoading,
+  } = useDataLoader(() =>
+    api.bcAssessment.getJurisdictionRoleByPid(parcelData.at(parcelIndex)?.PID_NUMBER),
+  );
+
   const map = useMap();
   const api = usePimsApi();
 
@@ -67,6 +76,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
     if (parcelData && clickPosition) {
       refreshLtsa();
       if (pimsUser.hasOneOfRoles([Roles.ADMIN])) {
+        refreshXref();
         refreshBCA();
       }
     }
@@ -105,6 +115,22 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
       setParcelData(undefined);
     }
   }, [clickPosition]);
+
+  const getMatchingBcaRecord = useMemo(() => {
+    if (!xrefData || !bcAssessmentData) {
+      return undefined;
+    }
+    if (xrefData.status !== 200) {
+      return undefined;
+    }
+    const xrefRecord = xrefData.parsedBody as JurRollPidXref;
+    const matchingFolio = bcAssessmentData.features.find(
+      (folio) =>
+        folio.properties.JURISDICTION_CODE === xrefRecord.JurisdictionCode &&
+        folio.properties.ROLL_NUMBER === xrefRecord.RollNumber,
+    );
+    return matchingFolio;
+  }, [bcAssessmentData, xrefData]);
 
   if (!clickPosition) return <></>;
 
@@ -164,10 +190,10 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                     <BCAssessmentDetails
                       data={
                         bcAssessmentData && bcAssessmentData.features.length
-                          ? bcAssessmentData.features.at(0).properties
+                          ? getMatchingBcaRecord.properties
                           : undefined
                       }
-                      isLoading={bcaLoading}
+                      isLoading={bcaLoading || xrefLoading}
                       width={POPUP_WIDTH}
                     />
                   </TabPanel>

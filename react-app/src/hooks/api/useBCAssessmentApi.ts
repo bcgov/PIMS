@@ -1,3 +1,4 @@
+import { IFetch } from '@/hooks/useFetch';
 import { BBox, FeatureCollection, Geometry } from 'geojson';
 
 export interface BCAssessmentProperties {
@@ -29,7 +30,13 @@ export interface BCAssessmentProperties {
   bbox: BBox;
 }
 
-const useBCAssessmentApi = () => {
+export interface JurRollPidXref {
+  PID: number;
+  JurisdictionCode: string;
+  RollNumber: string;
+}
+
+const useBCAssessmentApi = (absoluteFetch: IFetch) => {
   const url = window.location.href.includes('pims.gov.bc.ca')
     ? 'https://apps.gov.bc.ca/ext/sgw/geo.bca?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=geo.bca:WHSE_HUMAN_CULTURAL_ECONOMIC.BCA_FOLIO_GNRL_PROP_VALUES_SV&outputFormat=application/json'
     : 'https://test.apps.gov.bc.ca/ext/sgw/geo.bca?REQUEST=GetFeature&SERVICE=WFS&VERSION=2.0.0&typeName=geo.bca:WHSE_HUMAN_CULTURAL_ECONOMIC.BCA_FOLIO_GNRL_PROP_VALUES_SV&outputFormat=application/json';
@@ -44,8 +51,14 @@ const useBCAssessmentApi = () => {
     return body as FeatureCollection<Geometry, BCAssessmentProperties>;
   };
 
+  const getJurisdictionRoleByPid = async (pid: number) => {
+    const response = await absoluteFetch.get(`/tools/jur-roll-xref?pid=${pid}`);
+    return response;
+  };
+
   return {
     getBCAssessmentByLocation,
+    getJurisdictionRoleByPid,
   };
 };
 
