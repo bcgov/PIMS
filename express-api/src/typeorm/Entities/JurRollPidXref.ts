@@ -1,5 +1,8 @@
 import { Entity, PrimaryColumn } from 'typeorm';
 
+/**
+ * Used to cross reference the records from BC Assessment and find one that matches a PID.
+ */
 @Entity()
 export class JurRollPidXref {
   @PrimaryColumn({ type: 'int', name: 'pid' })

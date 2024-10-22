@@ -116,6 +116,10 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
     }
   }, [clickPosition]);
 
+  /**
+   * Gets a matching record from BC Assessment data by using the XREF table in the database to
+   * match the PID with a corresponding Jurisdiction Code and Roll Number.
+   */
   const getMatchingBcaRecord = useMemo(() => {
     if (!xrefData || !bcAssessmentData) {
       return undefined;

@@ -93,6 +93,13 @@ export const searchGeocoderAddresses = async (req: Request, res: Response) => {
   return res.status(200).send(geoReturn);
 };
 
+/**
+ * Retrieves jurisdiction & roll number based on PID.
+ * Used to cross reference BC Assessment records with Parcels.
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A response with the jurisdiction, roll number, and PID if found.
+ */
 export const getJurisdictionRollNumberByPid = async (req: Request, res: Response) => {
   const pidQuery = req.query.pid as string;
   if (parseInt(pidQuery)) {
