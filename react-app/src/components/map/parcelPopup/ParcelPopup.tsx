@@ -192,11 +192,7 @@ export const ParcelPopup = (props: ParcelPopupProps) => {
                   </TabPanel>
                   <TabPanel value="2" sx={tabPanelStyle}>
                     <BCAssessmentDetails
-                      data={
-                        bcAssessmentData && bcAssessmentData.features.length
-                          ? getMatchingBcaRecord.properties
-                          : undefined
-                      }
+                      data={getMatchingBcaRecord ? getMatchingBcaRecord?.properties : undefined}
                       isLoading={bcaLoading || xrefLoading}
                       width={POPUP_WIDTH}
                     />
