@@ -11,7 +11,7 @@ import { Box, Typography, Grid, Button } from '@mui/material';
 import React, { Dispatch, SetStateAction, useContext } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { ProjectStatus } from '@/constants/projectStatuses';
-import ToggleSwitch from '@/components/form/SwitchToggle';
+import ToggleSwitch from '@/components/form/ToggleSwitch';
 
 interface FilterControlProps {
   setFilter: Dispatch<SetStateAction<MapFilter>>;
