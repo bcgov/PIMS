@@ -212,6 +212,7 @@ const getPropertiesForMap = async (filter?: MapFilter) => {
       : undefined,
     PID: filter.PID,
     PIN: filter.PIN,
+    ProjectStatusId: filter.ProjectStatusId,
     Address1: filter.Address ? ILike(`%${filter.Address}%`) : undefined,
     Name: filter.Name ? ILike(`%${filter.Name}%`) : undefined,
     PropertyTypeId: filter.PropertyTypeIds ? In(filter.PropertyTypeIds) : undefined,
