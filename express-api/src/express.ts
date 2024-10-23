@@ -107,7 +107,7 @@ app.use(`/v2/buildings`, protectedRoute(), userAuthCheck(), router.buildingsRout
 app.use(`/v2/notifications`, protectedRoute(), router.notificationsRouter);
 app.use(`/v2/projects`, protectedRoute(), router.projectsRouter);
 app.use(`/v2/reports`, protectedRoute(), userAuthCheck(), router.reportsRouter);
-app.use(`/v2/tools`, protectedRoute(), userAuthCheck(), router.toolsRouter);
+app.use(`/v2/tools`, protectedRoute(), router.toolsRouter);
 
 // If a non-existent route is called. Must go after other routes.
 app.use('*', (_req, _res, next) => next(EndpointNotFound404));

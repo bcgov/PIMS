@@ -45,6 +45,7 @@ import { ImportResult } from './Entities/ImportResult';
 import { ProjectJoin } from './Entities/views/ProjectJoinView';
 import { AdministrativeAreaJoinView } from '@/typeorm/Entities/views/AdministrativeAreaJoinView';
 import { AgencyJoinView } from '@/typeorm/Entities/views/AgencyJoinView';
+import { JurRollPidXref } from '@/typeorm/Entities/JurRollPidXref';
 
 const views = [
   BuildingRelations,
@@ -97,5 +98,6 @@ export default [
   User,
   NoteType,
   ImportResult,
+  JurRollPidXref,
   ...views,
 ];

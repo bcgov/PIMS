@@ -7,6 +7,8 @@ import {
   produceEmailStatus,
 } from '../../../testUtils/factories';
 import { randomUUID } from 'crypto';
+import { AppDataSource } from '@/appDataSource';
+import { JurRollPidXref } from '@/typeorm/Entities/JurRollPidXref';
 
 const _getChesMessageStatusById = jest.fn().mockImplementation(() => produceEmailStatus({}));
 
@@ -33,6 +35,14 @@ jest.mock('@/services/ches/chesServices.ts', () => ({
   cancelEmailsAsync: () => _cancelEmailsAsync(),
   sendEmailAsync: () => _sendEmailAsync(),
 }));
+
+const _xrefSpy = jest
+  .spyOn(AppDataSource.getRepository(JurRollPidXref), 'findOne')
+  .mockImplementation(async () => ({
+    JurisdictionCode: '123',
+    RollNumber: '1234567',
+    PID: 111222333,
+  }));
 
 describe('UNIT - Tools', () => {
   let mockRequest: Request & MockReq, mockResponse: Response & MockRes;
@@ -161,6 +171,32 @@ describe('UNIT - Tools', () => {
       mockRequest.params.siteId = randomUUID();
       await controllers.searchGeocoderAddresses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
+    });
+  });
+
+  describe('GET /tools/jur-roll-xref', () => {
+    it('should return 200 if given a valid PID', async () => {
+      mockRequest.query.pid = '2134';
+      await controllers.getJurisdictionRollNumberByPid(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue).toHaveProperty('PID');
+      expect(mockResponse.sendValue).toHaveProperty('JurisdictionCode');
+      expect(mockResponse.sendValue).toHaveProperty('RollNumber');
+    });
+
+    it('should return 400 if given an invalid PID', async () => {
+      mockRequest.query.pid = 'hi';
+      await controllers.getJurisdictionRollNumberByPid(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Invalid PID value.');
+    });
+
+    it('should return 404 if a record with that PID is not found', async () => {
+      mockRequest.query.pid = '1234';
+      _xrefSpy.mockImplementationOnce(async () => null);
+      await controllers.getJurisdictionRollNumberByPid(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(404);
+      expect(mockResponse.sendValue).toBe('PID not found.');
     });
   });
 });
