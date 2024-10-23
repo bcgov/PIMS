@@ -11,17 +11,17 @@ paths:
         This response comes from the BC Geocoder Service.
         Capable of any error code from BC Geocoder.
       parameters:
-        - in: path
+        - in: query
           name: address
           schema:
             type: string
             example: 742 Evergreen Terr
-        - in: path
+        - in: query
           name: minScore
           schema:
             type: integer
             example: 30
-        - in: path
+        - in: query
           name: maxResults
           schema:
             type: integer
@@ -40,9 +40,56 @@ paths:
               schema: 
                 type: string
                 example: Failed to fetch data
+  /tools/jur-roll-xref:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Tools
+      summary: Returns a record matching the provided PID.
+      description: >
+        Used to cross reference the PID and Jurisdiction Code + Roll Number from BC Assessment.
+      parameters:
+        - in: query
+          name: pid
+          schema:
+            type: integer
+            example: 111222333
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JurRollXref'
+        '400': 
+          content: 
+            text/plain:
+              schema: 
+                type: string
+                example: Invalid PID value.
+        '404':
+           content: 
+            text/plain:
+              schema: 
+                type: string
+                example: PID not found.
 ### SCHEMAS ### 
 components:
   schemas:
+    JurRollXref:
+      type: object
+      properties:
+        PID:
+          type: integer
+          example: 123456789
+        JurisdictionCode:
+          type: string
+          example: '123'
+        RollNumber:
+          type: string 
+          example: '1342341'
     GeocoderAddress:
       type: object
       properties: 
