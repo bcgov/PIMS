@@ -34,6 +34,7 @@ const PropertyRow = (props: PropertyRowProps) => {
 
   return (
     <Box
+      className="property-row"
       onClick={() => window.open(`/properties/${propertyType}/${id}`)}
       sx={{
         cursor: 'pointer',
