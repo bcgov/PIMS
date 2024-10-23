@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import chesServices from '@/services/ches/chesServices';
 import { ChesFilterSchema } from './toolsSchema';
 import geocoderService from '@/services/geocoder/geocoderService';
+import { AppDataSource } from '@/appDataSource';
+import { JurRollPidXref } from '@/typeorm/Entities/JurRollPidXref';
 
 /**
  * NOTE
@@ -89,4 +91,25 @@ export const searchGeocoderAddresses = async (req: Request, res: Response) => {
   const maxResults = isNaN(Number(req.query.maxResults)) ? undefined : String(req.query.maxResults);
   const geoReturn = await geocoderService.getSiteAddresses(address, minScore, maxResults);
   return res.status(200).send(geoReturn);
+};
+
+/**
+ * Retrieves jurisdiction & roll number based on PID.
+ * Used to cross reference BC Assessment records with Parcels.
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A response with the jurisdiction, roll number, and PID if found.
+ */
+export const getJurisdictionRollNumberByPid = async (req: Request, res: Response) => {
+  const pidQuery = req.query.pid as string;
+  if (parseInt(pidQuery)) {
+    const result = await AppDataSource.getRepository(JurRollPidXref).findOne({
+      where: { PID: parseInt(pidQuery) },
+    });
+    if (!result) {
+      return res.status(404).send('PID not found.');
+    }
+    return res.status(200).send(result);
+  }
+  return res.status(400).send('Invalid PID value.');
 };
