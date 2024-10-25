@@ -29,7 +29,7 @@
     "dayjs": "1.11.10",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-error-boundary": "4.0.12",
+    "react-error-boundary": "4.1.2",
     "react-hook-form": "7.53.0",
     "react-leaflet": "4.2.1",
     "react-leaflet-draw": "0.20.4",
