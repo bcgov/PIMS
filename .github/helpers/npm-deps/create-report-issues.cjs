@@ -9,6 +9,8 @@ const outputText = require(path.resolve(__dirname, `../../../outputText.json`));
 // Get package.json paths from env.
 const packageJsonPaths = JSON.parse(process.env.packageJsonPaths);
 
+console.log(outputText);
+
 (async () => {
   const module = await import('../github-api/create-and-close-existing-issue.mjs');
   const createAndCloseExistingIssue = module.default;
