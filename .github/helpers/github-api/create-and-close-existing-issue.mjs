@@ -22,7 +22,7 @@ export const createAndCloseExistingIssue = async (issueTitle, issueBody, issueCo
   const newIssueNumber = await findIssueByTitle(issueTitle);
 
   // Add comment to Issue.
-  await addComment(newIssueNumber, decodeURIComponent(issueComment));
+  await addComment(newIssueNumber, issueComment);
 };
 
 export default createAndCloseExistingIssue;
