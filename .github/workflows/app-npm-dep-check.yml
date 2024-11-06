@@ -99,11 +99,11 @@ jobs:
 
       # checkout repo and branch
       - name: Checkout Branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # setup Python environment
       - name: setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11' # current Python version
 

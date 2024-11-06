@@ -352,10 +352,10 @@ def main():
     print(update_str)
 
     # get path to github output
-    github_env = os.getenv('GITHUB_ENV')
+    github_env = os.getenv('GITHUB_OUTPUT')
     # write retults to file
     with open(github_env, "a", encoding="utf-8") as env_file:
-        env_file.write("commentContents=" + update_str + os.linesep)
+        env_file.write("commentContents=" + update_str)
 
     # log end
     log(EXIT_CODE, "Sript has completed")
