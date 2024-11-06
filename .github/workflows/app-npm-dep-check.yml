@@ -160,7 +160,7 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       packageJsonPaths: ${{ needs.parse-json5-config.outputs.packageJsonPaths }}
-      commentContents: ${{ steps.create-comment-text.outputs.commentContents }}
+      commentContents: ${{ needs.create-comment-text.outputs.commentContents }}
     container:
       # Lightweight NodeJS Image
       image: node:21.5-bullseye-slim
