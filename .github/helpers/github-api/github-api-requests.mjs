@@ -92,7 +92,7 @@ export async function closeIssue(issue_number) {
  *  addComment('My Issue', 'An example comment');
  */
 export async function addComment(issueTitle, issueComment) {
-  const issueNumber = findIssueByTitle(issueTitle);
+  const issueNumber = await findIssueByTitle(issueTitle);
 
   const request = await octokit.rest.issues.createComment({
     owner: GITHUB_OWNER,
