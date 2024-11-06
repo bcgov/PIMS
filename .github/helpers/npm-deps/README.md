@@ -126,7 +126,7 @@ Env:
 Steps:
 1. Checkout repository & branch
 2. Download `outputText.json` from write-output
-3. Install @octokit/rest
+3. Install [@octokit/rest](https://octokit.github.io/rest.js/v21/)
 4. Run `node .github/helpers/npm-deps/create-report-issues.cjs`
 
 ## Associated Scripts
@@ -215,7 +215,7 @@ Steps:
 Path: `.github/helpers/github-api/github-api-requests.mjs`
 
 Requires:
-  - Octokit
+  - [Octokit](https://octokit.github.io/rest.js/v21/)
   - GITHUB_TOKEN, GITHUB_REPOSITORY from env variables
   - GITHUB_REPOSITORY [OWNER, REPO]
 

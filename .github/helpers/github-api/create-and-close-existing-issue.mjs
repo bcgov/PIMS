@@ -1,4 +1,4 @@
-import { createIssue, closeIssue, findIssueByTitle } from './github-api-requests.mjs';
+import { createIssue, closeIssue, addComment, findIssueByTitle } from './github-api-requests.mjs';
 
 /**
  * FILE DOES NOT NEED TO BE EDITED.

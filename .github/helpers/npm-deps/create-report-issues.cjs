@@ -6,9 +6,8 @@ const outputText = require(path.resolve(__dirname, `../../../outputText.json`));
  * Place within .github/helpers/npm-deps/
  */
 
-// Get package.json paths from env.
+// Get package.json paths and comment contents from env.
 const packageJsonPaths = JSON.parse(process.env.packageJsonPaths);
-console.log(process.env.commentContents);
 const comment = JSON.parse(process.env.commentContents);
 
 (async () => {

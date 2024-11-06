@@ -61,7 +61,7 @@ export async function createIssue(title, body) {
     title,
     body,
   });
-  console.log(request.data);
+  //console.log(request.data);
   return request;
 }
 
@@ -79,7 +79,7 @@ export async function closeIssue(issue_number) {
     issue_number,
     state: 'closed',
   });
-  console.log(request.data);
+  //console.log(request.data);
   return request;
 }
 
@@ -100,7 +100,7 @@ export async function addComment(issueTitle, issueComment) {
     issueNumber,
     body: issueComment,
   });
-  console.log(request.data);
+  //console.log(request.data);
   return request;
 }
 
@@ -130,5 +130,6 @@ export async function findIssueByTitle(title, state = 'open') {
 export default {
   createIssue,
   closeIssue,
+  addComment,
   findIssueByTitle,
 };
