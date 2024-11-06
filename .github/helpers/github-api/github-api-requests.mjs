@@ -95,7 +95,7 @@ export async function addComment(issueNumber, issueComment) {
   const request = await octokit.rest.issues.createComment({
     owner: GITHUB_OWNER,
     repo: GITHUB_REPO,
-    issueNumber,
+    issue_number: issueNumber,
     body: issueComment,
   });
   //console.log(request.data);

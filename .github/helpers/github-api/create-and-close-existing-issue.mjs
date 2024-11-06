@@ -17,9 +17,7 @@ export const createAndCloseExistingIssue = async (issueTitle, issueBody, issueCo
   // Create new Issue.
   await createIssue(issueTitle, decodeURIComponent(issueBody));
 
-  setTimeout(() => {
-    console.log("pausing for issue to be created...", 2000);
-  });
+  setTimeout(() => console.log("pausing for issue to be created..."), 2000);
 
   const newIssueNumber = await findIssueByTitle(issueTitle);
 
