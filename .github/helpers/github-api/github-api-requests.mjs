@@ -85,23 +85,13 @@ export async function closeIssue(issue_number) {
 
 /**
  * Get issue number from title, and create a request to add a comment.
- * @param {*} issueTitle - the title of the comment to comment on
+ * @param {*} issueNumber - the number for the issue to comment on
  * @param {*} issueComment - the comment to add
  * @returns - requestData - Data returned by the request.
  * @example
- *  addComment('My Issue', 'An example comment');
+ *  addComment(1234, 'An example comment');
  */
-export async function addComment(issueTitle, issueComment) {
-  let issueNumber = await findIssueByTitle(issueTitle);
-  let counter = 1;
-
-  while ( typeof issueNumber !== 'number' && counter < 5){
-    setTimeout(() =>
-       console.log(`no issue with ${issueTitle} found, pausing...`), counter * 1000);
-    issueNumber = await findIssueByTitle(issueTitle);
-    counter++;
-  };
-
+export async function addComment(issueNumber, issueComment) {
   const request = await octokit.rest.issues.createComment({
     owner: GITHUB_OWNER,
     repo: GITHUB_REPO,
