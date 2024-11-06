@@ -138,7 +138,7 @@ def get_env_variables():
     decoded_str = decoded_str.replace( '%0A', '\n' )
     decoded_str = decoded_str.replace( '%0D', '\r' )
     # add to return object
-    return_env['DEP_INPUT'] = dep_in
+    return_env['DEP_INPUT'] = decoded_str
 
     return return_env
 
@@ -366,6 +366,6 @@ if __name__ == "__main__":
         main()
     except Exception as error: # pylint: disable=broad-exception-caught
         # if we hit any unexpected errors, catch them, report, and exit.
-        L_M = "Hit uncaught error while processing. Error message: " + error + "\nQuitting."
+        L_M = "Hit uncaught error while processing. Error message: " + str(error) + "\nQuitting."
         log(ERROR, L_M)
         exit(ERROR)
