@@ -5,7 +5,7 @@ import { createIssue, closeIssue, findIssueByTitle } from './github-api-requests
  * Place within .github/helpers/github-api/
  */
 
-export const createAndCloseExistingIssue = async (issueTitle, issueBody) => {
+export const createAndCloseExistingIssue = async (issueTitle, issueBody, issueComment) => {
   // Check for existing Issue.
   const existingIssueNumber = await findIssueByTitle(issueTitle);
 
@@ -16,6 +16,9 @@ export const createAndCloseExistingIssue = async (issueTitle, issueBody) => {
 
   // Create new Issue.
   await createIssue(issueTitle, decodeURIComponent(issueBody));
+
+  // Add comment to Issue.
+  await addComment(issueTitle, issueComment);
 };
 
 export default createAndCloseExistingIssue;

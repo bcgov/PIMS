@@ -8,6 +8,7 @@ const outputText = require(path.resolve(__dirname, `../../../outputText.json`));
 
 // Get package.json paths from env.
 const packageJsonPaths = JSON.parse(process.env.packageJsonPaths);
+const comment = JSON.parse(process.env.commentContents);
 
 (async () => {
   const module = await import('../github-api/create-and-close-existing-issue.mjs');
@@ -17,7 +18,7 @@ const packageJsonPaths = JSON.parse(process.env.packageJsonPaths);
     const issueTitle =
       packagePath !== '.' ? `${packagePath} NPM Dependency Report` : 'NPM Dependency Report';
     // Await the completion of create and close existing issue.
-    await createAndCloseExistingIssue(issueTitle, outputText[packagePath]);
+    await createAndCloseExistingIssue(issueTitle, outputText[packagePath], comment);
   });
 
   // Wait for all issues to be created.

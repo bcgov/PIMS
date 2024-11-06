@@ -84,6 +84,27 @@ export async function closeIssue(issue_number) {
 }
 
 /**
+ * Get issue number from title, and create a request to add a comment.
+ * @param {*} issueTitle - the title of the comment to comment on
+ * @param {*} issueComment - the comment to add
+ * @returns - requestData - Data returned by the request.
+ * @example
+ *  addComment('My Issue', 'An example comment');
+ */
+export async function addComment(issueTitle, issueComment) {
+  const issueNumber = findIssueByTitle(issueTitle);
+
+  const request = await octokit.rest.issues.createComment({
+    owner: GITHUB_OWNER,
+    repo: GITHUB_REPO,
+    issueNumber,
+    body: issueComment,
+  });
+  console.log(request.data);
+  return request;
+}
+
+/**
  * Find an Issue's ID number with the GitHub REST API, given a title.
  * @param {string} title - The title of the issue to search for.
  * @param {string} state - (optional, default=open) Search for all, open, or closed issues.

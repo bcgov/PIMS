@@ -355,7 +355,7 @@ def main():
     github_env = os.getenv('GITHUB_ENV')
     # write retults to file
     with open(github_env, "a", encoding="utf-8") as env_file:
-        env_file.write("COMMENT=" + update_str)
+        env_file.write("commentContents=" + update_str)
 
     # log end
     log(EXIT_CODE, "Sript has completed")
