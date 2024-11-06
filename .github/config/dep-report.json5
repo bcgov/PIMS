@@ -3,21 +3,4 @@
   // Check package.json files for dependency updates.
   packageJsonPaths: ["react-app", "express-api"],
 
-  // Do not report on the following packages.
-  ignorePackages: {
-    // Path to package.json file.
-    "src/react-app": [], // Add names of packages such as ["typescript"].
-    "src/express-api": ["xlsx"],
-  },
-
-  // The env variables below are used to update the create_tickets.py script
-  
-  // used to determine what updates to post
-  LEVEL_FLAGS: "MINOR MAJOR",
-  // sets what JIRA board to post and pull from
-  JIRA_BOARD: "PIMS",
-  // each Jira board has a different issue type for subtasks
-  JIRA_SUBTASK: "10003",
-  // epic links are technically a custom field with this specific id and ticket number (for PIMS)
-  JIRA_EPIC: "10014, PIMS-450"
 }

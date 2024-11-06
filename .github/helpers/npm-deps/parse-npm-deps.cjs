@@ -4,10 +4,6 @@ const path = require('path');
 
 const LOCAL_TEST = false;
 const TEST_PACKAGEJSON_PATHS = ['src/frontend', 'src/backend'];
-const TEST_IGNORE_PACKAGES = {
-  'src/frontend': [],
-  'src/backend': [],
-};
 
 /**
  * THIS FILE DOES NOT REQUIRE ANY EDITING.
@@ -15,7 +11,7 @@ const TEST_IGNORE_PACKAGES = {
  *
  * To test this file locally,
  * - Set LOCAL_TEST variable to true.
- * - Edit TEST_PACKAGEJSON_PATHS and TEST_IGNORE_PACKAGES if necessary.
+ * - Edit TEST_PACKAGEJSON_PATHS if necessary.
  * - From root, run "node .github/helpers/npm-deps/parse-npm-deps.cjs > outdatedDeps.json"
  * - Check the outdatedDeps.json file, then delete it.
  */
@@ -24,9 +20,6 @@ const TEST_IGNORE_PACKAGES = {
 const packageJsonPaths = LOCAL_TEST
   ? TEST_PACKAGEJSON_PATHS
   : JSON.parse(process.env.packageJsonPaths);
-
-// Ignore packages from env.
-const ignorePackages = LOCAL_TEST ? TEST_IGNORE_PACKAGES : JSON.parse(process.env.ignorePackages);
 
 // Save results to json.
 let results = {};
@@ -60,13 +53,6 @@ const checkVersions = async (dependencyList, packagePath, isDevDep) => {
   for (let key in dependencyList) {
     const [dependency, version] = dependencyList[key];
     const url = `https://registry.npmjs.org/${dependency}/latest`;
-
-    // Skip dependency if in ignorePackages array.
-    if (
-      ignorePackages.hasOwnProperty(packagePath) &&
-      ignorePackages[packagePath].includes(dependency)
-    )
-      continue;
 
     // Add to total.
     if (isDevDep) ++results[packagePath].devDeps.total;

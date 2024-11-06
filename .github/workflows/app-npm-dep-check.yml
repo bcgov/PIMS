@@ -28,7 +28,6 @@ jobs:
       runs-on: ubuntu-22.04
       outputs:
         packageJsonPaths: ${{ steps.parse_config.outputs.packageJsonPaths }}
-        ignorePackages: ${{ steps.parse_config.outputs.ignorePackages }}
 
       steps:
         # Checkout branch.
@@ -50,7 +49,6 @@ jobs:
     needs: parse-json5-config
     env:
       packageJsonPaths: ${{ needs.parse-json5-config.outputs.packageJsonPaths }}
-      ignorePackages: ${{ needs.parse-json5-config.outputs.ignorePackages }}
     container:
       # Lightweight NodeJS Image
       image: node:21.5-bullseye-slim
@@ -63,6 +61,7 @@ jobs:
       # Run NodeJS script to check for latest npm dependency versions and capture output.
       - name: Run NPM DEP Check Node.js script
         id: check_versions
+        # we want this one
         run: |
           node .github/helpers/npm-deps/parse-npm-deps.cjs > outdatedDeps.json
 
@@ -72,6 +71,47 @@ jobs:
         with:
           name: outdatedDeps
           path: outdatedDeps.json
+
+  # Create comment text
+  create-comment-text:
+    runs-on: ubuntu-22.04
+    needs:
+      - parse-json5-config
+      - parse-package-versions
+    steps:
+      # download artifact from parse-package-versions
+      - name: Download output
+        uses: actions/download-artifact@v4
+        with:
+          name: outdatedDeps
+          path: .
+      # encode file to github needs
+      - name: Encode Outdated Deps
+        shell: bash
+        run: |
+          OUTPUT=$(cat outdatedDeps.json)
+          OUTPUT="${OUTPUT//'%'/'%25'}"
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "DEP_INPUT=${OUTPUT}" >> $GITHUB_ENV
+      # checkout repo and branch
+      - name: Checkout Branch
+        uses: actions/checkout@v3
+      # setup Python environment
+      - name: setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' # current Python version
+      # Run Python Script to Create Comment
+      - name: Create Comment Contents
+        env:
+          DEP_INPUT: ${{ env.DEP_INPUT }} # dependency updates
+        run: |
+          python3 .github/helpers/npm-deps/parse_to_comment.py
+      - name: Test comment
+        run: |
+          echo $COMMENT
+
 
   # Write the output text for the GitHub Issue.
   write-output:
