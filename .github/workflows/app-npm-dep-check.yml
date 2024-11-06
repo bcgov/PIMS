@@ -78,7 +78,7 @@ jobs:
       - parse-json5-config
       - parse-package-versions
     outputs:
-        commentContents: ${{ steps.create-comment-text.outputs.commentContents }}
+        commentContents: ${{ steps.create_comment.outputs.commentContents }}
     steps:
       # download artifact from parse-package-versions
       - name: Download output
@@ -109,6 +109,7 @@ jobs:
 
       # Run Python Script to Create Comment
       - name: Create Comment Contents
+        id: create_comment
         env:
           DEP_INPUT: ${{ env.DEP_INPUT }} # dependency updates
         run: |
