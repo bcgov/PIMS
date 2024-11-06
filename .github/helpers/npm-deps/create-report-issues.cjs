@@ -8,6 +8,7 @@ const outputText = require(path.resolve(__dirname, `../../../outputText.json`));
 
 // Get package.json paths from env.
 const packageJsonPaths = JSON.parse(process.env.packageJsonPaths);
+console.log(process.env.commentContents);
 const comment = JSON.parse(process.env.commentContents);
 
 (async () => {
