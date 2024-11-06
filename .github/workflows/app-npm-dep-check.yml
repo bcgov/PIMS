@@ -61,7 +61,6 @@ jobs:
       # Run NodeJS script to check for latest npm dependency versions and capture output.
       - name: Run NPM DEP Check Node.js script
         id: check_versions
-        # we want this one
         run: |
           node .github/helpers/npm-deps/parse-npm-deps.cjs > outdatedDeps.json
 

@@ -28,12 +28,12 @@ The following structure must be followed and all files present for the workflow 
 
 ### Manual
 
-The action can be run manually from the repository it is stored in:
+The action can be run manually from the repository it is stored in.
 
 Note: This will only work after the files have been pushed to the repo.
 
 ```
-\<Repo Page\>
+<Repo Page>
  -> Actions
  -> (Left Pane) NPM Dependency Reports
  -> Run Workflow
