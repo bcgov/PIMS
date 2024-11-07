@@ -15,15 +15,32 @@
 }
 
 Sample Output:
-{ "folder1": { "Updates": {
-               "patch": [ { "count": <num_patch_deps> },
-                          { "updateCmd": <string to update all patch deps> },
-                          { "detailedList":[ "Update <dep1_name> from <cur_ver> to <update_to>",
-                                              ... ,
-                                             "Update <depN_name> from <cur_ver> to <update_to>"
-                                         ] } ] }
-               "minor": { ... },
-               "major": { ... } ],
+{ "folder1": {
+    "Total updates to process: <patchcount> + <minorcount> + <majorcount>
+
+     There are <patchcount> patch updates.
+     To update run the following:
+     <string to update all patch deps>
+     List of updates:
+     <list of patch updates>
+
+     There are <minorcount> minor updates.
+     To update run the following:
+     <string to update all minor deps>
+     List of updates:
+     <list of minor updates>
+
+     There are <majorcount> major updates.
+     To update run the following:
+     <string to update all major deps>
+     List of updates:
+     <list of major updates>
+
+     ERRORS:
+     <list of errors>
+
+     WARNINGS:
+     <list of warnings>"
   ... ,
   "folderN": { ... } }
 
@@ -142,6 +159,25 @@ def get_env_variables():
 
     return return_env
 
+def create_comment_string(dep_level, dep_cmd, dep_li):
+    """
+    Take in information and convert to string as shown above.
+
+    Args:
+      dep_level (str): <patch/minor/major>
+      dep_cmd (str): command to run updates
+      dep_li (list): list of updates in readable form
+
+    Returns:
+      return_str (str): string of comment for this dep_level
+    """
+    count = "There are " + str(len(dep_li)) + str(dep_level) + "updates.\n"
+    update = "To update run the following:\nnpm install " + dep_cmd + "\n"
+    list_u = "List of updates:\n" + str(dep_li)
+
+    return_str = count + update + list_u
+    return return_str
+
 def dep_obj_to_str(folder_name, dep_li):
     """
     Take in a list of dependency update objects, pull out necessary information
@@ -242,11 +278,11 @@ def create_update_dict(folder, outdated_json):
     missing_updates = []
     # add check to see if these exist
     patch_li = []
-    patch_cmd = "npm install "
+    patch_cmd = ""
     minor_li = []
-    minor_cmd = "npm install "
+    minor_cmd = ""
     major_li = []
-    major_cmd = "npm install "
+    major_cmd = ""
     # loop through all dependencies present.
     to_process = []
 
@@ -284,16 +320,16 @@ def create_update_dict(folder, outdated_json):
 
     if S_PATCH in LEVELS and len(patch_li) > 0:
         # if we are reporting on patch and there are updates include that section
-        patch_di = {"patch": [ {"count": len(patch_li)}, {"cmd": patch_cmd}, {"list": patch_li}] }
-        return_li.append(patch_di)
+        patch_str = create_comment_string(S_PATCH, patch_cmd, patch_li)
+        return_li.append(patch_str)
     if S_MINOR in LEVELS and len(minor_li) > 0:
         # if we are reporting on minor and there are updates  include that section
-        minor_di = {"minor": [{"count": len(minor_li)}, {"cmd": minor_cmd}, {"list": minor_li}]}
-        return_li.append(minor_di)
+        minor_str = create_comment_string(S_MINOR, minor_cmd, minor_li)
+        return_li.append(minor_str)
     if S_MAJOR in LEVELS and len(major_li) > 0:
         # if we are reporting on major and there are updates  include that section
-        major_di = {"major": [{"count": len(major_li)}, {"cmd": major_cmd}, {"list": major_li}]}
-        return_li.append(major_di)
+        major_str = create_comment_string(S_MAJOR, major_cmd, major_li)
+        return_li.append(major_str)
 
     return return_li
 
@@ -311,7 +347,7 @@ def go_through_folders(json_input):
         folder_values = json_input[folder]
         # call function to parse json and create lists
         cur_folder_updates = create_update_dict(folder, folder_values)
-        # if we returned unsuccessfully log it and continue
+        # if we returned unsuccessfully log it and continue to next folder
         if cur_folder_updates == WARNING:
             log_msg = "Error parsing input, missing <deps/devDeps> element for ", folder
             log(WARNING, log_msg)
@@ -319,15 +355,19 @@ def go_through_folders(json_input):
 
         if len(ERR_LI) != 0:
             # if we hit any errors add the list to the output dict then clear the list
-            cur_folder_updates.append({"ERRORS": ERR_LI})
+            error_report = "ERRORS:\n" + str(ERR_LI)
+            cur_folder_updates.append(error_report)
             ERR_LI = []
         if len(WARN_LI) != 0:
             # if we hit any warnings add the list to the output dict then clear the list
-            cur_folder_updates.append({"WARNINGS": WARN_LI})
+            warn_report = "WARNINGS:\n" + str(WARN_LI)
+            cur_folder_updates.append(warn_report)
             WARN_LI = []
 
-        # add the dict we just created into the update dict.
-        update_dict[folder] = cur_folder_updates
+        # combine all elements of the list together, separate by newline.
+        update_string = "\n".join(cur_folder_updates)
+        # add string to return dict.
+        update_dict[folder] = update_string
 
     return update_dict
 
