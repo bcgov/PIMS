@@ -9,6 +9,9 @@ export const createAndCloseExistingIssue = async (issueTitle, issueBody, issueCo
   // Check for existing Issue.
   const existingIssueNumber = await findIssueByTitle(issueTitle);
 
+  console.log(typeof issueComment);
+  console.log(issueComment);
+
   if (existingIssueNumber && !Number.isNaN(Number(existingIssueNumber))) {
     // Close old Issue.
     await closeIssue(Number(existingIssueNumber));
