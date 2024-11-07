@@ -8,7 +8,7 @@ const outputText = require(path.resolve(__dirname, `../../../outputText.json`));
 
 // Get package.json paths and comment contents from env.
 const packageJsonPaths = JSON.parse(process.env.packageJsonPaths);
-const comment = JSON.parse(process.env.commentContents);
+const comment = process.env.commentContents;
 
 (async () => {
   const module = await import('../github-api/create-and-close-existing-issue.mjs');
