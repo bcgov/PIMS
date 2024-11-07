@@ -236,7 +236,7 @@ def create_update_dict(folder, outdated_json):
       folder (str): folder we are currently processing
       outdated_dep_json (dict): jsonfied string from outdatedDeps.json
     Returns:
-      return_dict (dict): grouping of lists of updates and str cmds
+      return_li (list): grouping of lists of updates and str cmds
     """
     # checking if we have dev & regular dependencies
     missing_updates = []
@@ -282,19 +282,22 @@ def create_update_dict(folder, outdated_json):
 
 
     # define return dictionary and set count
-    return_dict = {}
+    return_li = []
 
     if S_PATCH in LEVELS and len(patch_li) > 0:
         # if we are reporting on patch and there are updates include that section
-        return_dict["patch"] = [ {"count": len(patch_li)}, {"cmd": patch_cmd}, {"list": patch_li}]
+        patch_di = {"patch": [ {"count": len(patch_li)}, {"cmd": patch_cmd}, {"list": patch_li}] }
+        return_li.append(patch_di)
     if S_MINOR in LEVELS and len(minor_li) > 0:
         # if we are reporting on minor and there are updates  include that section
-        return_dict["minor"] = [{"count": len(minor_li)}, {"cmd": minor_cmd}, {"list": minor_li}]
+        minor_di = {"minor": [{"count": len(minor_li)}, {"cmd": minor_cmd}, {"list": minor_li}]}
+        return_li.append(minor_di)
     if S_MAJOR in LEVELS and len(major_li) > 0:
         # if we are reporting on major and there are updates  include that section
-        return_dict["major"] = [{"count": len(major_li)}, {"cmd": major_cmd}, {"list": major_li}]
+        major_di = {"major": [{"count": len(major_li)}, {"cmd": major_cmd}, {"list": major_li}]}
+        return_li.append(major_di)
 
-    return return_dict
+    return return_li
 
 def go_through_folders(json_input):
     """
