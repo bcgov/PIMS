@@ -171,9 +171,10 @@ def create_comment_string(dep_level, dep_cmd, dep_li):
     Returns:
       return_str (str): string of comment for this dep_level
     """
-    count = "There are " + str(len(dep_li)) + str(dep_level) + "updates.\n"
+    count = "There are " + str(len(dep_li)) + " " + str(dep_level) + " updates.\n"
     update = "To update run the following:\nnpm install " + dep_cmd + "\n"
-    list_u = "List of updates:\n" + str(dep_li)
+    join_update_list = "\n".join(dep_li)
+    list_u = "List of updates:\n" + join_update_list
 
     return_str = count + update + list_u
     return return_str
