@@ -147,7 +147,7 @@ def get_env_variables():
         # if we can access the input set it
         dep_in = os.environ["DEP_INPUT"]
     except KeyError:
-        log(ERROR, "Unable to get DEP INPUT")
+        log(ERROR, "Unable to get < DEP_INPUT >")
         exit(ERROR)
 
     # decode string based on Github standards
@@ -171,10 +171,18 @@ def create_comment_string(dep_level, dep_cmd, dep_li):
     Returns:
       return_str (str): string of comment for this dep_level
     """
-    count = "There are " + str(len(dep_li)) + " " + str(dep_level) + " updates.\n"
-    update = "To update run the following:\nnpm install " + dep_cmd + "\n"
+    # if there is only one update use better language
+    if len(dep_li) == 1:
+        is_are = "is "
+        update_s = " update.\n"
+    else:
+        is_are = "are "
+        update_s = " updates.\n"
+
+    count = "\nThere " + is_are + str(len(dep_li)) + " " + str(dep_level) + update_s
+    update = "\nTo update run the following:\nnpm install " + dep_cmd + "\n"
     join_update_list = "\n".join(dep_li)
-    list_u = "List of updates:\n" + join_update_list
+    list_u = "\nList of updates:\n" + join_update_list
 
     return_str = count + update + list_u
     return return_str
@@ -198,6 +206,9 @@ def dep_obj_to_str(folder_name, dep_li):
     """
     # every object in list should have these elements
     dep_ele = ['dependency', 'version', 'latestVersion']
+    dependency = dep_ele.index('dependency')
+    version = dep_ele.index('version')
+    latest_version = dep_ele.index('latestVersion')
     # string for all updates
     all_update_cmds = ""
     update_li = []
@@ -205,17 +216,17 @@ def dep_obj_to_str(folder_name, dep_li):
     for dep_obj in dep_li:
         # check if any of the required elements are missing, if yes add to missing list
         missing_elements = []
-        if dep_ele[0] not in dep_obj:
-            missing_elements.append(dep_ele[0])
-        if dep_ele[1] not in dep_obj:
-            missing_elements.append(dep_ele[1])
-        if dep_ele[2] not in dep_obj:
-            missing_elements.append(dep_ele[2])
+        if dep_ele[dependency] not in dep_obj:
+            missing_elements.append(dep_ele[dependency])
+        if dep_ele[version] not in dep_obj:
+            missing_elements.append(dep_ele[version])
+        if dep_ele[latest_version] not in dep_obj:
+            missing_elements.append(dep_ele[latest_version])
         # if there are are any elements missing log and continue
         if len(missing_elements) != 0:
             # if we are missing any of the titles above we have to log an go to the next list
-            l_m = "From: " + folder_name + " missing " + str(missing_elements) +\
-                " from this object: " + str(dep_obj)
+            l_m = "From: < " + folder_name + " > missing [ " + str(missing_elements) +\
+                " ] from this object: < " + str(dep_obj) + " >"
             log(WARNING, l_m)
             continue
 
@@ -226,8 +237,8 @@ def dep_obj_to_str(folder_name, dep_li):
 
         if dep_name in IGNORE_LIST:
             # if the dep name is in ignore list log, and go to next
-            l_m = "Found update in: " + folder_name + " for: " + dep_name + \
-                " which is on the ignore list. Dependency not included in final update list."
+            l_m = "Found update in: < " + folder_name + " > for: < " + dep_name + \
+                " > which is on the ignore list. Dependency not included in final update list."
             log(WARNING, l_m)
             continue
 
@@ -350,18 +361,18 @@ def go_through_folders(json_input):
         cur_folder_updates = create_update_dict(folder, folder_values)
         # if we returned unsuccessfully log it and continue to next folder
         if cur_folder_updates == WARNING:
-            log_msg = "Error parsing input, missing <deps/devDeps> element for ", folder
+            log_msg = "Error parsing input, missing deps and devDeps element for < " + folder + " >"
             log(WARNING, log_msg)
             continue
 
         if len(ERR_LI) != 0:
             # if we hit any errors add the list to the output dict then clear the list
-            error_report = "ERRORS:\n" + "\n".join(ERR_LI)
+            error_report = "\nERRORS:\n" + "\n".join(ERR_LI)
             cur_folder_updates.append(error_report)
             ERR_LI = []
         if len(WARN_LI) != 0:
             # if we hit any warnings add the list to the output dict then clear the list
-            warn_report = "WARNINGS:\n" + "\n".join(WARN_LI)
+            warn_report = "\nWARNINGS:\n" + "\n".join(WARN_LI)
             cur_folder_updates.append(warn_report)
             WARN_LI = []
 
