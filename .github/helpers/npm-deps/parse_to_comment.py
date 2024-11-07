@@ -15,15 +15,14 @@
 }
 
 Sample Output:
-{ "folder1": { "count": <number_folder1_deps>,
-               "patch": { "count": <num_patch_deps>,
+{ "folder1": { "patch": { "count": <num_patch_deps>,
                           "updateCmd": <string to update all patch deps>,
                           "detailedList":[ "Update <dep1_name> from <cur_ver> to <update_to>",
                                            ... ,
                                            "Update <depN_name> from <cur_ver> to <update_to>"
                                          ] },
                "minor": { ... },
-               "major": { ... } },
+               "major": { ... } ],
   ... ,
   "folderN": { ... } }
 
@@ -280,7 +279,7 @@ def create_update_dict(folder, outdated_json):
         return WARNING
 
     # define return dictionary and set count
-    return_dict = {"count": len(patch_li) + len(minor_li) + len(major_li)}
+    return_dict = {}
 
     if S_PATCH in LEVELS and len(patch_li) > 0:
         # if we are reporting on patch and there are updates include that section

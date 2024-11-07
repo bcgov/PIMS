@@ -9,9 +9,6 @@ export const createAndCloseExistingIssue = async (issueTitle, issueBody, issueCo
   // Check for existing Issue.
   const existingIssueNumber = await findIssueByTitle(issueTitle);
 
-  console.log(typeof issueComment);
-  console.log(issueComment);
-
   if (existingIssueNumber && !Number.isNaN(Number(existingIssueNumber))) {
     // Close old Issue.
     await closeIssue(Number(existingIssueNumber));
@@ -20,12 +17,13 @@ export const createAndCloseExistingIssue = async (issueTitle, issueBody, issueCo
   // Create new Issue.
   await createIssue(issueTitle, decodeURIComponent(issueBody));
 
-  setTimeout(() => console.log("pausing for issue to be created..."), 2000);
+  setTimeout(() => console.log("pausing for issue to be created..."), 1500);
 
+  // get the issue number for the issue just created
   const newIssueNumber = await findIssueByTitle(issueTitle);
 
   // Add comment to Issue.
-  await addComment(newIssueNumber, issueComment);
+  await addComment(newIssueNumber, JSON.stringify(issueComment));
 };
 
 export default createAndCloseExistingIssue;
