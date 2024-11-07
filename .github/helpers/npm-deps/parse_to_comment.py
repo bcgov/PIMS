@@ -356,12 +356,12 @@ def go_through_folders(json_input):
 
         if len(ERR_LI) != 0:
             # if we hit any errors add the list to the output dict then clear the list
-            error_report = "ERRORS:\n" + str(ERR_LI)
+            error_report = "ERRORS:\n" + "\n".join(ERR_LI)
             cur_folder_updates.append(error_report)
             ERR_LI = []
         if len(WARN_LI) != 0:
             # if we hit any warnings add the list to the output dict then clear the list
-            warn_report = "WARNINGS:\n" + str(WARN_LI)
+            warn_report = "WARNINGS:\n" + "\n".join(WARN_LI)
             cur_folder_updates.append(warn_report)
             WARN_LI = []
 
