@@ -15,12 +15,13 @@
 }
 
 Sample Output:
-{ "folder1": { "patch": { "count": <num_patch_deps>,
-                          "updateCmd": <string to update all patch deps>,
-                          "detailedList":[ "Update <dep1_name> from <cur_ver> to <update_to>",
-                                           ... ,
-                                           "Update <depN_name> from <cur_ver> to <update_to>"
-                                         ] },
+{ "folder1": { "Updates": {
+               "patch": [ { "count": <num_patch_deps> },
+                          { "updateCmd": <string to update all patch deps> },
+                          { "detailedList":[ "Update <dep1_name> from <cur_ver> to <update_to>",
+                                              ... ,
+                                             "Update <depN_name> from <cur_ver> to <update_to>"
+                                         ] } ] }
                "minor": { ... },
                "major": { ... } ],
   ... ,
@@ -118,7 +119,7 @@ def get_env_variables():
     also catch and report any errors as they arise.
 
     Returns:
-      return_env (dictionary): holds all env variables
+      return_env (dict): holds all env variables
         {
             dep_in (str): json string from parse-package-versions output with dependency information
         }
@@ -229,14 +230,15 @@ def format_lists(folder, li_to_str, update_cmd_in,  update_li):
 
 def create_update_dict(folder, outdated_json):
     """
-    Add any dependencies to necessary lists and return the lists.
+    Add any dependencies to necessary lists and return as dictionary.
 
     Args:
       folder (str): folder we are currently processing
-      outdated_dep_json (directory): jsonfied string from outdatedDeps.json
+      outdated_dep_json (dict): jsonfied string from outdatedDeps.json
     Returns:
-      return_dict (dictionary): grouping of lists of updates and str cmds
+      return_dict (dict): grouping of lists of updates and str cmds
     """
+    # checking if we have dev & regular dependencies
     missing_updates = []
     # add check to see if these exist
     patch_li = []
@@ -245,51 +247,52 @@ def create_update_dict(folder, outdated_json):
     minor_cmd = "npm install "
     major_li = []
     major_cmd = "npm install "
+    # loop through all dependencies present.
+    to_process = []
 
     # if there are dependencies in the directory, add them
     if DEPENDENCIES not in outdated_json:
         missing_updates.append(DEPENDENCIES)
     else:
+        # if DEPENDENCIES exist add to process
         dep_json = outdated_json[DEPENDENCIES]
-        # updates from each folder under DEPENDENCIES
-        # for each level we are reporting on add commands to string, and updates to list
-        if S_PATCH in dep_json and S_PATCH in LEVELS:
-            patch_cmd = format_lists(folder, dep_json[S_PATCH], patch_cmd, patch_li)
-        if S_MINOR in dep_json and S_MINOR in LEVELS:
-            minor_cmd = format_lists(folder, dep_json[S_MINOR], minor_cmd, minor_li)
-        if S_MAJOR in dep_json and S_MAJOR in LEVELS:
-            major_cmd = format_lists(folder, dep_json[S_MAJOR], major_cmd, major_li)
+        to_process.append(dep_json)
 
     # check if there are no DEV_DEPENDENCIES
     if DEV_DEPENDENCIES not in outdated_json:
         missing_updates.append(DEV_DEPENDENCIES)
     else:
+        # if DEV_DEPENDENCIES exist add to process
         dev_json = outdated_json[DEV_DEPENDENCIES]
-        # updates from each folder under DEV_DEPENDENCIES
-        # for each level we are reporting on add commands to string, and updates to list
-        if S_PATCH in dev_json and S_PATCH in LEVELS:
-            patch_cmd = format_lists(folder, dev_json[S_PATCH], patch_cmd, patch_li)
-        if S_MINOR in dev_json and S_MINOR in LEVELS:
-            minor_cmd = format_lists(folder, dev_json[S_MINOR], minor_cmd, minor_li)
-        if S_MAJOR in dev_json and S_MAJOR in LEVELS:
-            major_cmd = format_lists(folder, dev_json[S_MAJOR], major_cmd, major_li)
+        to_process.append(dev_json)
 
     if DEPENDENCIES in missing_updates and DEV_DEPENDENCIES in missing_updates:
         # if there are no dependencies or dev dependencies there is an issue
         return WARNING
+
+    for type_dep in to_process:
+        # for each level we are reporting on add commands to string, and updates to list
+        if S_PATCH in dev_json and S_PATCH in LEVELS:
+            patch_cmd = format_lists(folder, type_dep[S_PATCH], patch_cmd, patch_li)
+        if S_MINOR in dev_json and S_MINOR in LEVELS:
+            minor_cmd = format_lists(folder, type_dep[S_MINOR], minor_cmd, minor_li)
+        if S_MAJOR in dev_json and S_MAJOR in LEVELS:
+            major_cmd = format_lists(folder, type_dep[S_MAJOR], major_cmd, major_li)
+
+
 
     # define return dictionary and set count
     return_dict = {}
 
     if S_PATCH in LEVELS and len(patch_li) > 0:
         # if we are reporting on patch and there are updates include that section
-        return_dict["patch"] = {"count": len(patch_li), "cmd": patch_cmd, "list": patch_li}
+        return_dict["patch"] = [ {"count": len(patch_li)}, {"cmd": patch_cmd}, {"list": patch_li}]
     if S_MINOR in LEVELS and len(minor_li) > 0:
         # if we are reporting on minor and there are updates  include that section
-        return_dict["minor"] = {"count": len(minor_li), "cmd": minor_cmd, "list": minor_li}
+        return_dict["minor"] = [{"count": len(minor_li)}, {"cmd": minor_cmd}, {"list": minor_li}]
     if S_MAJOR in LEVELS and len(major_li) > 0:
         # if we are reporting on major and there are updates  include that section
-        return_dict["major"] = {"count": len(major_li), "cmd": major_cmd, "list": major_li}
+        return_dict["major"] = [{"count": len(major_li)}, {"cmd": major_cmd}, {"list": major_li}]
 
     return return_dict
 
