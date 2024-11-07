@@ -16,7 +16,7 @@ const commentIn = JSON.parse(process.env.commentContents);
   // Create an array of promises for each packageJsonPath.
   const promises = packageJsonPaths.map(async (packagePath) => {
     // get the comment for this folder
-    const comment = {"Updates": commentIn[packagePath]};
+    const comment = commentIn[packagePath];
     // create title
     const issueTitle =
       packagePath !== '.' ? `${packagePath} NPM Dependency Report` : 'NPM Dependency Report';

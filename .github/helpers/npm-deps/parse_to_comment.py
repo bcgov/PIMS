@@ -329,8 +329,6 @@ def go_through_folders(json_input):
         # add the dict we just created into the update dict.
         update_dict[folder] = cur_folder_updates
 
-
-
     return update_dict
 
 def main():

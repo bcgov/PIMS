@@ -1,0 +1,32 @@
+{
+    "Updates": [
+        {
+            "minor": [
+                {
+                    "count": 9
+                },
+                {
+                    "cmd": "npm install @mui/x-date-pickers@7.22.1 @mui/x-data-grid@7.22.1 react-router-dom@6.28.0 typescript-eslint@8.13.0 @babel/preset-env@7.26.0 @babel/preset-react@7.25.9 @testing-library/jest-dom@6.6.3 eslint@9.14.0 vite-tsconfig-paths@5.1.0 "
+                },
+                {
+                    "list": [
+                        "Update @mui/x-date-pickers from 7.21.0 to 7.22.1",
+                        "Update @mui/x-data-grid from 7.21.0 to 7.22.1",
+                        "Update react-router-dom from 6.27.0 to 6.28.0",
+                        "Update typescript-eslint from 8.11.0 to 8.13.0",
+                        "Update @babel/preset-env from 7.25.2 to 7.26.0",
+                        "Update @babel/preset-react from 7.24.1 to 7.25.9",
+                        "Update @testing-library/jest-dom from 6.5.0 to 6.6.3",
+                        "Update eslint from 9.11.1 to 9.14.0",
+                        "Update vite-tsconfig-paths from 5.0.1 to 5.1.0"
+                    ]
+                }
+            ]
+        },
+        {
+            "WARNINGS": [
+                "Found update in: react-app for: xlsx which is on the ignore list. Dependency not included in final update list."
+            ]
+        }
+    ]
+}
