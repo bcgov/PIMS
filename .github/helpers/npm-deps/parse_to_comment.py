@@ -279,8 +279,6 @@ def create_update_dict(folder, outdated_json):
         if S_MAJOR in dev_json and S_MAJOR in LEVELS:
             major_cmd = format_lists(folder, type_dep[S_MAJOR], major_cmd, major_li)
 
-
-
     # define return dictionary and set count
     return_li = []
 
@@ -319,17 +317,19 @@ def go_through_folders(json_input):
             log(WARNING, log_msg)
             continue
 
-        # add the dict we just created into the update dict.
-        update_dict[folder] = cur_folder_updates
-
         if len(ERR_LI) != 0:
             # if we hit any errors add the list to the output dict then clear the list
-            update_dict[folder]["ERRORS"] = ERR_LI
+            cur_folder_updates.append({"ERRORS": ERR_LI})
             ERR_LI = []
         if len(WARN_LI) != 0:
             # if we hit any warnings add the list to the output dict then clear the list
-            update_dict[folder]["WARNINGS"] = WARN_LI
+            cur_folder_updates.append({"WARNINGS": WARN_LI})
             WARN_LI = []
+
+        # add the dict we just created into the update dict.
+        update_dict[folder] = cur_folder_updates
+
+
 
     return update_dict
 
