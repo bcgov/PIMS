@@ -83,7 +83,7 @@ const findIssueNumberByTitle = async (issueTitle) => {
 	return null;
 };
 
-export const closeAndCreateIssue = async (issueTitle, issueBody) => {
+export async function closeAndCreateIssue(issueTitle, issueBody) {
 	// try to get number of old issue
 	const issueNumber = await findIssueNumberByTitle(issueTitle);
 
@@ -114,9 +114,9 @@ export const closeAndCreateIssue = async (issueTitle, issueBody) => {
 
 	// return new issue number
 	return newIssue.body.number;
-};
+}
 
-export const createAndCloseComment = async (issueNumber, issueComment) => {
+export async function createAndCloseComment(issueNumber, issueComment) {
 	// Add comment to Issue.
 	const newComment = await addComment(
 		issueNumber,
@@ -145,4 +145,4 @@ export const createAndCloseComment = async (issueNumber, issueComment) => {
 	}
 	// all good if we make it here.
 	return SUCCESS;
-};
+}
