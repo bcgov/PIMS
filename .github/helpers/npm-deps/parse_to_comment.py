@@ -329,6 +329,13 @@ def create_update_dict(folder, outdated_json):
 
     # define return dictionary and set count
     return_li = []
+    total_updates = len(patch_li) + len(minor_li) + len(major_li)
+    if total_updates > 0:
+        header_str = "There are a total of " + str(total_updates) + " for < " + folder + " >\n"
+    else:
+        header_str = "Currently there are no updates for < " + folder + " >\n"
+
+    return_li.append(header_str)
 
     if S_PATCH in LEVELS and len(patch_li) > 0:
         # if we are reporting on patch and there are updates include that section
