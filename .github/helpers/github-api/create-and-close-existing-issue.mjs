@@ -11,12 +11,8 @@ import {
  * Place within .github/helpers/github-api/
  */
 
-const NUMBER = "NUMBER";
-const STATUS = "STATUS";
-const ID = "ID";
 const SUCCESS = 0;
-const ERROR = 1;
-const WARNING = 2;
+
 const STATCODE = {
 	Success: {
 		200: "OK",
