@@ -67,7 +67,7 @@ export async function addComment(issueNumber, issueComment) {
 		issue_number: issueNumber,
 		body: issueComment,
 	});
-	//console.log("add comment: ", request.data);
+	console.log("add comment: ", request.data);
 	return response;
 }
 
@@ -84,7 +84,7 @@ export async function deleteComment(commentID) {
 		repo: GITHUB_REPO,
 		comment_id: commentID,
 	});
-	//console.log("delete comment: ", response.data);
+	console.log("delete comment: ", response.data);
 	return response;
 }
 
@@ -102,7 +102,7 @@ export async function findIssues(state = "open") {
 		repo: GITHUB_REPO,
 		state, // Get issues that are 'open', 'closed' or 'all'.
 	});
-	//console.log("found issue: ", response.data);
+	console.log("found issue: ", response.data);
 	return response;
 }
 

@@ -1,8 +1,10 @@
-import outputText from "../../../outputText.json";
-import {
-	closeAndCreateIssue,
-	createAndCloseComment,
-} from "../github-api/create-and-close-existing-issue.mjs";
+// NOTE: these cant be imports as they are outside a module
+const outputText = require(path.resolve(__dirname, `../../../outputText.json`));
+const module = await import(
+	"../github-api/create-and-close-existing-issue.mjs"
+);
+const closeAndCreateIssue = module.closeAndCreateIssue;
+const createAndCloseComment = module.createAndCloseComment;
 
 /**
  * THIS FILE DOES NOT REQUIRE ANY EDITING.
