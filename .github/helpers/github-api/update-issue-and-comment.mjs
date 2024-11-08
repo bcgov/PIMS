@@ -35,7 +35,7 @@ const STATCODE = {
 };
 
 const checkStatus = (retInfo) => {
-	returnedStatus = retInfo.status;
+	const returnedStatus = retInfo.status;
 
 	if (returnedStatus in STATCODE.Success) {
 		// hit a listed successful code, return good code
