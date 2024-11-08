@@ -4,8 +4,6 @@ const outputText = require(path.resolve(__dirname, `../../../outputText.json`));
 const updateIssueAndComment = import(
 	"../github-api/update-issue-and-comment.mjs"
 );
-const closeAndCreateIssue = updateIssueAndComment.closeAndCreateIssue;
-const createAndCloseComment = updateIssueAndComment.createAndCloseComment;
 
 /**
  * THIS FILE DOES NOT REQUIRE ANY EDITING.
@@ -27,7 +25,7 @@ const commentIn = JSON.parse(process.env.commentContents);
 				? `${packagePath} NPM Dependency Report`
 				: "NPM Dependency Report";
 		// Await the completion of create and close existing issue.
-		const newIssueNumber = await closeAndCreateIssue(
+		const newIssueNumber = await updateIssueAndComment.closeAndCreateIssue(
 			issueTitle,
 			outputText[packagePath],
 		);
@@ -37,7 +35,7 @@ const commentIn = JSON.parse(process.env.commentContents);
 		}
 
 		// Await the completion of create and close comment
-		const commentRes = await createAndCloseComment(
+		const commentRes = await updateIssueAndComment.createAndCloseComment(
 			Number(newIssueNumber),
 			comment,
 		);
