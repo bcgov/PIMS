@@ -1,6 +1,7 @@
-import * as fs from "node:fs";
-import * as os from "node:os";
-import { JSON5 as json5 } from "json5";
+// NOTE: these cant be imports as they are outside a module
+const fs = require("fs");
+const os = require("os");
+const json5 = require("json5");
 
 /**
  * THIS FILE DOES NOT REQUIRE ANY EDITING.
