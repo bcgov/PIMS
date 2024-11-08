@@ -1,5 +1,8 @@
-const path = require('path');
-const outputText = require(path.resolve(__dirname, `../../../outputText.json`));
+import outputText from "../../../outputText.json";
+import {
+	closeAndCreateIssue,
+	createAndCloseComment,
+} from "../github-api/create-and-close-existing-issue.mjs";
 
 /**
  * THIS FILE DOES NOT REQUIRE ANY EDITING.
@@ -11,19 +14,41 @@ const packageJsonPaths = JSON.parse(process.env.packageJsonPaths);
 const commentIn = JSON.parse(process.env.commentContents);
 
 (async () => {
-  const module = await import('../github-api/create-and-close-existing-issue.mjs');
-  const createAndCloseExistingIssue = module.default;
-  // Create an array of promises for each packageJsonPath.
-  const promises = packageJsonPaths.map(async (packagePath) => {
-    // get the comment for this folder
-    const comment = commentIn[packagePath];
-    // create title
-    const issueTitle =
-      packagePath !== '.' ? `${packagePath} NPM Dependency Report` : 'NPM Dependency Report';
-    // Await the completion of create and close existing issue.
-    await createAndCloseExistingIssue(issueTitle, outputText[packagePath], comment);
-  });
+	// Create an array of promises for each packageJsonPath.
+	const promises = packageJsonPaths.map(async (packagePath) => {
+		// get the comment for this folder
+		const comment = commentIn[packagePath];
+		// create title
+		const issueTitle =
+			packagePath !== "."
+				? `${packagePath} NPM Dependency Report`
+				: "NPM Dependency Report";
+		// Await the completion of create and close existing issue.
+		const newIssueNumber = await closeAndCreateIssue(
+			issueTitle,
+			outputText[packagePath],
+		);
+		// if we dont get a number back we hit an error somewhere.
+		if (Number.isNaN(Number(newIssueNumber))) {
+			throw error("Unexpected response: ", newIssueNumber, "\nQuitting.");
+		}
 
-  // Wait for all issues to be created.
-  await Promise.all(promises);
+		// Await the completion of create and close comment
+		const commentRes = await createAndCloseComment(
+			Number(newIssueNumber),
+			comment,
+		);
+		if (Number.isNaN(Number(commentRes))) {
+			// if we dont get a number back we hit an error at some point.
+			throw error("Unexpected response: ", commentRes, "\nQuitting.");
+		}
+	});
+
+	// Wait for all issues to be created.
+	try {
+		await Promise.all(promises);
+	} catch (e) {
+		console.error("END WITH ERROR:\n ", e);
+		exit();
+	}
 })();
