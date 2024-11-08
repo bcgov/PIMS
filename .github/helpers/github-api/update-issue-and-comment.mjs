@@ -83,7 +83,7 @@ const findIssueNumberByTitle = async (issueTitle) => {
 	return null;
 };
 
-export async function closeAndCreateIssue(issueTitle, issueBody) {
+const closeAndCreateIssue = async (issueTitle, issueBody) => {
 	// try to get number of old issue
 	const issueNumber = await findIssueNumberByTitle(issueTitle);
 
@@ -114,9 +114,9 @@ export async function closeAndCreateIssue(issueTitle, issueBody) {
 
 	// return new issue number
 	return newIssue.body.number;
-}
+};
 
-export async function createAndCloseComment(issueNumber, issueComment) {
+const createAndCloseComment = async (issueNumber, issueComment) => {
 	// Add comment to Issue.
 	const newComment = await addComment(
 		issueNumber,
@@ -145,4 +145,29 @@ export async function createAndCloseComment(issueNumber, issueComment) {
 	}
 	// all good if we make it here.
 	return SUCCESS;
-}
+};
+
+export const updateIssueAndComment = async (
+	issueTitle,
+	issueBody,
+	issueComment,
+) => {
+	// Await the completion of create and close existing issue.
+	const newIssueNumber = await closeAndCreateIssue(issueTitle, issueBody);
+	// if we dont get a number back we hit an error somewhere.
+	if (Number.isNaN(Number(newIssueNumber))) {
+		throw new Error("Unexpected response: ", newIssueNumber, "\nQuitting.");
+	}
+
+	// Await the completion of create and close comment
+	const commentRes = await createAndCloseComment(
+		Number(newIssueNumber),
+		issueComment,
+	);
+	if (Number.isNaN(Number(commentRes))) {
+		// if we dont get a number back we hit an error at some point.
+		throw new Error("Unexpected response: ", commentRes, "\nQuitting.");
+	}
+};
+
+export default updateIssueAndComment;

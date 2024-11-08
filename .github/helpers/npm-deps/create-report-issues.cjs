@@ -15,6 +15,8 @@ const packageJsonPaths = JSON.parse(process.env.packageJsonPaths);
 const commentIn = JSON.parse(process.env.commentContents);
 
 (async () => {
+	const module = await import("../github-api/update-issue-and-comment.mjs");
+	const updateIssueAndComment = module.default;
 	// Create an array of promises for each packageJsonPath.
 	const promises = packageJsonPaths.map(async (packagePath) => {
 		// get the comment for this folder
@@ -24,32 +26,10 @@ const commentIn = JSON.parse(process.env.commentContents);
 			packagePath !== "."
 				? `${packagePath} NPM Dependency Report`
 				: "NPM Dependency Report";
-		// Await the completion of create and close existing issue.
-		const newIssueNumber = await updateIssueAndComment.closeAndCreateIssue(
-			issueTitle,
-			outputText[packagePath],
-		);
-		// if we dont get a number back we hit an error somewhere.
-		if (Number.isNaN(Number(newIssueNumber))) {
-			throw error("Unexpected response: ", newIssueNumber, "\nQuitting.");
-		}
 
-		// Await the completion of create and close comment
-		const commentRes = await updateIssueAndComment.createAndCloseComment(
-			Number(newIssueNumber),
-			comment,
-		);
-		if (Number.isNaN(Number(commentRes))) {
-			// if we dont get a number back we hit an error at some point.
-			throw error("Unexpected response: ", commentRes, "\nQuitting.");
-		}
+		await updateIssueAndComment(issueTitle, outputText[packagePath], comment);
 	});
 
 	// Wait for all issues to be created.
-	try {
-		await Promise.all(promises);
-	} catch (e) {
-		console.error("END WITH ERROR:\n ", e);
-		exit();
-	}
+	await Promise.all(promises);
 })();
