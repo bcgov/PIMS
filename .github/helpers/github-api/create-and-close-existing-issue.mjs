@@ -20,10 +20,7 @@ export const createAndCloseExistingIssue = async (issueTitle, issueBody, issueCo
   setTimeout(() => console.log("pausing for issue to be created..."), 1500);
 
   // get the issue number for the issue just created
-  const newIssueNumber = new_issue['number'];
-  console.log("Issue: ", new_issue);
-  console.log("Number: ", newIssueNumber);
-  const betterIssueNumber = await findIssueByTitle(issueTitle);
+  const newIssueNumber = new_issue['data']['number'];
 
   // Add comment to Issue.
   await addComment(newIssueNumber, JSON.stringify(issueComment));
