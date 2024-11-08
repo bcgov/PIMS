@@ -48,7 +48,7 @@ export async function closeIssue(issue_number) {
 		issue_number,
 		state: "closed",
 	});
-	console.log("close issue: ", response.data);
+	//console.log("close issue: ", response.data);
 	return response;
 }
 
@@ -102,7 +102,7 @@ export async function findIssues(state = "open") {
 		repo: GITHUB_REPO,
 		state, // Get issues that are 'open', 'closed' or 'all'.
 	});
-	console.log("found issue: ", response.data);
+	//console.log("found issue: ", response.data);
 	return response;
 }
 
