@@ -1,6 +1,6 @@
 // NOTE: these cant be imports as they are outside a module
 const outputText = require(path.resolve(__dirname, `../../../outputText.json`));
-const updateIssueAndComment = await import(
+const updateIssueAndComment = import(
 	"../github-api/update-issue-and-comment.mjs"
 );
 const closeAndCreateIssue = updateIssueAndComment.closeAndCreateIssue;
