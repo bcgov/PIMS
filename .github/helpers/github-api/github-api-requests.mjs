@@ -30,7 +30,7 @@ export async function createIssue(title, body) {
 		title,
 		body,
 	});
-	console.log("create issue: ", response.data);
+	//console.log("create issue: ", response.data);
 	return response;
 }
 
@@ -67,7 +67,7 @@ export async function addComment(issueNumber, issueComment) {
 		issue_number: issueNumber,
 		body: issueComment,
 	});
-	console.log("add comment: ", request.data);
+	console.log("add comment: ", response.data);
 	return response;
 }
 
