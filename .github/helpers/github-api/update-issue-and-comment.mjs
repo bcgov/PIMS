@@ -112,7 +112,7 @@ const closeAndCreateIssue = async (issueTitle, issueBody) => {
 	}
 
 	// wait for issue to be created.
-	timeout(1000).then(() => console.log("pausing for issue to be created..."));
+	timeout(2000).then(() => console.log("pausing for issue to be created..."));
 
 	// return new issue number
 	return newIssue.body.number;
@@ -132,7 +132,7 @@ const createAndCloseComment = async (issueNumber, issueComment) => {
 	}
 
 	// pausing so that the comment is created, and webhook sent.
-	timeout(1000).then(() => console.log("pausing for comment to be created..."));
+	timeout(2000).then(() => console.log("pausing for comment to be created..."));
 
 	// get the comment id from the response data
 	const commentID = newComment.data.id;
