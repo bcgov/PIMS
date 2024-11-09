@@ -115,7 +115,10 @@ const closeAndCreateIssue = async (issueTitle, issueBody) => {
 	timeout(2000).then(() => console.log("pausing for issue to be created..."));
 
 	// return new issue number
-	return newIssue.body.number;
+	const newIssueNumber = newIssue.body.number;
+	// wait for issue to be created.
+	timeout(2000).then(() => console.log(newIssueNumber));
+	return newIssueNumber;
 };
 
 const createAndCloseComment = async (issueNumber, issueComment) => {
