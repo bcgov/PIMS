@@ -104,7 +104,6 @@ const closeAndCreateIssue = async (issueTitle, issueBody) => {
 
 	// Create new Issue.
 	const newIssue = await createIssue(issueTitle, decodeURIComponent(issueBody));
-	console.log("is this something? ", newIssue.data);
 	const newIssueStatus = checkStatus(newIssue);
 
 	if (newIssueStatus !== SUCCESS) {
@@ -116,9 +115,8 @@ const closeAndCreateIssue = async (issueTitle, issueBody) => {
 	timeout(2000).then(() => console.log("pausing for issue to be created..."));
 
 	// return new issue number
-	const newIssueNumber = newIssue.body.number;
-	// wait for issue to be created.
-	timeout(2000).then(() => console.log(newIssueNumber));
+	const newIssueNumber = newIssue.data.number;
+
 	return newIssueNumber;
 };
 
