@@ -67,7 +67,7 @@ export async function addComment(issueNumber, issueComment) {
 		issue_number: issueNumber,
 		body: issueComment,
 	});
-	console.log("add comment: ", response.data);
+	//console.log("add comment: ", response.data);
 	return response;
 }
 
@@ -84,7 +84,7 @@ export async function deleteComment(commentID) {
 		repo: GITHUB_REPO,
 		comment_id: commentID,
 	});
-	console.log("delete comment: ", response.data);
+	//console.log("delete comment: ", response.data);
 	return response;
 }
 
