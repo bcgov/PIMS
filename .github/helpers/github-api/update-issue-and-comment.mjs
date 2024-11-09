@@ -104,7 +104,7 @@ const closeAndCreateIssue = async (issueTitle, issueBody) => {
 
 	// Create new Issue.
 	const newIssue = await createIssue(issueTitle, decodeURIComponent(issueBody));
-	console.log("is this something? ", newIssue);
+	console.log("is this something? ", newIssue.data);
 	const newIssueStatus = checkStatus(newIssue);
 
 	if (newIssueStatus !== SUCCESS) {
