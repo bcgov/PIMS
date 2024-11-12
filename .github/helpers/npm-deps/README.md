@@ -31,17 +31,17 @@ The following structure must be followed and all files present for the workflow 
 In plain text (if you want a more detailed explanation see below) this workflow does the following:
 
 1. Run `.github/helpers/parse-json5-config` on `.github/config/dep-report.json5`
-    - This produces `packageJsonPaths` (currently the only config item)
+    - This produces `packageJsonPaths`, `ignoreList`, and `depLevels`
 2. Run `.github/helpers/npm-deps/parse-npm-deps.cjs`
     - This goes through `packageJsonPaths` and gets the lists of dependencies for each path listed
     - Checks if there is a newer version from their npm page
     - Create json structure of updates that need to be processed
     - write output to `outdatedDeps.json`
 3. Run `.github/helpers/npm-deps/parse_to_comment.py`
-    - This takes in `outdatedDeps.json`
+    - This takes in `outdatedDeps.json`, `ignoreList`, and `depLevels`
     - Creates strings of info for each update that is listed
-        - Ignores any packages in ignore list (adds to warning list)
-        - Ignores any package updates for levels not being reported on
+        - Ignores any packages in `ignoreList` (adds to warning list)
+        - Only reports on package updates for `<patch, minor, major>` dependencies in `depLevels`
     - Puts all the update strings together, and any warnings or errors into one string to rule them all
     - Saves that string to GITHUB_OUTPUT env file as `commentContents`=oneString
 4. Run `.github/helpers/npm-deps/create-report.cjs`
@@ -119,6 +119,8 @@ Steps:
 
 Outputs:
 - packageJsonPaths
+- ignoreList
+- depLevels
 
 ### parse-package-versions
 
@@ -141,6 +143,8 @@ Needs:
 
 Env:
 - packageJsonPaths from parse-json5-config
+- ignoreList from parse-json5-config
+- depLevels from parse-json5-config
 
 Steps:
 1. Download output `<outdatedDeps>` from parse-package-versions
@@ -248,14 +252,17 @@ Requires:
   - os          - Python lib for interacting with files
   - json        - json string -> dict -> json string
   - datetime    - timestamp for errors and warngings
-  - env variable DEP_INPUT (output from parse-package-versions)
+  - env variables:
+      - `DEP_INPUT` (output from parse-package-versions)
+      - `ignoreList` (output from parse-package-versions)
+      - `depLevels` (output from parse-package-versions)
 
 Steps:
 1. Get env variables
 2. Create update dictionary
-3. For each folder listed in DEP_INPUT
+3. For each folder listed in `DEP_INPUT`
    1. Combine dev dependencies and regular dependencies
-   2. For each dep level we are reporting on.
+   2. For each `depLevels` we are reporting on (ignoring those in `ignoreList`).
       1. Make a command to update all at once
          - ex: `"npm install dep1@<new_version>, ..., depN@<new_version>"`
       2. make a list of all updates in readable format
@@ -266,11 +273,12 @@ Steps:
          - Yes: Create header string: `"There are a total of <total_updates> updates for <folder>\n"`
          - No: Create header string: `"Currently there are no updates for <folder>\n"`
       4. For each dependency level we are reporting on & has updates create an update string:
-         - ex: `" There are <count> <level> updates.
+         - ex:
+            ```There are <count> <level> updates.
             To update run the following:
             <string to update all level deps>
             List of updates:
-            <list of level updates> "`
+            <list of level updates>
       5. Add header string to list
       6. Add update strings to list
    3. If we hit any Errors add them to the list

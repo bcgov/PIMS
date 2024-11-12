@@ -195,7 +195,7 @@ def create_comment_string(dep_level, dep_cmd, dep_li):
         is_are = "are "
         update_s = " updates.\n"
 
-    count = "\nThere " + is_are + str(len(dep_li)) + " " + str(dep_level) + update_s
+    count = "\n\nThere " + is_are + str(len(dep_li)) + " " + str(dep_level) + update_s
     update = "\nTo update run the following:\nnpm install " + dep_cmd + "\n"
     join_update_list = "\n".join(dep_li)
     list_u = "\nList of updates:\n" + join_update_list
@@ -348,9 +348,9 @@ def create_update_dict(folder, outdated_json):
     total_updates = len(patch_li) + len(minor_li) + len(major_li)
     if total_updates > 0:
         header_str = "There are a total of " + str(total_updates) + \
-            " updates for < " + folder + " >\n"
+            " updates for PIMS/" + folder + "/\n"
     else:
-        header_str = "Currently there are no updates for < " + folder + " >\n"
+        header_str = "Currently there are no updates for PIMS/" + folder + "/\n"
 
     return_li.append(header_str)
 
@@ -420,6 +420,7 @@ def main():
 
     # get the string to process, ignore list, and dependency levels to report on
     github_output_string = env_vars['DEP_INPUT']
+    # set these to global vars to be used in multiple functions
     IGNORE_LIST = env_vars["IGNORE_LIST"]
     LEVELS = env_vars["DEP_LEVELS"]
 
