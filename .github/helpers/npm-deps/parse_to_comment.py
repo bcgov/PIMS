@@ -72,9 +72,9 @@ WARNING = 2
 ERR_LI = []
 WARN_LI = []
 # list of levels to include in report
-LEVELS = [S_MINOR, S_MAJOR]
+LEVELS = []
 # if a variable name matches one in this list it will be left out of the normal list
-IGNORE_LIST = ["xlsx"]
+IGNORE_LIST = []
 
 def set_level_and_exit_code(code, message):
     """
@@ -156,6 +156,22 @@ def get_env_variables():
     decoded_str = decoded_str.replace( '%0D', '\r' )
     # add to return object
     return_env['DEP_INPUT'] = decoded_str
+
+    try:
+        ignore_li = os.environ["ignoreList"]
+    except KeyError:
+        log(ERROR, "Unable to get < ignoreList >")
+        exit(ERROR)
+    # transform string of a list to a list and add to dict
+    return_env['IGNORE_LIST'] = json.loads(ignore_li)
+
+    try:
+        dep_levels = os.environ["depLevels"]
+    except KeyError:
+        log(ERROR, "Unable to get < depLevels >")
+        exit(ERROR)
+    # transform string of a list to a list and add to dict
+    return_env['DEP_LEVELS'] = json.loads(dep_levels)
 
     return return_env
 
@@ -397,11 +413,15 @@ def main():
     dependencies in IGNORE_LIST and generate report updates in the levels specified in LEVELS.
     See doc above for sample input and output.
     """
+    global IGNORE_LIST # pylint: disable=global-statement
+    global LEVELS # pylint: disable=global-statement
     # get envronment variables
     env_vars = get_env_variables()
 
-    # get the string to process
+    # get the string to process, ignore list, and dependency levels to report on
     github_output_string = env_vars['DEP_INPUT']
+    IGNORE_LIST = env_vars["IGNORE_LIST"]
+    LEVELS = env_vars["DEP_LEVELS"]
 
     # convert input to json
     json_input = json.loads(github_output_string)

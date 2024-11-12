@@ -27,7 +27,10 @@ jobs:
   parse-json5-config:
       runs-on: ubuntu-22.04
       outputs:
+        # save output from dep-report.json5 to Github env variables
         packageJsonPaths: ${{ steps.parse_config.outputs.packageJsonPaths }}
+        ignoreList: ${{ steps.parse_config.outputs.ignoreList }}
+        depLevels: ${{ steps.parse_config.outputs.depLevels }}
 
       steps:
         # Checkout branch.
@@ -77,6 +80,9 @@ jobs:
     needs:
       - parse-json5-config
       - parse-package-versions
+    env:
+      ignoreList: ${{ needs.parse-json5-config.outputs.ignoreList }}
+      depLevels: ${{ needs.parse-json5-config.outputs.depLevels }}
     outputs:
         commentContents: ${{ steps.create_comment.outputs.commentContents }}
     steps:

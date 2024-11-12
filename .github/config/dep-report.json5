@@ -3,4 +3,10 @@
   // Check package.json files for dependency updates.
   packageJsonPaths: ["react-app", "express-api"],
 
+  // List of packages to ignore when reporting in jira ticket(s)
+  ignoreList: ["xlsx"],
+
+  // Sets what levels of dependencies to include in the jira ticket(s)
+  depLevels: ["minor", "major"],
+
 }
