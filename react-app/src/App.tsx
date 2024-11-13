@@ -57,6 +57,7 @@ const Router = () => {
           hideControls={false}
           showClusterPopup
           showSideBar
+          zoomOnScroll={true}
         />
       </AuthRouteGuard>
     </BaseLayout>
