@@ -274,11 +274,13 @@ Steps:
          - No: Create header string: `"Currently there are no updates for <folder>\n"`
       4. For each dependency level we are reporting on & has updates create an update string:
          - ex:
-            ```There are <count> <level> updates.
+            ```
+            There are <count> <level> updates.
             To update run the following:
             <string to update all level deps>
             List of updates:
             <list of level updates>
+            ```
       5. Add header string to list
       6. Add update strings to list
    3. If we hit any Errors add them to the list
