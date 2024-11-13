@@ -194,6 +194,14 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
       }),
   });
 
+  // Converts mouse event on clusters to a usable Point
+  const convertEventToPoint = (e: MouseEvent): Point => {
+    return {
+      x: e.clientX,
+      y: e.clientY,
+    } as Point;
+  };
+
   return (
     <>
       {/* For all cluster objects */}
@@ -208,7 +216,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
               eventHandlers={{
                 click: () => zoomOnCluster(property),
                 mouseover: (e) => {
-                  openClusterPopup(property, e.containerPoint);
+                  openClusterPopup(property, convertEventToPoint(e.originalEvent));
                 },
                 mouseout: cancelOpenPopup,
               }}
@@ -232,7 +240,7 @@ export const InventoryLayer = (props: InventoryLayerProps) => {
                     },
                   );
                 },
-                mouseover: (e) => openClusterPopup(property, e.containerPoint),
+                mouseover: (e) => openClusterPopup(property, convertEventToPoint(e.originalEvent)),
                 mouseout: cancelOpenPopup,
               }}
             />

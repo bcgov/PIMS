@@ -7,7 +7,7 @@ import { formatNumber, pidFormatter } from '@/utilities/formatters';
 import { ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-material';
 import { Box, Grid, IconButton, Typography } from '@mui/material';
 import { Point } from 'leaflet';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 
 export interface PopupState {
   open: boolean;
@@ -23,6 +23,7 @@ export interface PopupState {
 interface ClusterPopupProps {
   popupState: PopupState;
   setPopupState: (stateUpdates: Partial<PopupState>) => void;
+  boundingBox?: DOMRect;
 }
 
 /**
@@ -34,46 +35,60 @@ interface ClusterPopupProps {
  * @returns {JSX.Element} A React component representing the ClusterPopup.
  */
 const ClusterPopup = (props: ClusterPopupProps) => {
-  const { popupState, setPopupState } = props;
+  const { popupState, setPopupState, boundingBox } = props;
   const { getLookupValueById } = useContext(LookupContext);
+
+  // Backups for when surrounding box isn't initialized
+  const within = boundingBox ?? {
+    x: 0,
+    y: 0,
+    height: 0,
+    width: 0,
+    right: 0,
+    left: 0,
+    top: 0,
+    bottom: 0,
+  };
 
   /**
    * The following block of code determines which direction and position the popup should open with.
-   * Depending on the screen size, it determines the quadrant of the mouse event and choses a position and offset.
+   * Depending on the map size, it determines the quadrant of the mouse event and choses a position and offset.
    */
-  const screenCentre = { x: window.innerWidth / 2 - 100, y: window.innerHeight / 2 }; // -100 to account for the side menu being open
+  const mapCentre = { x: within.width / 2 - 100, y: within.height / 2 }; // -100 to account for the side menu being open
+  const mousePositionOnMap = popupState.position;
+
   let offset: { x: number; y: number } = { x: 0, y: 0 };
-  // Depending on how many properties are available, y displacement changes. 1 = -60, 2 = -180, else -220
+  // Depending on how many properties are available, y displacement changes. 1 = -170, 2 = -260, else -300
   const bottomYOffset =
-    popupState.properties.length < 3 ? (popupState.properties.length === 2 ? -180 : -60) : -220;
+    popupState.properties.length < 3 ? (popupState.properties.length === 2 ? -260 : -170) : -300;
   // Determine quadrant and set offset
-  const leftXOffset = 5;
-  const rightXOffset = -415;
-  const topYOffset = 80;
+  const leftXOffset = 0;
+  const rightXOffset = -400;
+  const topYOffset = 0;
   switch (true) {
     // Top-left quadant
-    case popupState.position.x <= screenCentre.x && popupState.position.y <= screenCentre.y:
+    case mousePositionOnMap.x <= mapCentre.x && mousePositionOnMap.y <= mapCentre.y:
       offset = {
         x: leftXOffset,
         y: topYOffset,
       };
       break;
     // Top-right quadrant
-    case popupState.position.x > screenCentre.x && popupState.position.y <= screenCentre.y:
+    case mousePositionOnMap.x > mapCentre.x && mousePositionOnMap.y <= mapCentre.y:
       offset = {
         x: rightXOffset,
         y: topYOffset,
       };
       break;
     // Bottom-left quadrant
-    case popupState.position.x <= screenCentre.x && popupState.position.y > screenCentre.y:
+    case mousePositionOnMap.x <= mapCentre.x && mousePositionOnMap.y > mapCentre.y:
       offset = {
         x: leftXOffset,
         y: bottomYOffset,
       };
       break;
     // Bottom-right quadrant
-    case popupState.position.x > screenCentre.x && popupState.position.y > screenCentre.y:
+    case mousePositionOnMap.x > mapCentre.x && mousePositionOnMap.y > mapCentre.y:
       offset = {
         x: rightXOffset,
         y: bottomYOffset,
@@ -95,16 +110,18 @@ const ClusterPopup = (props: ClusterPopupProps) => {
     }
   }, [popupState.pageIndex]);
 
+  const popupRef = useRef<HTMLDivElement>();
   return (
     <Box
       id={'clusterPopup'}
-      position={'fixed'}
+      ref={popupRef}
+      position={'absolute'}
       width={'400px'}
       height={'fit-content'}
       maxHeight={'300px'}
-      left={popupState.position.x + offset.x}
-      top={popupState.position.y + offset.y}
-      zIndex={900}
+      left={mousePositionOnMap.x - within.left + offset.x}
+      top={mousePositionOnMap.y - within.top + offset.y}
+      zIndex={10000}
       display={popupState.open ? 'flex' : 'none'}
       flexDirection={'column'}
       overflow={'clip'}
@@ -162,7 +179,9 @@ const ClusterPopup = (props: ClusterPopupProps) => {
                 ? property.properties.Name.match(/^\d*$/) || property.properties.Name == ''
                   ? property.properties.Address1
                   : property.properties.Name
-                : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
+                : property.properties.PID != null && property.properties.PID != 0
+                  ? pidFormatter(property.properties.PID)
+                  : String(property.properties.PIN)
             }
             content={[
               property.properties.Address1,
