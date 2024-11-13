@@ -23,6 +23,7 @@ describe('UNIT - Ches Services', () => {
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
       _fetch.mockImplementationOnce(() => ({
+        ok: true,
         text: () => `{ "messages": [{}], "txId": "${randomUUID()}" }`,
       }));
       const response = await chesServices.sendEmailAsync(email, keycloak);
@@ -35,9 +36,36 @@ describe('UNIT - Ches Services', () => {
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
       _fetch.mockImplementationOnce(() => ({
+        ok: false,
         text: () => `{ "messages": [{}], "txId": "${randomUUID()}" }`,
       }));
       expect(async () => await chesServices.sendEmailAsync(email, keycloak)).rejects.toThrow();
+    });
+    it('should return null if the CHES response is not OK', async () => {
+      const email = produceEmail({ cc: ['john@doe.com'], bcc: ['john@doe.com'] });
+      const keycloak = producePimsRequestUser();
+      _fetch.mockImplementationOnce(() => ({
+        text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
+      }));
+      _fetch.mockImplementationOnce(() => ({
+        ok: false,
+        text: () => `{ "messages": [{}], "txId": "${randomUUID()}" }`,
+      }));
+      const result = await chesServices.sendEmailAsync(email, keycloak);
+      expect(result).toBeNull();
+    });
+    it('should return null if the CHES response has no text length', async () => {
+      const email = produceEmail({ cc: ['john@doe.com'], bcc: ['john@doe.com'] });
+      const keycloak = producePimsRequestUser();
+      _fetch.mockImplementationOnce(() => ({
+        text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
+      }));
+      _fetch.mockImplementationOnce(() => ({
+        ok: true,
+        text: () => ``,
+      }));
+      const result = await chesServices.sendEmailAsync(email, keycloak);
+      expect(result).toBeNull();
     });
     it('should send email with extra config', async () => {
       const email: IEmail = produceEmail({});
@@ -55,6 +83,7 @@ describe('UNIT - Ches Services', () => {
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
       _fetch.mockImplementationOnce(() => ({
+        ok: true,
         text: () => `{ "messages": [{}], "txId": "${randomUUID()}" }`,
       }));
       const response = await chesServices.sendEmailAsync(email, keycloak);
@@ -67,8 +96,8 @@ describe('UNIT - Ches Services', () => {
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
       _fetch.mockImplementationOnce(() => ({
+        ok: true,
         text: () => `
-
           {
           
               "createdTS": 1560000000,
@@ -102,6 +131,7 @@ describe('UNIT - Ches Services', () => {
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
       _fetch.mockImplementationOnce(() => ({
+        ok: true,
         text: () => `
             [
               {
@@ -143,6 +173,7 @@ describe('UNIT - Ches Services', () => {
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
       _fetch.mockImplementationOnce(() => ({
+        ok: true,
         text: () => `
 
           {
@@ -177,6 +208,7 @@ describe('UNIT - Ches Services', () => {
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
       _fetch.mockImplementationOnce(() => ({
+        ok: true,
         text: () => `
 
           {
@@ -202,6 +234,7 @@ describe('UNIT - Ches Services', () => {
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
       _fetch.mockImplementationOnce(() => ({
+        ok: true,
         text: () => `
 
           {
@@ -238,6 +271,7 @@ describe('UNIT - Ches Services', () => {
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
       _fetch.mockImplementationOnce(() => ({
+        ok: true,
         text: () => `
             [
               {

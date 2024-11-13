@@ -15,8 +15,8 @@
           <li> 
             {% if property.Type == "Parcel" %}
               <span> 
-                Site Address: {{ property.Address1 }}
-                <br> 
+                Site Address: {{ property.Address1 }}<br>
+					      Site Location: {{ property.AdministrativeArea.Name }}<br> 
                 Site Description: {{ property.Name }}
                 <br> 
                 Site Size: {{ property.TotalArea }} ha
@@ -41,8 +41,8 @@
               </span> 
             {% else %} 
                 <span> 
-                  Site Address: {{ property.Address1 }}
-                  <br> 
+                  Site Address: {{ property.Address1 }}<br>
+                  Site Location: {{ property.AdministrativeArea.Name }}<br> 
                   Site Description: {{ property.Name }}
                   <br> 
                   Rentable Area: {{ property.RentableArea }} Sq. M

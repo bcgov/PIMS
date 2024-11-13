@@ -148,7 +148,7 @@ const ClusterPopup = (props: ClusterPopupProps) => {
           </IconButton>
         </Grid>
       </Grid>
-      <Box overflow={'scroll'}>
+      <Box sx={{ overflowY: 'scroll' }}>
         {popupState.properties.map((property) => (
           <PropertyRow
             key={`${property.properties.PropertyTypeId === PropertyTypes.BUILDING ? 'Building' : 'Land'}-${property.properties.Id}`}

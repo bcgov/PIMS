@@ -137,7 +137,7 @@ const MapSidebar = (props: MapSidebarProps) => {
         </Grid>
 
         {/* List of Properties */}
-        <Box overflow={'scroll'} height={'100%'} display={'flex'} flexDirection={'column'}>
+        <Box height={'100%'} display={'flex'} flexDirection={'column'} sx={{ overflowY: 'scroll' }}>
           {propertiesInBounds
             .slice(pageIndex * propertyPageSize, pageIndex * propertyPageSize + propertyPageSize)
             .map((property) => (
