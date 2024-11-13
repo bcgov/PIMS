@@ -27,8 +27,10 @@ jobs:
   parse-json5-config:
       runs-on: ubuntu-22.04
       outputs:
+        # save output from dep-report.json5 to Github env variables
         packageJsonPaths: ${{ steps.parse_config.outputs.packageJsonPaths }}
-        ignorePackages: ${{ steps.parse_config.outputs.ignorePackages }}
+        ignoreList: ${{ steps.parse_config.outputs.ignoreList }}
+        depLevels: ${{ steps.parse_config.outputs.depLevels }}
 
       steps:
         # Checkout branch.
@@ -50,7 +52,6 @@ jobs:
     needs: parse-json5-config
     env:
       packageJsonPaths: ${{ needs.parse-json5-config.outputs.packageJsonPaths }}
-      ignorePackages: ${{ needs.parse-json5-config.outputs.ignorePackages }}
     container:
       # Lightweight NodeJS Image
       image: node:21.5-bullseye-slim
@@ -73,9 +74,56 @@ jobs:
           name: outdatedDeps
           path: outdatedDeps.json
 
+  # Create comment text
+  create-comment-text:
+    runs-on: ubuntu-22.04
+    needs:
+      - parse-json5-config
+      - parse-package-versions
+    env:
+      ignoreList: ${{ needs.parse-json5-config.outputs.ignoreList }}
+      depLevels: ${{ needs.parse-json5-config.outputs.depLevels }}
+    outputs:
+        commentContents: ${{ steps.create_comment.outputs.commentContents }}
+    steps:
+      # download artifact from parse-package-versions
+      - name: Download output
+        uses: actions/download-artifact@v4
+        with:
+          name: outdatedDeps
+          path: .
+
+      # encode file to github needs
+      - name: Encode Outdated Deps
+        shell: bash
+        run: |
+          OUTPUT=$(cat outdatedDeps.json)
+          OUTPUT="${OUTPUT//'%'/'%25'}"
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "DEP_INPUT=${OUTPUT}" >> $GITHUB_ENV
+
+      # checkout repo and branch
+      - name: Checkout Branch
+        uses: actions/checkout@v4
+
+      # setup Python environment
+      - name: setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # current Python version
+
+      # Run Python Script to Create Comment
+      - name: Create Comment Contents
+        id: create_comment
+        env:
+          DEP_INPUT: ${{ env.DEP_INPUT }} # dependency updates
+        run: |
+          python3 .github/helpers/npm-deps/parse_to_comment.py
+
   # Write the output text for the GitHub Issue.
   write-output:
-    needs: 
+    needs:
       - parse-json5-config
       - parse-package-versions
     runs-on: ubuntu-22.04
@@ -84,7 +132,7 @@ jobs:
     container:
       # Lightweight NodeJS Image
       image: node:21.5-bullseye-slim
-    
+
     steps:
       # Checkout branch.
       - name: Checkout repository
@@ -112,12 +160,14 @@ jobs:
 
   # Create the GitHub Issues.
   create-issues:
-    needs: 
+    needs:
       - parse-json5-config
+      - create-comment-text
       - write-output
     runs-on: ubuntu-22.04
     env:
       packageJsonPaths: ${{ needs.parse-json5-config.outputs.packageJsonPaths }}
+      commentContents: ${{ needs.create-comment-text.outputs.commentContents }}
     container:
       # Lightweight NodeJS Image
       image: node:21.5-bullseye-slim
@@ -142,48 +192,3 @@ jobs:
       - name: Create GitHub Issues
         run: |
           node .github/helpers/npm-deps/create-report-issues.cjs
-  
-  create-tickets:
-    needs: 
-      - parse-json5-config
-      - parse-package-versions
-    runs-on: ubuntu-latest
-    steps:
-      # Download the output artifact from parse-package-versions.
-      - name: Download output
-        uses: actions/download-artifact@v4
-        with:
-          name: outdatedDeps
-          path: .
-
-      # create env variable for issue body
-      - name: Create Issue Body
-        shell: bash
-        run: |
-          OUTPUT=$(cat outdatedDeps.json)
-          OUTPUT="${OUTPUT//'%'/'%25'}"
-          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
-          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
-          echo "ISSUE_BODY=${OUTPUT}" >> $GITHUB_ENV
-
-
-      # Checkout branch
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Setup Python
-      - name: setup python      
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11' # current Python version
-
-      - name: execute py script
-        env:      
-          LEVEL_FLAGS: "MINOR MAJOR" # used to determine what updates to post
-          JIRA_BOARD: "PIMS" # sets what JIRA board to post and pull from
-          JIRA_SUBTASK: "10003" # each Jira board has a different issue type for subtasks
-          JIRA_EPIC: "10014, PIMS-450" # epic links are technically a custom field with this specific id and ticket number (for PIMS)
-          JIRA_API_KEY: ${{ secrets.JIRA_API_KEY }} # key used to access JIRA API
-          ISSUE_BODY: ${{ env.ISSUE_BODY }} # dependency update list
-        run: |
-          python3 .github/helpers/jira-api/create_tickets.py
