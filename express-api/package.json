@@ -39,7 +39,7 @@
     "tsconfig-paths": "4.2.0",
     "typeorm": "0.3.20",
     "typeorm-naming-strategies": "4.1.0",
-    "winston": "3.16.0",
+    "winston": "3.17.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zod": "3.23.3"
   },
