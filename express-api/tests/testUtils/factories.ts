@@ -144,7 +144,7 @@ export const produceUser = (props?: Partial<User>): User => {
     MiddleName: faker.person.middleName(),
     LastName: faker.person.lastName(),
     Email: faker.internet.email(),
-    Username: faker.internet.userName(),
+    Username: faker.internet.username(),
     Position: 'Tester',
     Note: '',
     LastLogin: faker.date.anytime(),
