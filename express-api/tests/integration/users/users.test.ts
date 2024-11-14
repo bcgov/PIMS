@@ -22,7 +22,7 @@ const mockUser: IUser = {
   middleName: faker.person.middleName(),
   lastName: faker.person.lastName(),
   email: faker.internet.email(),
-  username: faker.internet.userName(),
+  username: faker.internet.username(),
   position: 'Tester',
 };
 const TOKEN = '';
