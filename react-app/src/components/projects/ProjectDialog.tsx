@@ -168,7 +168,6 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const requireNotificationAcknowledge =
     approvedStatus == status && status !== initialValues?.StatusId;
   const isAdmin = pimsUser.hasOneOfRoles([Roles.ADMIN]);
-  console.log('project form values', projectFormMethods.getValues());
   return (
     <ConfirmDialog
       title={'Update Project'}
@@ -178,7 +177,6 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       }}
       onConfirm={async () => {
         const isValid = await projectFormMethods.trigger();
-        console.log('lookupData and isValid', lookupData, isValid);
         if (lookupData && isValid) {
           const values = projectFormMethods.getValues();
           submit(+initialValues.Id, {

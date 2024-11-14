@@ -97,12 +97,25 @@ interface MapLayersProps {
 const MapLayers = (props: MapLayersProps) => {
   const { hideControls } = props;
   // If layer control is hidden, must still return a default tileset to use
+  // Also showing parcel boundaries
   if (hideControls) {
+    const parcelBoundaryLayer = LAYER_CONFIGS.landOwnership.find(
+      (layer) => layer.name === 'Parcel Boundaries',
+    );
     return (
-      <TileLayer
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors'
-      />
+      <>
+        <TileLayer
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors'
+        />
+        <WMSTileLayer
+          url={parcelBoundaryLayer.url}
+          format="image/png"
+          transparent={true}
+          layers={parcelBoundaryLayer.layers}
+          opacity={0.5}
+        />
+      </>
     );
   }
   return (
