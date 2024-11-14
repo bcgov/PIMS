@@ -52,6 +52,9 @@ import { getStatusString } from '@/constants/chesNotificationStatus';
 import { NoteTypes } from '@/constants/noteTypes';
 import EnhancedReferralDates from './EnhancedReferralDates';
 import { NotificationType } from '@/constants/notificationTypes';
+import ParcelMap from '@/components/map/ParcelMap';
+import { PropertyGeo } from '@/hooks/api/usePropertiesApi';
+import { convertProjectPropertyToPropertyGeo } from '@/utilities/convertProjectPropertyToPropertyGeo';
 
 interface IProjectDetail {
   onClose: () => void;
@@ -116,6 +119,19 @@ const ProjectDetail = (props: IProjectDetail) => {
     // Check if any of the notifications match the types
     return notificationItems.some((n) => types.includes(n.TemplateId));
   }, [notifications]);
+
+  // Store the map properties for this project
+  const [mapProperties, setMapProperties] = useState<PropertyGeo[]>([]);
+  // When data changes, refresh the map properties
+  useEffect(() => {
+    if (data?.parsedBody) {
+      setMapProperties(
+        data.parsedBody.ProjectProperties.map((property) =>
+          convertProjectPropertyToPropertyGeo(property, data.parsedBody),
+        ),
+      );
+    }
+  }, [data]);
 
   const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
   interface IStatusHistoryStruct {
@@ -351,6 +367,15 @@ const ProjectDetail = (props: IProjectDetail) => {
             />
           )}
         </DataCard>
+        <ParcelMap
+          height="600px"
+          zoomOnScroll={false}
+          loadProperties={false}
+          hideControls
+          overrideProperties={mapProperties}
+          showClusterPopup
+          popupSize="small"
+        />
         <DataCard
           loading={isLoading}
           customFormatter={customFormatter}

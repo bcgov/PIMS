@@ -153,7 +153,9 @@ const MapSidebar = (props: MapSidebarProps) => {
                     ? property.properties.Name.match(/^\d*$/) || property.properties.Name == ''
                       ? property.properties.Address1
                       : property.properties.Name
-                    : pidFormatter(property.properties.PID) ?? String(property.properties.PIN)
+                    : property.properties.PID != null && property.properties.PID != 0
+                      ? pidFormatter(property.properties.PID)
+                      : String(property.properties.PIN)
                 }
                 content={[
                   property.properties.Address1,

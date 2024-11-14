@@ -34,6 +34,9 @@ type ParcelMapProps = {
   hideControls?: boolean;
   defaultZoom?: number;
   defaultLocation?: LatLngExpression;
+  overrideProperties?: PropertyGeo[];
+  showClusterPopup?: boolean;
+  showSideBar?: boolean;
 } & PropsWithChildren;
 
 export const SelectedMarkerContext = createContext(null);
@@ -130,10 +133,13 @@ const ParcelMap = (props: ParcelMapProps) => {
     loadProperties = false,
     popupSize,
     scrollOnClick,
-    zoomOnScroll = true,
+    zoomOnScroll = false,
     hideControls = false,
     defaultLocation,
     defaultZoom,
+    overrideProperties,
+    showClusterPopup = false,
+    showSideBar = false,
   } = props;
 
   // To access map outside of MapContainer
@@ -166,6 +172,13 @@ const ParcelMap = (props: ParcelMapProps) => {
       }
     }
   }, [data, isLoading]);
+
+  // If override properties were supplied, set them.
+  useEffect(() => {
+    if (overrideProperties) {
+      setProperties(overrideProperties);
+    }
+  }, [overrideProperties]);
 
   // Loops through any array and pairs it down to a flat list of its base elements
   // Used here for breaking shape geography down to bounds coordinates
@@ -292,14 +305,16 @@ const ParcelMap = (props: ParcelMapProps) => {
               ],
         ),
         {
-          paddingBottomRight: [500, 0], // Padding for map sidebar
+          paddingBottomRight: showSideBar ? [500, 0] : [0, 0], // Padding for map sidebar
         },
       );
     }
   }, [properties]);
+  // Reference to containing div to help centre cluster popups
+  const mapBoxRef = useRef<HTMLDivElement>();
 
   return (
-    <Box height={height} display={'flex'}>
+    <Box height={height} display={'flex'} ref={mapBoxRef} position={'relative'}>
       {loadProperties ? <LoadingCover show={isLoading} /> : <></>}
       <MapContainer
         id="parcel-map"
@@ -331,7 +346,7 @@ const ParcelMap = (props: ParcelMapProps) => {
           mapEventsDisabled={mapEventsDisabled}
         />
         <MapEvents />
-        {loadProperties ? (
+        {loadProperties || overrideProperties ? (
           <InventoryLayer
             isLoading={isLoading}
             properties={properties}
@@ -347,18 +362,24 @@ const ParcelMap = (props: ParcelMapProps) => {
         ))}
         {props.children}
       </MapContainer>
-      {loadProperties ? (
-        <>
-          <MapSidebar
-            properties={properties}
-            map={localMapRef}
-            setFilter={setFilter}
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-            filter={filter}
-          />
-          <ClusterPopup popupState={popupState} setPopupState={controlledSetPopupState} />
-        </>
+      {loadProperties && showSideBar ? (
+        <MapSidebar
+          properties={properties}
+          map={localMapRef}
+          setFilter={setFilter}
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          filter={filter}
+        />
+      ) : (
+        <></>
+      )}
+      {(loadProperties || overrideProperties) && showClusterPopup ? (
+        <ClusterPopup
+          popupState={popupState}
+          setPopupState={controlledSetPopupState}
+          boundingBox={mapBoxRef.current?.getBoundingClientRect()}
+        />
       ) : (
         <></>
       )}
