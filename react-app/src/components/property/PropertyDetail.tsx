@@ -354,7 +354,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
           height={'500px'}
           mapRef={map}
           movable={false}
-          zoomable={false}
+          zoomable={true}
           zoomOnScroll={false}
           popupSize="small"
           hideControls

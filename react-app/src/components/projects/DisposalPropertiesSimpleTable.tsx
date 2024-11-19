@@ -1,15 +1,17 @@
 import { PropertyTypes } from '@/constants/propertyTypes';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { formatMoney, pidFormatter } from '@/utilities/formatters';
-import { Box, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Typography, useTheme } from '@mui/material';
+import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface IDisposalPropertiesTable {
   rows: Record<string, any>[];
 }
 
 const DisposalPropertiesTable = (props: IDisposalPropertiesTable) => {
+  const theme = useTheme();
   const columns: GridColDef[] = [
     {
       field: 'PropertyType',
@@ -23,6 +25,19 @@ const DisposalPropertiesTable = (props: IDisposalPropertiesTable) => {
         row.PropertyTypeId === PropertyTypes.BUILDING && row.Address1
           ? row.Address1
           : pidFormatter(row.PID) ?? row.PIN,
+      renderCell: (params: GridCellParams) => {
+        const urlType = params.row.PropertyTypeId === 0 ? 'parcel' : 'building';
+        return (
+          <Link
+            to={`/properties/${urlType}/${params.row.Id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
+          >
+            {String(params.value)}
+          </Link>
+        );
+      },
     },
     {
       field: 'Agency',
