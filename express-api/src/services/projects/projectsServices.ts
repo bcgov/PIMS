@@ -556,8 +556,8 @@ const handleProjectAgencyResponses = async (
         ...resp,
         ProjectId: newProject.Id,
         CreatedById: newProject.CreatedById,
-        DeletedById: null,
-        DeletedOn: null,
+        DeletedById: newProject.DeletedById,
+        DeletedOn: newProject.DeletedOn,
       })),
     );
   }
