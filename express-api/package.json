@@ -44,7 +44,7 @@
     "zod": "3.23.3"
   },
   "devDependencies": {
-    "@eslint/js": "9.14.0",
+    "@eslint/js": "9.16.0",
     "@faker-js/faker": "9.2.0",
     "@types/compression": "1.7.4",
     "@types/cookie-parser": "1.4.5",
