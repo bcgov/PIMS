@@ -24,7 +24,7 @@ const DisposalPropertiesTable = (props: IDisposalPropertiesTable) => {
       valueGetter: (value, row) =>
         row.PropertyTypeId === PropertyTypes.BUILDING && row.Address1
           ? row.Address1
-          : pidFormatter(row.PID) ?? row.PIN,
+          : (pidFormatter(row.PID) ?? row.PIN),
       renderCell: (params: GridCellParams) => {
         const urlType = params.row.PropertyTypeId === 0 ? 'parcel' : 'building';
         return (
