@@ -552,13 +552,16 @@ const handleProjectAgencyResponses = async (
     );
     await queryRunner.manager.save(
       ProjectAgencyResponse,
-      newProject.AgencyResponses.map((resp) => ({
-        ...resp,
-        ProjectId: newProject.Id,
-        CreatedById: newProject.CreatedById,
-        DeletedById: null,
-        DeletedOn: null,
-      })),
+      newProject.AgencyResponses.map(
+        (resp) =>
+          ({
+            ...resp,
+            ProjectId: newProject.Id,
+            CreatedById: newProject.CreatedById,
+            DeletedById: null,
+            DeletedOn: null,
+          }) as ProjectAgencyResponse,
+      ),
     );
   }
 };
