@@ -3,6 +3,7 @@
  * The only necessary property of the notification is the "id".
  * Get the token from your browser session. You must be an admin for this to work.
  * Drop the JSON file in this same folder and adjust the file name to use.
+ * I ran this using Deno. Adjustments may be needed with other runtimes.
  */
 
 import notifsToResend from './notif_ids_to_resend.json' with { type: "json" };
