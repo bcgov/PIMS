@@ -19,14 +19,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-        
-      # Login to the Openshift Cluster
-      - name: Login to Openshift
-        uses: redhat-actions/oc-login@v1
-        with:
-          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_URL }}
-          openshift_token: ${{ secrets.OPENSHIFT_SA_TOOLS_TOKEN }}
-          namespace: ${{ secrets.OPENSHIFT_TOOLS_NAMESPACE }}
+      
           
       # Login to BC Gov Docker Image Repository
       - name: Login to Openshift Docker
