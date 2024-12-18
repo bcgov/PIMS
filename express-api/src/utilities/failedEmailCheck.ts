@@ -67,7 +67,7 @@ const failedEmailCheck = async () => {
       const email: IEmail = {
         to: [config.contact.toEmail],
         cc: [],
-        from: 'PIMS System <notifications.pims@gov.bc.ca>', // Made up for this purpose.
+        from: config.contact.systemEmail, // Made up for this purpose.
         bodyType: EmailBody.Html,
         subject: 'PIMS Notifications Warning',
         body: emailBody,
