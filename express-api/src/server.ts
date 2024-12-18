@@ -4,6 +4,8 @@ import app from '@/express';
 import { AppDataSource } from '@/appDataSource';
 import { Application } from 'express';
 import { IncomingMessage, Server, ServerResponse } from 'http';
+import cron from 'node-cron';
+import failedEmailCheck from '@/utilities/failedEmailCheck';
 
 const { API_PORT } = constants;
 
@@ -17,6 +19,13 @@ const startApp = (app: Application) => {
   const server = app.listen(API_PORT, async (err?: Error) => {
     if (err) logger.error(err);
     logger.info(`Server started on port ${API_PORT}.`);
+
+    // 0 2 * * *  == Triggers every 2:00AM
+    cron.schedule('0 2 * * *', async () => {
+      logger.info('Failed email check: Starting');
+      await failedEmailCheck();
+      logger.info('Failed email check: Completed');
+    });
 
     // creating connection to database
     await AppDataSource.initialize()
