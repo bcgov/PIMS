@@ -79,7 +79,7 @@ const failedEmailCheck = async () => {
       }
     }
   } catch (e) {
-    logger.error(`Error in failedEmailCheck: ${e}`);
+    logger.error(`Error in failedEmailCheck: ${(e as Error).message}`);
   }
 };
 
