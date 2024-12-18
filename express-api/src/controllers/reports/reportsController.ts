@@ -31,7 +31,7 @@ export const submitErrorReport = async (req: Request, res: Response) => {
   const email: IEmail = {
     to: [config.contact.toEmail],
     cc: [req.user.email],
-    from: 'pims.error@gov.bc.ca', // Made up for this purpose.
+    from: config.contact.systemEmail, // Made up for this purpose.
     bodyType: EmailBody.Html,
     subject: 'PIMS Error Report Submission',
     body: emailBody,

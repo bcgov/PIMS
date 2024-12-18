@@ -912,7 +912,10 @@ export const produceProjectNotification = (props?: Partial<ProjectStatusNotifica
   return notif;
 };
 
-export const produceNotificationQueue = (props?: Partial<NotificationQueue>) => {
+export const produceNotificationQueue = (
+  props?: Partial<NotificationQueue>,
+  includeProject: boolean = false,
+) => {
   const queue: NotificationQueue = {
     Id: faker.number.int(),
     Key: randomUUID(),
@@ -928,7 +931,7 @@ export const produceNotificationQueue = (props?: Partial<NotificationQueue>) => 
     Cc: '',
     Tag: faker.lorem.word(),
     ProjectId: faker.number.int(),
-    Project: undefined,
+    Project: includeProject ? produceProject() : undefined,
     ToAgencyId: faker.number.int(),
     ToAgency: undefined,
     TemplateId: faker.number.int(),

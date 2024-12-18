@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>PIMS Notifications Warning</title>
+  </head>
+  <body>
+    <h2>Some PIMS notifications may not have been sent.</h2>
+    <p>PIMS has detected that some projects have notifications in a pending state that have passed their intended send date.</p>
+    <p>Please review the following projects for notification issues:</p>
+    <ul>
+    {% for project in Projects %}
+      <li><p><b><a href={{project.Link}}>{{project.ProjectNumber}}</a></b> {{project.Name}}</p></li>
+    {% endfor %}
+    </ul>
+  </body>
+</html>
