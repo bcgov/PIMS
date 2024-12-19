@@ -27,6 +27,7 @@ const config = {
   },
   contact: {
     toEmail: process.env.CONTACT_EMAIL,
+    systemEmail: 'PIMS System <system.pims@gov.bc.ca>',
   },
   notificationTemplate: {
     title: 'PIMS',
