@@ -69,12 +69,14 @@ export const updateBuildingById = async (
   user: PimsRequestUser,
 ) => {
   const existingBuilding = await getBuildingById(building.Id);
+  // Does this building exist?
   if (!existingBuilding) {
     throw new ErrorWithCode('Building does not exists.', 404);
   }
+  // Does the user have permissions to change its agency?
   const validUserAgencies = await userServices.getAgencies(user.Username);
   const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
-  if (!isAdmin && !validUserAgencies.includes(building.AgencyId)) {
+  if (!isAdmin && building.AgencyId && !validUserAgencies.includes(building.AgencyId)) {
     throw new ErrorWithCode('This agency change is not permitted.', 403);
   }
   if (building.Fiscals && building.Fiscals.length) {
