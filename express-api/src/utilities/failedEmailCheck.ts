@@ -42,9 +42,12 @@ const failedEmailCheck = async () => {
     // Update these records
     await Promise.all(
       overdueNotifications.map((notif) =>
-        notificationServices.updateNotificationStatus(notif.Id, system),
+        notificationServices.updateNotificationStatus(notif.Id, system).catch(() => {
+          logger.error(`failedEmailCheck: Failed to update notification with ID ${notif.Id}.`);
+        }),
       ),
     );
+
     // Temporary interface to allow for URL to project
     interface ProjectWithLink extends Project {
       Link?: string;
