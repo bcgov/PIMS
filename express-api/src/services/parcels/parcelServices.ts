@@ -159,13 +159,15 @@ const updateParcel = async (incomingParcel: DeepPartial<Parcel>, user: PimsReque
   if (incomingParcel.PID == null && incomingParcel.PIN == null) {
     throw new ErrorWithCode('Must include PID or PIN in parcel data.', 400);
   }
+  // Does this parcel exist?
   const findParcel = await getParcelById(incomingParcel.Id);
   if (findParcel == null || findParcel.Id !== incomingParcel.Id) {
     throw new ErrorWithCode('Parcel not found', 404);
   }
+  // Does the user have permissions to change its agency?
   const validUserAgencies = await userServices.getAgencies(user.Username);
   const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
-  if (!isAdmin && !validUserAgencies.includes(incomingParcel.AgencyId)) {
+  if (!isAdmin && incomingParcel.AgencyId && !validUserAgencies.includes(incomingParcel.AgencyId)) {
     throw new ErrorWithCode('This agency change is not permitted.', 403);
   }
   if (incomingParcel.Fiscals && incomingParcel.Fiscals.length) {
