@@ -147,7 +147,7 @@ describe('updateBuildingById', () => {
       RoleId: Roles.GENERAL_USER,
       hasOneOfRoles: () => false,
     });
-    const updateBuilding = produceBuilding();
+    const updateBuilding = produceBuilding({ AgencyId: 1 });
     expect(
       async () => await buildingService.updateBuildingById(updateBuilding, generalUser),
     ).rejects.toThrow();

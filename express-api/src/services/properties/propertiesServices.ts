@@ -98,9 +98,11 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
       }),
     )
     // Only include surplus properties
-    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
-    // Exclude if already is a project property in a project that's in a disallowed status
-    .andWhere(`parcel.id NOT IN(:...excludedParcelIds)`, { excludedParcelIds });
+    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`);
+  // Exclude if already is a project property in a project that's in a disallowed status
+  if (excludedParcelIds && excludedParcelIds.length > 0) {
+    parcelsQuery.andWhere(`parcel.id NOT IN(:...excludedParcelIds)`, { excludedParcelIds });
+  }
 
   // Add the optional agencyIds filter if provided
   if (agencyIds && agencyIds.length > 0) {
@@ -130,9 +132,11 @@ const propertiesFuzzySearch = async (keyword: string, limit?: number, agencyIds?
       }),
     )
     // Only include surplus properties
-    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`)
-    // Exclude if already is a project property in a project that's in a disallowed status
-    .andWhere(`building.id NOT IN(:...excludedBuildingIds)`, { excludedBuildingIds });
+    .andWhere(`classification.Name in ('Surplus Encumbered', 'Surplus Active')`);
+  // Exclude if already is a project property in a project that's in a disallowed status
+  if (excludedBuildingIds && excludedBuildingIds.length > 0) {
+    buildingsQuery.andWhere(`building.id NOT IN(:...excludedBuildingIds)`, { excludedBuildingIds });
+  }
 
   if (agencyIds && agencyIds.length > 0) {
     buildingsQuery.andWhere(`building.agency_id IN (:...agencyIds)`, { agencyIds });
