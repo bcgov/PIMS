@@ -129,7 +129,6 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
           }),
         )
       : {};
-    noNullParam.ExcelExport = true;
     const { parsedBody } = await absoluteFetch.get('/properties/search/geo/export', noNullParam);
     return parsedBody as ((Parcel | Building) & { ProjectNumber: string })[];
   };

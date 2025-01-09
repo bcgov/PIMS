@@ -292,12 +292,6 @@ paths:
           schema: 
             type: string 
             example: '[[[1,1], [2,2], [3,3]]]'
-        - in: query
-          name: ExcelExport
-          desciption: If true, returns in format for Excel export.
-          schema:
-            type: boolean
-            example: false
       responses:
         '200': 
           description: OK
