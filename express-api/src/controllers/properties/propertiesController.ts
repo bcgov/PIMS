@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import propertyServices from '@/services/properties/propertiesServices';
+import propertyServices, { PropertyIdsByType } from '@/services/properties/propertiesServices';
 import {
   ImportResultFilterSchema,
   MapFilter,
@@ -16,6 +16,7 @@ import { ImportResult } from '@/typeorm/Entities/ImportResult';
 import { readFile } from 'xlsx';
 import logger from '@/utilities/winstonLogger';
 import { Roles } from '@/constants/roles';
+import { PropertyType } from '@/constants/propertyType';
 
 /**
  * @description Search for a single keyword across multiple different fields in both parcels and buildings.
@@ -96,7 +97,7 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
       requestedAgencies,
       permittedRoles,
     );
-    // If not agencies were requested or if the user doesn't have those requested agencies
+    // If no agencies were requested or if the user doesn't have those requested agencies
     if (!requestedAgencies || !userHasAgencies) {
       // Then only show that user's agencies instead.
       const usersAgencies = await userServices.getAgencies(user.Username);
@@ -105,7 +106,24 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   }
 
   const properties = await propertyServices.getPropertiesForMap(filterResult);
-  // Convert to GeoJSON format
+
+  // If it was requested as an Excel export, get the properties in export form
+  if (filterResult.ExcelExport) {
+    const filteredIds: PropertyIdsByType = {
+      parcelIds: properties
+        .filter(
+          (p) =>
+            p.PropertyTypeId === PropertyType.LAND || p.PropertyTypeId === PropertyType.SUBDIVISION,
+        )
+        .map((p) => p.Id),
+      buildingIds: properties
+        .filter((p) => p.PropertyTypeId === PropertyType.BUILDING)
+        .map((p) => p.Id),
+    };
+    const exportData = await propertyServices.getPropertiesForExport({}, filteredIds);
+    return res.status(200).send(exportData);
+  }
+  // Standard operation is to return the properties in GeoJSON format
   const mapFeatures = properties.map((property) => ({
     type: 'Feature',
     properties: { ...property },

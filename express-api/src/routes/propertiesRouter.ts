@@ -21,6 +21,7 @@ const {
 router.route('/search/fuzzy').get(userAuthCheck(), catchErrors(getPropertiesFuzzySearch));
 
 router.route('/search/geo').get(userAuthCheck(), catchErrors(getPropertiesForMap)); // Formerly wfs route
+router.route('/search/geo/export').get(userAuthCheck(), catchErrors(getPropertiesForMap)); // Similar to above, but separated for documentation purposes
 
 router.route('/search/linkedProjects').get(userAuthCheck(), catchErrors(getLinkedProjects));
 
