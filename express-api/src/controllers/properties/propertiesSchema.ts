@@ -35,6 +35,7 @@ export const MapFilterSchema = z.object({
   RegionalDistrictIds: arrayFromString(numberSchema),
   UserAgencies: z.array(z.number().int()).optional(),
   Polygon: z.string().optional(),
+  ExcelExport: z.coerce.boolean().optional(),
 });
 
 export type MapFilter = z.infer<typeof MapFilterSchema>;

@@ -1,7 +1,17 @@
 import { MapFilter, PropertyGeo } from '@/hooks/api/usePropertiesApi';
 import { formatNumber, pidFormatter } from '@/utilities/formatters';
 import { FilterList, ArrowCircleLeft, ArrowCircleRight } from '@mui/icons-material';
-import { Box, Paper, Grid, IconButton, Typography, Icon, useTheme } from '@mui/material';
+import {
+  Box,
+  Paper,
+  Grid,
+  IconButton,
+  Typography,
+  Icon,
+  useTheme,
+  Tooltip,
+  CircularProgress,
+} from '@mui/material';
 import sideBarIcon from '@/assets/icons/SidebarLeft-Linear.svg';
 import sideBarClosedIcon from '@/assets/icons/SidebarLeft-Linear-White.svg';
 import { Map } from 'leaflet';
@@ -17,6 +27,11 @@ import PropertyRow from '@/components/map/propertyRow/PropertyRow';
 import { PropertyTypes } from '@/constants/propertyTypes';
 import FilterControl from '@/components/map/controls/FilterControl';
 import { LookupContext } from '@/contexts/lookupContext';
+import DownloadIcon from '@mui/icons-material/Download';
+import { downloadExcelFile } from '@/utilities/downloadExcelFile';
+import usePimsApi from '@/hooks/usePimsApi';
+import { SnackBarContext } from '@/contexts/snackbarContext';
+import { getPropertyExportMap } from '@/utilities/getPropertyExportMap';
 
 interface MapSidebarProps {
   properties: PropertyGeo[];
@@ -38,9 +53,15 @@ const MapSidebar = (props: MapSidebarProps) => {
   const [propertiesInBounds, setPropertiesInBounds] = useState<PropertyGeo[]>(properties ?? []);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
   const theme = useTheme();
   const propertyPageSize = 20; // Affects paging size
   const sidebarWidth = 350;
+  const snackbar = useContext(SnackBarContext);
+
+  // Tools to prepare properties for export.
+  const api = usePimsApi();
+  const excelDataMap = getPropertyExportMap();
 
   // Get related data for lookups
   const { getLookupValueById } = useContext(LookupContext);
@@ -93,12 +114,43 @@ const MapSidebar = (props: MapSidebarProps) => {
       >
         {/* Sidebar Header */}
         <Grid container height={50} sx={{ backgroundColor: 'rgb(221,221,221)' }}>
-          <Grid item xs={2} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+          <Grid item xs={3} display={'flex'} justifyContent={'center'} alignItems={'center'}>
             <IconButton onClick={() => setFilterOpen(!filterOpen)} id="map-filter-open">
               <FilterList />
             </IconButton>
+            <Tooltip title="Export to Excel">
+              <IconButton
+                onClick={async () => {
+                  setIsExporting(true);
+                  try {
+                    // Get properties and convert to correct structure
+                    const rows = await api.properties.propertiesMapExport(filter);
+                    const convertedRows = excelDataMap(rows);
+                    // download function expects MUI table format
+                    const mappedRows = convertedRows.map((r, i) => ({
+                      model: r,
+                      id: i,
+                    }));
+                    downloadExcelFile({
+                      data: mappedRows,
+                      tableName: 'MapProperties',
+                      includeDate: true,
+                    });
+                  } catch {
+                    snackbar.setMessageState({
+                      style: snackbar.styles.warning,
+                      text: 'Table failed to export.',
+                      open: true,
+                    });
+                  }
+                  setIsExporting(false);
+                }}
+              >
+                {isExporting ? <CircularProgress size={24} /> : <DownloadIcon />}
+              </IconButton>
+            </Tooltip>
           </Grid>
-          <Grid item xs={8} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+          <Grid item xs={7} display={'flex'} justifyContent={'center'} alignItems={'center'}>
             <IconButton
               id="sidebar-decrement"
               size="small"

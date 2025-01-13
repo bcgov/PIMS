@@ -20,7 +20,23 @@ const {
 
 router.route('/search/fuzzy').get(userAuthCheck(), catchErrors(getPropertiesFuzzySearch));
 
-router.route('/search/geo').get(userAuthCheck(), catchErrors(getPropertiesForMap)); // Formerly wfs route
+// Formerly wfs route
+router.route('/search/geo').get(
+  userAuthCheck(),
+  catchErrors((req, res) => {
+    req.query.ExcelExport = undefined; // Prevents Excel export
+    return getPropertiesForMap(req, res);
+  }),
+);
+
+// Similar to above, but separated for documentation purposes
+router.route('/search/geo/export').get(
+  userAuthCheck(),
+  catchErrors((req, res) => {
+    req.query.ExcelExport = 'true'; // Forces Excel export
+    return getPropertiesForMap(req, res);
+  }),
+);
 
 router.route('/search/linkedProjects').get(userAuthCheck(), catchErrors(getLinkedProjects));
 

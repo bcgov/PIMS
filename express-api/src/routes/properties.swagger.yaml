@@ -224,6 +224,83 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PropertyGeojson'
+  /properties/search/geo/export:
+    get: 
+      security:
+        - bearerAuth: []
+      tags:
+        - Properties
+      summary: Gets a list of properties in format for Excel export, based on the map filter.
+      parameters:
+        - in: query
+          name: PID
+          description: Should not include leading zeroes or hyphens.
+          schema: 
+            type: integer
+            example: 24545457
+        - in: query
+          name: PIN
+          schema: 
+            type: integer
+        - in: query
+          name: Address
+          schema: 
+            type: string
+        - in: query
+          name: Name
+          schema: 
+            type: string
+        - in: query
+          name: AgencyIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 81,166
+        - in: query
+          name: AdministrativeAreaIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 219,300
+        - in: query
+          name: ClassificationIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 0,1
+        - in: query
+          name: PropertyTypeIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 0,1
+        - in: query
+          name: RegionalDistrictIds
+          description: Comma-separated list of IDs.
+          schema: 
+            type: string
+            example: 19,25
+        - in: query
+          name: ProjectStatusId
+          description: The status of the most recent active project this property was in.
+          schema:
+            type: integer
+            example: 1
+        - in: query
+          name: Polygon
+          desciption: A stringified array of polygons and their coordinates
+          schema: 
+            type: string 
+            example: '[[[1,1], [2,2], [3,3]]]'
+      responses:
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PropertyJoinView'
   /properties/import:
     post:
       security:

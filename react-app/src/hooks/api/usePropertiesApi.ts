@@ -112,9 +112,25 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
             return v != null;
           }),
         )
-      : undefined;
+      : {};
     const { parsedBody } = await absoluteFetch.get('/properties/search/geo', noNullParam);
     return parsedBody as PropertyGeo[];
+  };
+  // Similar to propertiesGeoSearch, but for exporting to Excel
+  const propertiesMapExport = async (filter: MapFilter) => {
+    const noNullParam = filter
+      ? Object.fromEntries(
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          Object.entries(filter).filter(([_, v]) => {
+            // No empty arrays
+            if (Array.isArray(v) && v.length === 0) return false;
+            // No undefined or null
+            return v != null;
+          }),
+        )
+      : {};
+    const { parsedBody } = await absoluteFetch.get('/properties/search/geo/export', noNullParam);
+    return parsedBody as ((Parcel | Building) & { ProjectNumber: string })[];
   };
 
   const getPropertiesUnion = async (filter: CommonFiltering, signal?: AbortSignal) => {
@@ -213,6 +229,7 @@ const usePropertiesApi = (absoluteFetch: IFetch) => {
     propertiesDataSource,
     getPropertiesForExcelExport,
     getLinkedProjectsToProperty,
+    propertiesMapExport,
   };
 };
 
