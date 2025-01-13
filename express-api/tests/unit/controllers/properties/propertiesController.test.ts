@@ -62,6 +62,10 @@ const _getPropertiesForMap = jest.fn().mockImplementation(async () => [
   },
 ]);
 
+const _getPropertiesForExport = jest
+  .fn()
+  .mockImplementation(async () => [produceBuilding(), produceParcel()]);
+
 const _getPropertyUnion = jest.fn().mockImplementation(async () => [producePropertyUnion()]);
 
 const _getImportResults = jest.fn().mockImplementation(async () => [produceImportResult()]);
@@ -88,6 +92,7 @@ jest.mock('@/services/properties/propertiesServices', () => ({
   getPropertiesUnion: () => _getPropertyUnion(),
   getImportResults: () => _getImportResults(),
   findLinkedProjectsForProperty: () => _findLinkedProjectsForProperty(),
+  getPropertiesForExport: () => _getPropertiesForExport(),
 }));
 
 const _getAgencies = jest.fn().mockImplementation(async () => [1, 2, 3]);
@@ -181,10 +186,32 @@ describe('UNIT - Properties', () => {
       jest
         .spyOn(AppDataSource.getRepository(Agency), 'find')
         .mockImplementation(async () => [produceAgency()]);
-      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER });
       await getPropertiesForMap(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
       expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);
+    });
+  });
+
+  describe('GET /properties/search/geo/export', () => {
+    const _checkUserAgencyPermission = jest.fn().mockImplementation(async () => true);
+    jest.mock('@/utilities/authorizationChecks', () => ({
+      checkUserAgencyPermission: _checkUserAgencyPermission,
+    }));
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should return 200 with a list of properties in export form', async () => {
+      mockRequest.setUser({ client_roles: [Roles.ADMIN] });
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
+      mockRequest.query = {
+        ExcelExport: 'true',
+      };
+      await getPropertiesForMap(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue.length).toBeGreaterThanOrEqual(1);
+      expect(_checkUserAgencyPermission).toHaveBeenCalledTimes(0);
     });
   });
 
