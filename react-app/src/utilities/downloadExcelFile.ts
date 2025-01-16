@@ -27,7 +27,7 @@ export const downloadExcelFile = (props: IExcelDownloadProps) => {
     const columnHeaders = Object.keys(data.at(0).model);
     // Create file name
     const fileName = `${includeDate ? new Date().toLocaleDateString('iso') : ''}_${tableName}${
-      '-' + filterName || ''
+      filterName ? '-' + filterName : ''
     }.xlsx`;
     // Build xlsx file
     const worksheet = sheetjs.utils.aoa_to_sheet(

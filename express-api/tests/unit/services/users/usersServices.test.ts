@@ -76,7 +76,7 @@ jest
 
 const _agenciesFind = jest
   .spyOn(AppDataSource.getRepository(Agency), 'find')
-  .mockImplementation(async () => [produceAgency()]);
+  .mockImplementation(async () => [produceAgency({ Id: 100 })]);
 
 describe('UNIT - User services', () => {
   beforeEach(() => {

@@ -965,6 +965,11 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
   return { data, totalCount };
 };
 
+export interface PropertyIdsByType {
+  buildingIds: number[];
+  parcelIds: number[];
+}
+
 /**
  * Retrieves properties for export based on the provided filter.
  * Filters the properties by type (LAND, BUILDING, SUBDIVISION) and fetches additional details for each property.
@@ -972,7 +977,10 @@ const getPropertiesUnion = async (filter: PropertyUnionFilter) => {
  * @param filter - The filter criteria to apply when retrieving properties.
  * @returns An array of Parcel and Building entities for export.
  */
-const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
+const getPropertiesForExport = async (
+  filter: PropertyUnionFilter,
+  specificProperties?: PropertyIdsByType,
+) => {
   const result = await getPropertiesUnion(filter);
   const filteredProperties = result.data;
   const parcelIds = filteredProperties
@@ -1025,7 +1033,11 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
   const buildingFiscals = resolvedFinds.at(5) as BuildingFiscal[];
   const projectProperties = resolvedFinds.at(6) as ProjectProperty[];
   const parcels: Parcel[] = (resolvedFinds.at(0) as Parcel[])
-    .filter((p: Parcel) => parcelIds.includes(p.Id))
+    .filter((p: Parcel) =>
+      parcelIds.includes(p.Id) && specificProperties
+        ? specificProperties.parcelIds.includes(p.Id)
+        : true,
+    )
     .map((p: Parcel) => {
       const evaluation = parcelEvaluations.find((pe) => pe.ParcelId === p.Id);
       const fiscal = parcelFiscals.find((pf) => pf.ParcelId === p.Id);
@@ -1038,7 +1050,11 @@ const getPropertiesForExport = async (filter: PropertyUnionFilter) => {
       };
     });
   const buildings: Building[] = (resolvedFinds.at(1) as Building[])
-    .filter((b: Building) => buildingIds.includes(b.Id))
+    .filter((b: Building) =>
+      buildingIds.includes(b.Id) && specificProperties
+        ? specificProperties.buildingIds.includes(b.Id)
+        : true,
+    )
     .map((b: Building) => {
       const evaluation = buildingEvaluations.find((be) => be.BuildingId === b.Id);
       const fiscal = buildingFiscals.find((bf) => bf.BuildingId === b.Id);
