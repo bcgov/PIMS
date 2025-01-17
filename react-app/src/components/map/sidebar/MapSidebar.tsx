@@ -162,11 +162,20 @@ const MapSidebar = (props: MapSidebarProps) => {
             >
               <ArrowCircleLeft fontSize="small" />
             </IconButton>
-            <Typography
-              id="sidebar-count"
-              margin={'0 0.5em'}
-              fontSize={'0.8em'}
-            >{`${pageIndex + 1} of ${formatNumber(Math.max(Math.ceil(propertiesInBounds.length / propertyPageSize), 1))} (${formatNumber(propertiesInBounds.length)} items)`}</Typography>
+            <Grid item container display={'flex'} justifyContent={'center'} id="sidebar-count">
+              <Grid item>
+                <Typography
+                  margin={'0 0.3em'}
+                  fontSize={'0.8em'}
+                >{`${pageIndex + 1} of ${formatNumber(Math.max(Math.ceil(propertiesInBounds.length / propertyPageSize), 1))}`}</Typography>
+              </Grid>
+              <Grid item>
+                <Typography
+                  margin={'0 0.3em'}
+                  fontSize={'0.8em'}
+                >{`(${formatNumber(propertiesInBounds.length)} items)`}</Typography>
+              </Grid>
+            </Grid>
             <IconButton
               id="sidebar-increment"
               size="small"
