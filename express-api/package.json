@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.18.0",
-    "@faker-js/faker": "9.3.0",
+    "@faker-js/faker": "9.4.0",
     "@types/compression": "1.7.4",
     "@types/cookie-parser": "1.4.5",
     "@types/cors": "2.8.15",
@@ -71,6 +71,6 @@
     "ts-jest": "29.2.0",
     "tsc-alias": "1.8.8",
     "typescript": "5.7.2",
-    "typescript-eslint": "8.20.0"
+    "typescript-eslint": "8.21.0"
   }
 }
