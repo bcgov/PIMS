@@ -290,8 +290,7 @@ describe('INTEGRATION - Users', () => {
     it('should return 401 Unauthorized if invalid token provided', async () => {
       const response = await request
         .post(`${API_ROUTE}/roles/${mockUser.username}`)
-        .set('Authorization', `Bearer notAToken`)
-        .send('new role');
+        .set('Authorization', `Bearer notAToken`);
       expect(response.status).toBe(401);
     });
 
@@ -309,8 +308,7 @@ describe('INTEGRATION - Users', () => {
     it('should return 401 Unauthorized if invalid token provided', async () => {
       const response = await request
         .delete(`${API_ROUTE}/roles/${mockUser.username}`)
-        .set('Authorization', `Bearer notAToken`)
-        .send('new role');
+        .set('Authorization', `Bearer notAToken`);
       expect(response.status).toBe(401);
     });
 

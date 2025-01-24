@@ -17,6 +17,7 @@ import nunjucks from 'nunjucks';
 import OPENAPI_OPTIONS from '@/swagger/swaggerConfig';
 import userAuthCheck from '@/middleware/userAuthCheck';
 import { Roles } from '@/constants/roles';
+import { PathParams } from 'express-serve-static-core';
 
 const app: Application = express();
 
@@ -110,9 +111,11 @@ app.use(`/v2/reports`, protectedRoute(), userAuthCheck(), router.reportsRouter);
 app.use(`/v2/tools`, protectedRoute(), router.toolsRouter);
 
 // If a non-existent route is called. Must go after other routes.
-app.use('*', (_req, _res, next) => next(EndpointNotFound404));
+// As of Express v5, *splat replaces the wildcard *.
+app.use('/*splat', (_req, _res, next) => next(EndpointNotFound404));
 
 // Request error handler. Must go last.
-app.use(errorHandler);
+// As of Express v5, the typing of this argument has changed but functionality has not.
+app.use(errorHandler as unknown as PathParams);
 
 export default app;
