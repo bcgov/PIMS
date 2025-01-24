@@ -87,3 +87,12 @@ export const makeDateOrUndefined = (date: unknown | undefined) => {
   if (typeof date == 'string' && (date as string).length === 0) return undefined;
   return new Date(date as string | number | Date);
 };
+
+/**
+ * Generates a list of numbers based on a start and end value.
+ * @param start The first number in the list
+ * @param end The last number in the list (inclusive)
+ * @returns A list of numbers.
+ */
+export const generateNumberList = (start, end) =>
+  Array.from({ length: end - (start - 1) + 1 }, (_, i) => start - 1 + i);

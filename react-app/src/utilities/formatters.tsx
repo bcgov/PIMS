@@ -110,7 +110,9 @@ export const pidFormatter = (pid: number | string): string => {
 
 export const formatNumber = (num: number) => num.toLocaleString();
 
+// e.g. 2024 -> 24/25
 export const formatFiscalYear = (year: number) => {
+  if (year == null) return '';
   const text = year.toString();
   const nextYear = (year + 1).toString();
   return `${text.slice(2)}/${nextYear.slice(2)}`;

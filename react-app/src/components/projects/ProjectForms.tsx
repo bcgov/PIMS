@@ -7,6 +7,9 @@ import { ISelectMenuItem } from '../form/SelectFormField';
 import SingleSelectBoxFormField from '../form/SingleSelectBoxFormField';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Roles } from '@/constants/roles';
+import { useFormContext } from 'react-hook-form';
+import { formatFiscalYear } from '@/utilities/formatters';
+import { generateNumberList } from '@/utilities/helperFunctions';
 
 interface IProjectGeneralInfoForm {
   projectStatuses: ISelectMenuItem[];
@@ -16,6 +19,7 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
   const { data: lookupData } = useContext(LookupContext);
   const { pimsUser } = useContext(UserContext);
   const canEdit = pimsUser.hasOneOfRoles([Roles.ADMIN]);
+  const { getValues } = useFormContext();
 
   return (
     <Grid mt={'1rem'} spacing={2} container>
@@ -57,6 +61,59 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
       <Grid item xs={12}>
         <TextFormField fullWidth multiline name={'Description'} label={'Description'} minRows={3} />
       </Grid>
+      {canEdit && (
+        <>
+          <Grid item xs={12}>
+            <AutocompleteFormField
+              name={'AgencyId'}
+              label={'Agency'}
+              options={
+                lookupData?.Agencies.map((agc) => ({ value: agc.Id, label: agc.Name })) ?? []
+              }
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <AutocompleteFormField
+              fullWidth
+              name={'ReportedFiscalYear'}
+              label={'Reported Fiscal Year'}
+              disabled
+              options={[getValues()['ReportedFiscalYear']].map((year) => ({
+                value: year,
+                label: formatFiscalYear(year),
+              }))}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <AutocompleteFormField
+              fullWidth
+              name={'ActualFiscalYear'}
+              label={'Fiscal Year of Disposal'}
+              options={generateNumberList(
+                (getValues()['ActualFiscalYear'] ?? new Date().getUTCFullYear()) - 1,
+                new Date().getUTCFullYear() + 1,
+              ).map((year) => ({
+                value: year,
+                label: formatFiscalYear(year),
+              }))}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <AutocompleteFormField
+              name={'RiskId'}
+              label={'Risk Level'}
+              required
+              options={
+                lookupData?.Risks.map((risk) => ({
+                  value: risk.Id,
+                  label: risk.Name,
+                  tooltip: risk.Description,
+                })) ?? []
+              }
+            />
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 };
