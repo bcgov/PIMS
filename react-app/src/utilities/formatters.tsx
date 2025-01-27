@@ -110,16 +110,35 @@ export const pidFormatter = (pid: number | string): string => {
 
 export const formatNumber = (num: number) => num.toLocaleString();
 
-export const capitalizeFirstLetters = (name: string) => {
-  if (!name.length) return '';
-  const nameParts = name.split(/[_\s]/);
-  const returnValue = [];
-  nameParts.forEach((part) => {
-    if (part.length) {
-      const lower = part.toLowerCase();
-      const firstLetter = lower.at(0).toUpperCase();
-      returnValue.push(firstLetter + lower.slice(1));
-    }
+/**
+ * @param input The string being capitalized.
+ * @param patterns A list of objects with split and join values.
+ * For each object, the string will be split, capitalized, then joined with the provided characters.
+ * Default splits on spaces and joins with spaces again.
+ * @returns A string with the capitalized result.
+ */
+export const capitalizeFirstLetters = (
+  input: string,
+  patterns = [
+    {
+      split: /[\s]/,
+      join: ' ',
+    },
+  ],
+) => {
+  if (!input.length) return '';
+  let returnValue = input.toLowerCase().trim();
+  // For each provided pattern, split the string, capitalize each initial letter, then join it again
+  patterns.forEach((pattern) => {
+    const parts = returnValue.split(pattern.split);
+    const result = [];
+    parts.forEach((part) => {
+      if (part.length) {
+        const firstLetter = part.at(0).toUpperCase();
+        result.push(firstLetter + part.slice(1));
+      }
+    });
+    returnValue = result.join(pattern.join);
   });
-  return returnValue.join(' ');
+  return returnValue;
 };
