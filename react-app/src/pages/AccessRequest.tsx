@@ -20,6 +20,7 @@ import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
 import { getProvider, validateEmail } from '@/utilities/helperFunctions';
 import InfoIcon from '@mui/icons-material/Info';
+import { capitalizeFirstLetters } from '@/utilities/formatters';
 
 interface StatusPageTemplateProps {
   blurb: JSX.Element;
@@ -56,8 +57,8 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
   const formMethods = useForm({
     defaultValues: {
       Provider: provider ?? '',
-      FirstName: sso.user?.first_name || '',
-      LastName: sso.user?.last_name || '',
+      FirstName: capitalizeFirstLetters(sso.user?.first_name) || '',
+      LastName: capitalizeFirstLetters(sso.user?.last_name) || '',
       Email: userIsIdir ? sso.user?.email : '',
       Notes: '',
       Agency: '',
@@ -68,8 +69,8 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
   useEffect(() => {
     formMethods.reset({
       Provider: provider ?? '',
-      FirstName: sso.user?.first_name || '',
-      LastName: sso.user?.last_name || '',
+      FirstName: capitalizeFirstLetters(sso.user?.first_name) || '',
+      LastName: capitalizeFirstLetters(sso.user?.last_name) || '',
       Email: userIsIdir ? sso.user?.email : '',
       Notes: '',
       Agency: '',

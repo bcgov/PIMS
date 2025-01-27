@@ -109,3 +109,17 @@ export const pidFormatter = (pid: number | string): string => {
 };
 
 export const formatNumber = (num: number) => num.toLocaleString();
+
+export const capitalizeFirstLetters = (name: string) => {
+  if (!name.length) return '';
+  const nameParts = name.split(/[_\s]/);
+  const returnValue = [];
+  nameParts.forEach((part) => {
+    if (part.length) {
+      const lower = part.toLowerCase();
+      const firstLetter = lower.at(0).toUpperCase();
+      returnValue.push(firstLetter + lower.slice(1));
+    }
+  });
+  return returnValue.join(' ');
+};
