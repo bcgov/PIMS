@@ -20,6 +20,7 @@ import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
 import { getProvider, validateEmail } from '@/utilities/helperFunctions';
 import InfoIcon from '@mui/icons-material/Info';
+import { capitalizeFirstLetters } from '@/utilities/formatters';
 
 interface StatusPageTemplateProps {
   blurb: JSX.Element;
@@ -50,14 +51,28 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
     () => getProvider(sso.user?.preferred_username, lookup?.data?.Config?.bcscIdentifier),
     [sso.user, lookup],
   );
-
   const userIsIdir = provider === 'IDIR';
+
+  const namePatterns = [
+    {
+      split: /\s/,
+      join: ' ',
+    },
+    {
+      split: /[_]/,
+      join: ' ',
+    },
+    {
+      split: /'/,
+      join: `'`,
+    },
+  ];
 
   const formMethods = useForm({
     defaultValues: {
       Provider: provider ?? '',
-      FirstName: sso.user?.first_name || '',
-      LastName: sso.user?.last_name || '',
+      FirstName: capitalizeFirstLetters(sso.user?.first_name, namePatterns) || '',
+      LastName: capitalizeFirstLetters(sso.user?.last_name, namePatterns) || '',
       Email: userIsIdir ? sso.user?.email : '',
       Notes: '',
       Agency: '',
@@ -68,8 +83,8 @@ const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => 
   useEffect(() => {
     formMethods.reset({
       Provider: provider ?? '',
-      FirstName: sso.user?.first_name || '',
-      LastName: sso.user?.last_name || '',
+      FirstName: capitalizeFirstLetters(sso.user?.first_name, namePatterns) || '',
+      LastName: capitalizeFirstLetters(sso.user?.last_name, namePatterns) || '',
       Email: userIsIdir ? sso.user?.email : '',
       Notes: '',
       Agency: '',
