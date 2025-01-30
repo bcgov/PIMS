@@ -17,6 +17,7 @@ import { readFile } from 'xlsx';
 import logger from '@/utilities/winstonLogger';
 import { Roles } from '@/constants/roles';
 import { PropertyType } from '@/constants/propertyType';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 
 /**
  * @description Search for a single keyword across multiple different fields in both parcels and buildings.
@@ -55,16 +56,16 @@ export const getLinkedProjects = async (req: Request, res: Response) => {
 };
 
 /**
- * @description Used to retrieve all property geolocation information.
- * @param   {Request}     req Incoming request
- * @param   {Response}    res Outgoing response
- * @returns {Response}        A 200 status with a list of property geolocation information.
+ * A helper function for the map-based property controllers.
+ * Handles the filtering and permission checks.
+ * @param req
+ * @returns A list of properties.
  */
-export const getPropertiesForMap = async (req: Request, res: Response) => {
+const prepareMapProperties = async (req: Request) => {
   // parse for filter
   const filter = MapFilterSchema.safeParse(req.query);
   if (filter.success == false) {
-    return res.status(400).send(filter.error);
+    throw new ErrorWithCode(JSON.stringify(filter.error), 400);
   }
 
   // Converts comma-separated lists to arrays, see schema
@@ -106,23 +107,17 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
   }
 
   const properties = await propertyServices.getPropertiesForMap(filterResult);
+  return properties;
+};
 
-  // If it was requested as an Excel export, get the properties in export form
-  if (filterResult.ExcelExport) {
-    const filteredIds: PropertyIdsByType = {
-      parcelIds: properties
-        .filter(
-          (p) =>
-            p.PropertyTypeId === PropertyType.LAND || p.PropertyTypeId === PropertyType.SUBDIVISION,
-        )
-        .map((p) => p.Id),
-      buildingIds: properties
-        .filter((p) => p.PropertyTypeId === PropertyType.BUILDING)
-        .map((p) => p.Id),
-    };
-    const exportData = await propertyServices.getPropertiesForExport({}, filteredIds);
-    return res.status(200).send(exportData);
-  }
+/**
+ * @description Used to retrieve all property geolocation information.
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns {Response}        A 200 status with a list of property geolocation information.
+ */
+export const getPropertiesForMap = async (req: Request, res: Response) => {
+  const properties = await prepareMapProperties(req);
   // Standard operation is to return the properties in GeoJSON format
   const mapFeatures = properties.map((property) => ({
     type: 'Feature',
@@ -135,6 +130,30 @@ export const getPropertiesForMap = async (req: Request, res: Response) => {
     },
   }));
   return res.status(200).send(mapFeatures);
+};
+
+/**
+ * @description Used to export properties based on map filter
+ * @param   {Request}     req Incoming request
+ * @param   {Response}    res Outgoing response
+ * @returns {Response}        A 200 status with a list of property information.
+ */
+export const getPropertiesForMapExport = async (req: Request, res: Response) => {
+  const properties = await prepareMapProperties(req);
+  // If it was requested as an Excel export, get the properties in export form
+  const filteredIds: PropertyIdsByType = {
+    parcelIds: properties
+      .filter(
+        (p) =>
+          p.PropertyTypeId === PropertyType.LAND || p.PropertyTypeId === PropertyType.SUBDIVISION,
+      )
+      .map((p) => p.Id),
+    buildingIds: properties
+      .filter((p) => p.PropertyTypeId === PropertyType.BUILDING)
+      .map((p) => p.Id),
+  };
+  const exportData = await propertyServices.getPropertiesForExport({}, filteredIds);
+  return res.status(200).send(exportData);
 };
 
 /**
