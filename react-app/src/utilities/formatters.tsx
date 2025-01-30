@@ -116,6 +116,7 @@ export const formatFiscalYear = (year: number) => {
   const text = year.toString();
   const previousYear = (year - 1).toString();
   return `${previousYear.slice(2)}/${text.slice(2)}`;
+};
 
 /**
  * @param input The string being capitalized.
