@@ -166,14 +166,13 @@ describe('UNIT - Properties', () => {
       expect(_checkUserAgencyPermission).toHaveBeenCalledTimes(0);
     });
 
-    it('should return 400 if the query params do not pass the schema', async () => {
+    it('should throw a 400 error if the query params do not pass the schema', async () => {
       mockRequest.setUser({ client_roles: [Roles.ADMIN] });
       mockRequest.setPimsUser({ RoleId: Roles.ADMIN });
       mockRequest.query = {
         AgencyIds: ['h'],
       };
-      await getPropertiesForMap(mockRequest, mockResponse);
-      expect(mockResponse.statusValue).toBe(400);
+      expect(async () => await getPropertiesForMap(mockRequest, mockResponse)).rejects.toThrow();
     });
 
     it('should follow the path to restrict filter agency if user is not an admin', async () => {
