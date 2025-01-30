@@ -116,4 +116,36 @@ export const formatFiscalYear = (year: number) => {
   const text = year.toString();
   const previousYear = (year - 1).toString();
   return `${previousYear.slice(2)}/${text.slice(2)}`;
+
+/**
+ * @param input The string being capitalized.
+ * @param patterns A list of objects with split and join values.
+ * For each object, the string will be split, capitalized, then joined with the provided characters.
+ * Default splits on spaces and joins with spaces again.
+ * @returns A string with the capitalized result.
+ */
+export const capitalizeFirstLetters = (
+  input: string,
+  patterns = [
+    {
+      split: /[\s]/,
+      join: ' ',
+    },
+  ],
+) => {
+  if (!input.length) return '';
+  let returnValue = input.toLowerCase().trim();
+  // For each provided pattern, split the string, capitalize each initial letter, then join it again
+  patterns.forEach((pattern) => {
+    const parts = returnValue.split(pattern.split);
+    const result = [];
+    parts.forEach((part) => {
+      if (part.length) {
+        const firstLetter = part.at(0).toUpperCase();
+        result.push(firstLetter + part.slice(1));
+      }
+    });
+    returnValue = result.join(pattern.join);
+  });
+  return returnValue;
 };
