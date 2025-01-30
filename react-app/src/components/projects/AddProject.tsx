@@ -34,7 +34,6 @@ const AddProject = () => {
       ExemptionNote: '',
       Approval: false,
       Tasks: [],
-      RiskId: null,
     },
   });
 
@@ -113,20 +112,6 @@ const AddProject = () => {
               fullWidth
               name={'Description'}
               label={'Description'}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <AutocompleteFormField
-              name={'RiskId'}
-              label={'Risk'}
-              required
-              options={
-                lookupData?.Risks?.map((risk) => ({
-                  value: risk.Id,
-                  label: risk.Name,
-                  tooltip: risk.Description,
-                })) ?? []
-              }
             />
           </Grid>
         </Grid>

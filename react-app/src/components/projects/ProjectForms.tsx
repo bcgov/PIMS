@@ -1,4 +1,4 @@
-import { Grid, InputAdornment, Typography } from '@mui/material';
+import { Box, Grid, InputAdornment, Tooltip, Typography } from '@mui/material';
 import React, { useContext } from 'react';
 import AutocompleteFormField from '../form/AutocompleteFormField';
 import { UserContext } from '@/contexts/userContext';
@@ -10,6 +10,7 @@ import { Roles } from '@/constants/roles';
 import { useFormContext } from 'react-hook-form';
 import { formatFiscalYear } from '@/utilities/formatters';
 import { generateNumberList } from '@/utilities/helperFunctions';
+import Help from '@mui/icons-material/Help';
 
 interface IProjectGeneralInfoForm {
   projectStatuses: ISelectMenuItem[];
@@ -98,10 +99,17 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
               }))}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={12}>
             <AutocompleteFormField
               name={'RiskId'}
-              label={'Risk Level'}
+              label={
+                <Box display={'inline-flex'} alignItems={'center'}>
+                  Risk Level
+                  <Tooltip title="The risk associated with completion of the sale of a property during the forecasted fiscal year. Risk status on property sales can change through the sales process.">
+                    <Help sx={{ ml: '4px' }} fontSize="small" />
+                  </Tooltip>
+                </Box>
+              }
               required
               options={
                 lookupData?.Risks.map((risk) => ({
