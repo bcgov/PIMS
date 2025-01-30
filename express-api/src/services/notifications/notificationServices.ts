@@ -746,6 +746,43 @@ const getNotificationById = async (id: number) => {
   return AppDataSource.getRepository(NotificationQueue).findOne({ where: { Id: id } });
 };
 
+/**
+ * Takes and existing notification and cancels it, then resends it with new properties.
+ * @param notif The original notification to be cancelled.
+ * @param newProperties The new properties to overwrite before resending.
+ * @returns The newly requeued version of the notification.
+ */
+const resendNotification = async (
+  notif: NotificationQueue,
+  newProperties: Partial<NotificationQueue> = {},
+) => {
+  const system = await AppDataSource.getRepository(User).findOne({ where: { Username: 'system' } });
+  // First, cancel the notification
+  const chesResult = await chesServices.cancelEmailByIdAsync(notif.ChesMessageId);
+  if (chesResult.status === 'cancelled') {
+    await AppDataSource.getRepository(NotificationQueue).save({
+      Id: notif.Id,
+      Status: NotificationStatus.Cancelled,
+      UpdatedById: system.Id,
+    });
+    // Cancelled successfully, then requeue with new properties
+    const newNotif = await sendNotification(
+      { ...notif, ...newProperties },
+      system as PimsRequestUser,
+    );
+    if (newNotif.Status === NotificationStatus.Failed) {
+      const error = `resendNotification: Failed to reque notification Id ${newNotif.Id} (originally ${notif.Id}).`;
+      logger.error(error);
+      throw new Error(error);
+    }
+    return newNotif;
+  } else {
+    const error = `resendNotification: Notification Id ${notif.Id} not cancelled successfully.`;
+    logger.error(error);
+    throw new Error(error);
+  }
+};
+
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
@@ -757,6 +794,7 @@ const notificationServices = {
   getNotificationById,
   cancelNotificationById,
   cancelProjectNotifications,
+  resendNotificationWithNewEmails: resendNotification,
 };
 
 export default notificationServices;

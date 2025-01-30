@@ -13,6 +13,9 @@ import { SortOrders } from '@/constants/types';
 import { AgencyJoinView } from '@/typeorm/Entities/views/AgencyJoinView';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { MapLike } from 'typescript';
+import notificationServices, {
+  NotificationStatus,
+} from '@/services/notifications/notificationServices';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -159,7 +162,7 @@ export const updateAgencyById = async (agencyIn: Agency) => {
 
   const updatedAgency = await agencyRepo.save(agencyIn);
 
-  // If the email fields changed, notifications for projects need to be requeued with new emails.
+  // If the email fields changed, pending notifications for projects need to be requeued with new emails.
   const emailChanged = agencyIn.Email != null && agencyIn.Email != findAgency.Email;
   const ccChanged = agencyIn.CCEmail != null && agencyIn.CCEmail != findAgency.CCEmail;
   // Create this map so that no notification is handled twice if both Email and CCEmail fields changed.
@@ -167,19 +170,41 @@ export const updateAgencyById = async (agencyIn: Agency) => {
   if (emailChanged) {
     // Get all notifications matching the old to field.
     const affectedNotifications = await AppDataSource.getRepository(NotificationQueue).find({
-      where: [{ To: findAgency.Email }],
+      where: [{ To: findAgency.Email, Status: NotificationStatus.Pending }],
     });
-    affectedNotifications.forEach((n) => {affectedNotificationMap[n.Id] = n});
+    affectedNotifications.forEach((n) => {
+      affectedNotificationMap[n.Id] = n;
+    });
   }
-  if (ccChanged){
+  if (ccChanged) {
     // Get all notifications matching the old cc field.
     const affectedNotifications = await AppDataSource.getRepository(NotificationQueue).find({
-      where: [{ Cc: findAgency.Email }],
+      where: [{ Cc: findAgency.Email, Status: NotificationStatus.Pending }],
     });
-    affectedNotifications.forEach((n) => {affectedNotificationMap[n.Id] = n});
+    affectedNotifications.forEach((n) => {
+      affectedNotificationMap[n.Id] = n;
+    });
   }
-  console.log(affectedNotificationMap)
-
+  // For each affected email, resend it with new emails
+  const affectedNotificationList = Object.values(affectedNotificationMap);
+  if (affectedNotificationList.length) {
+    try {
+      await Promise.all(
+        affectedNotificationList.map((notification) =>
+          notificationServices.resendNotificationWithNewEmails(notification, {
+            To: updatedAgency.Email,
+            Cc: updatedAgency.CCEmail,
+          }),
+        ),
+      );
+    } catch (e) {
+      logger.error(e);
+      throw new ErrorWithCode(
+        'Agency updated but notifications not resent with updated emails.',
+        500,
+      );
+    }
+  }
   return updatedAgency;
 };
 
