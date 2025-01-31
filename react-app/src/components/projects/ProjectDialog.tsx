@@ -26,9 +26,6 @@ import { LookupContext } from '@/contexts/lookupContext';
 import ProjectNotificationsTable from './ProjectNotificationsTable';
 import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
-import AutocompleteFormField from '../form/AutocompleteFormField';
-import { UserContext } from '@/contexts/userContext';
-import { Roles } from '@/constants/roles';
 import BaseDialog from '../dialog/BaseDialog';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
 
@@ -43,7 +40,6 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const { open, postSubmit, onCancel, initialValues } = props;
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
-  const { pimsUser } = useContext(UserContext);
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const [approvedStatus, setApprovedStatus] = useState<number>(null);
   const projectFormMethods = useForm({
@@ -59,6 +55,9 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       Notes: [],
       Timestamps: [],
       Monetaries: [],
+      ReportedFiscalYear: undefined,
+      ActualFiscalYear: undefined,
+      RiskId: undefined,
     },
   });
 
@@ -75,6 +74,9 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       Notes: [],
       Timestamps: [],
       Monetaries: [],
+      ReportedFiscalYear: initialValues?.ReportedFiscalYear,
+      ActualFiscalYear: initialValues?.ActualFiscalYear,
+      RiskId: initialValues?.RiskId,
     });
   }, [initialValues]);
 
@@ -167,7 +169,6 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const status = projectFormMethods.watch('StatusId');
   const requireNotificationAcknowledge =
     approvedStatus == status && status !== initialValues?.StatusId;
-  const isAdmin = pimsUser.hasOneOfRoles([Roles.ADMIN]);
   return (
     <ConfirmDialog
       title={'Update Project'}
@@ -198,14 +199,6 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             label: st.Name,
           }))}
         />
-        {isAdmin && (
-          <AutocompleteFormField
-            sx={{ mt: '1rem' }}
-            name={'AgencyId'}
-            label={'Agency'}
-            options={lookupData?.Agencies.map((agc) => ({ value: agc.Id, label: agc.Name })) ?? []}
-          />
-        )}
         {initialValues && statusTypes.Tasks?.length > 0 && (
           <Box mt={'1rem'}>
             <Typography variant="h5">Confirm Tasks</Typography>
