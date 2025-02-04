@@ -45,7 +45,12 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Roles } from '@/constants/roles';
 import { UserContext } from '@/contexts/userContext';
 import { ExpandMoreOutlined } from '@mui/icons-material';
-import { columnNameFormatter, dateFormatter, formatMoney } from '@/utilities/formatters';
+import {
+  columnNameFormatter,
+  dateFormatter,
+  formatFiscalYear,
+  formatMoney,
+} from '@/utilities/formatters';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { getStatusString } from '@/constants/chesNotificationStatus';
@@ -70,6 +75,7 @@ interface ProjectInfo extends Project {
   EstimatedProgramRecoveryFees: ProjectMetadata;
   SurplusDeclaration: boolean;
   TripleBottom: boolean;
+  'Fiscal Year of Disposal': number;
 }
 const ProjectDetail = (props: IProjectDetail) => {
   const navigate = useNavigate();
@@ -230,6 +236,9 @@ const ProjectDetail = (props: IProjectDetail) => {
     AssignTier: getLookupValueById('ProjectTiers', data?.parsedBody.TierLevelId),
     Description: data?.parsedBody.Description,
     Agency: getLookupValueById('Agencies', data?.parsedBody.AgencyId),
+    ReportedFiscalYear: formatFiscalYear(data?.parsedBody.ReportedFiscalYear),
+    'Fiscal Year of Disposal': formatFiscalYear(data?.parsedBody.ActualFiscalYear),
+    Risk: getLookupValueById('Risks', data?.parsedBody.RiskId)?.Name,
   };
 
   const FinancialInformationData = useMemo(() => {

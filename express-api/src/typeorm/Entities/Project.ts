@@ -90,9 +90,13 @@ export class Project extends SoftDeleteEntity {
   @Column({ type: 'character varying', length: 150, nullable: true })
   Manager: string;
 
+  // The year that a project was initially created.
+  // Stored as the year the fiscal year ends. e.g. 2024 = 23/24
   @Column('int')
   ReportedFiscalYear: number;
 
+  // The actua/expected fiscal year when disposal occurs.
+  // Stored as the year the fiscal year ends. e.g. 2024 = 23/24
   @Column('int')
   ActualFiscalYear: number;
 
