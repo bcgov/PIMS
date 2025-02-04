@@ -14,7 +14,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 type AutocompleteFormProps = {
   name: string;
-  label: string;
+  label: string | JSX.Element;
   required?: boolean;
   allowNestedIndent?: boolean;
   disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
