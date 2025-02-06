@@ -752,7 +752,7 @@ const getNotificationById = async (id: number) => {
  * @param newProperties The new properties to overwrite before resending.
  * @returns The newly requeued version of the notification.
  */
-const resendNotification = async (
+const resendNotificationWithNewEmails = async (
   notif: NotificationQueue,
   newProperties: Partial<NotificationQueue> = {},
 ) => {
@@ -794,7 +794,7 @@ const notificationServices = {
   getNotificationById,
   cancelNotificationById,
   cancelProjectNotifications,
-  resendNotificationWithNewEmails: resendNotification,
+  resendNotificationWithNewEmails,
 };
 
 export default notificationServices;

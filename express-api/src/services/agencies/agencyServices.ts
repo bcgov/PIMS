@@ -168,7 +168,7 @@ export const updateAgencyById = async (agencyIn: Agency) => {
   // Create this map so that no notification is handled twice if both Email and CCEmail fields changed.
   const affectedNotificationMap: MapLike<NotificationQueue> = {};
   if (emailChanged) {
-    // Get all notifications matching the old to field.
+    // Get all notifications matching the old "To" field.
     const affectedNotifications = await AppDataSource.getRepository(NotificationQueue).find({
       where: [{ To: findAgency.Email, Status: NotificationStatus.Pending }],
     });
