@@ -73,7 +73,7 @@ export const updateDisposalProject = async (req: Request, res: Response) => {
   if (projectId != req.body.project.Id) {
     return res.status(400).send('The param ID does not match the request body.');
   }
-  // need to coordinate how we want tasks to be translated
+
   const updateBody = { ...req.body.project, UpdatedById: user.Id };
   const project = await projectServices.updateProject(
     updateBody,
