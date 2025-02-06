@@ -35,7 +35,7 @@ export class ProjectAgencyResponse extends SoftDeleteEntity {
   @Index()
   Notification: NotificationQueue;
 
-  // What is this field?
+  // Refers to AgencyResponseType.
   @Column({ type: 'int' })
   Response: number;
 

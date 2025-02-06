@@ -300,6 +300,11 @@ const generateProjectNotifications = async (
         .where('a.parent_id IS NULL')
         .andWhere('a.is_disabled = false')
         .andWhere('a.send_email = true')
+        .andWhere('a.id <> :project_agency_id', {
+          project_agency_id: project.AgencyId,
+        })
+        .andWhere('a.email IS NOT NULL')
+        .andWhere(`LENGTH(a.email) > 0`)
         .andWhere(
           '(par.agency_id IS NULL OR (par.response != :unsubscribe AND par.response != :watch))',
           {
@@ -308,6 +313,7 @@ const generateProjectNotifications = async (
           },
         )
         .getMany();
+
       agencies.forEach((agc) =>
         returnNotifications.push(
           insertProjectNotificationQueue(
@@ -334,11 +340,17 @@ const generateProjectNotifications = async (
         )
         .andWhere('a.is_disabled = false')
         .andWhere('a.send_email = true')
+        .andWhere('a.id <> :project_agency_id', {
+          project_agency_id: project.AgencyId,
+        })
+        .andWhere('a.email IS NOT NULL')
+        .andWhere(`LENGTH(a.email) > 0`)
         .andWhere('(par.agency_id IS NOT NULL AND par.response = :watch)', {
           watch: AgencyResponseType.Watch,
         })
         .getMany();
-      agencies.forEach((agc) =>
+
+      agencies.forEach(async (agc) => {
         returnNotifications.push(
           insertProjectNotificationQueue(
             template,
@@ -349,8 +361,8 @@ const generateProjectNotifications = async (
             undefined,
             queryRunner,
           ),
-        ),
-      );
+        );
+      });
     } else if (template.Audience == NotificationAudience.Default) {
       returnNotifications.push(
         insertProjectNotificationQueue(
@@ -647,7 +659,7 @@ const generateProjectWatchNotifications = async (
             where: { Id: response.AgencyId },
           });
           //No use in queueing an email for an agency with no email address.
-          if (agency?.Email) {
+          if (agency?.Email && agency?.Email.length) {
             /*We get the most recent entry in the status history since the date value of this row would have been populated 
             at the time this project was placed into its current status value. Note that this value is not necessarily the same as
             Project.UpdatedOn, as projects can be updated without the status being changed. */
