@@ -189,7 +189,7 @@ const addProject = async (
         }) as ProjectAgencyResponse,
     );
     // Add these agencies
-    await queryRunner.manager.getRepository(ProjectAgencyResponse).save(defaultSubscribeAgencies);
+    await queryRunner.manager.save(ProjectAgencyResponse, defaultSubscribeAgencies);
 
     // Add parcel/building relations
     const { parcels, buildings } = propertyIds;
@@ -212,7 +212,7 @@ const addProject = async (
     await queryRunner.rollbackTransaction();
     logger.warn(e.message);
     if (e instanceof ErrorWithCode) throw e;
-    throw new ErrorWithCode('Error creating project.', 500);
+    throw new ErrorWithCode(`Error creating project. ${e}`, 500);
   } finally {
     await queryRunner.release();
   }
