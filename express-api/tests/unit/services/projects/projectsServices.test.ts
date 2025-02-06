@@ -20,6 +20,7 @@ import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { faker } from '@faker-js/faker';
 import {
+  produceAgency,
   produceAgencyResponse,
   produceBuilding,
   produceNote,
@@ -67,6 +68,9 @@ jest
 const _projectFindOne = jest
   .spyOn(AppDataSource.getRepository(Project), 'findOne')
   .mockImplementation(async () => produceProject({}));
+jest
+  .spyOn(AppDataSource.getRepository(Agency), 'find')
+  .mockImplementation(async () => [produceAgency()]);
 jest.spyOn(AppDataSource.getRepository(ProjectProperty), 'find').mockImplementation(
   async () =>
     [
@@ -169,6 +173,8 @@ const _mockEntityManager = {
   ) => {
     if (entityClass === Project) {
       return _projectManagerSave(obj);
+    } else if (entityClass == ProjectAgencyResponse) {
+      return jest.fn().mockImplementation((obj) => obj);
     } else {
       return obj;
     }
@@ -247,12 +253,14 @@ jest
 const _generateProjectWatchNotifications = jest.fn(async () => [produceNotificationQueue()]);
 const _generateProjectNotifications = jest.fn(async () => [produceNotificationQueue()]);
 const _cancelNotificationById = jest.fn(async () => produceNotificationQueue());
+
 jest.mock('@/services/notifications/notificationServices', () => ({
   generateProjectNotifications: async () => _generateProjectNotifications(),
   sendNotification: jest.fn(async () => produceNotificationQueue()),
   generateProjectWatchNotifications: async () => _generateProjectWatchNotifications(),
   NotificationStatus: { Accepted: 0, Pending: 1, Cancelled: 2, Failed: 3, Completed: 4 },
   cancelNotificationById: async () => _cancelNotificationById,
+  AgencyResponseType: { Unsubscribe: 0, Subscribe: 1, Watch: 2 },
 }));
 
 describe('UNIT - Project Services', () => {
@@ -337,7 +345,7 @@ describe('UNIT - Project Services', () => {
             },
             producePimsRequestUser(),
           ),
-      ).rejects.toThrow(new ErrorWithCode('Error creating project.', 500));
+      ).rejects.toThrow(new ErrorWithCode('Error creating project. Error', 500));
     });
 
     it('should throw an error if the parcel attached to project does not exist', async () => {
