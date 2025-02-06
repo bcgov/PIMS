@@ -16,6 +16,7 @@ import { ProjectTask } from '@/constants/projectTasks';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import { NoteTypes } from '@/constants/noteTypes';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
+import { getFiscalYear } from '@/utilities/helperFunctions';
 
 const AddProject = () => {
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
@@ -274,8 +275,8 @@ const AddProject = () => {
             submit(
               {
                 ...formValues,
-                ReportedFiscalYear: new Date().getFullYear(),
-                ActualFiscalYear: new Date().getFullYear(),
+                ReportedFiscalYear: getFiscalYear(),
+                ActualFiscalYear: getFiscalYear(),
                 Monetaries: [
                   { MonetaryTypeId: MonetaryType.PROGRAM_COST, Value: formValues.ProgramCost },
                   { MonetaryTypeId: MonetaryType.SALES_COST, Value: formValues.SalesCost },

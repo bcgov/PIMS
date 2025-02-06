@@ -87,3 +87,26 @@ export const makeDateOrUndefined = (date: unknown | undefined) => {
   if (typeof date == 'string' && (date as string).length === 0) return undefined;
   return new Date(date as string | number | Date);
 };
+
+/**
+ * Generates a list of numbers based on a start and end value.
+ * @param {number} start The first number in the list
+ * @param {number} end The last number in the list (inclusive)
+ * @returns A list of numbers.
+ */
+export const generateNumberList = (start: number, end: number) =>
+  Array.from({ length: end - (start - 1) + 1 }, (_, i) => start - 1 + i);
+
+/**
+ * Returns a fiscal year as only the year it ends.
+ * A fiscal year in BC runs from April 1 to March 31.
+ * A value of 2024 would mean the fiscal year of 23/24.
+ * A date of April 1, 2024 would return 2025, but March 31, 2024 would return 2024.
+ * @param date Optional - A date from which to determine the fiscal year. If not provided, uses current date.
+ * @returns {number} A year.
+ */
+export const getFiscalYear = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // getMonth() returns 0-11, so add 1
+  return month >= 4 ? year + 1 : year;
+};
