@@ -14,12 +14,15 @@ import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import logger from '@/utilities/winstonLogger';
 import {
+  And,
   Brackets,
   DeepPartial,
   FindManyOptions,
   FindOptionsWhere,
   In,
   InsertResult,
+  IsNull,
+  Not,
   QueryRunner,
 } from 'typeorm';
 import { ProjectFilter } from '@/services/projects/projectSchema';
@@ -164,6 +167,30 @@ const addProject = async (
   await queryRunner.startTransaction();
   try {
     const newProject = await queryRunner.manager.save(Project, project);
+    // Get the agencies that should be automatically subscribed to new projects
+    // This includes any agency that has SendEmail set to true and has an email field populated.
+    const defaultSubscribeAgencies = (
+      await AppDataSource.getRepository(Agency).find({
+        where: {
+          SendEmail: true,
+          Email: And(Not(IsNull()), Not('')),
+          Id: Not(project.AgencyId), // Not including the owning agency.
+          IsDisabled: false,
+        },
+      })
+    ).map(
+      (a) =>
+        ({
+          ProjectId: newProject.Id,
+          AgencyId: a.Id,
+          Response: AgencyResponseType.Subscribe,
+          OfferAmount: 0,
+          CreatedById: user.Id,
+        }) as ProjectAgencyResponse,
+    );
+    // Add these agencies
+    await queryRunner.manager.getRepository(ProjectAgencyResponse).save(defaultSubscribeAgencies);
+
     // Add parcel/building relations
     const { parcels, buildings } = propertyIds;
     if (parcels) await addProjectParcelRelations(newProject, parcels, queryRunner);
