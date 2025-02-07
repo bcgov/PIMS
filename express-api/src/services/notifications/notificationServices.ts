@@ -752,32 +752,31 @@ const getNotificationById = async (id: number) => {
  * @param newProperties The new properties to overwrite before resending.
  * @returns The newly requeued version of the notification.
  */
-const resendNotificationWithNewEmails = async (
+const resendNotificationWithNewProperties = async (
   notif: NotificationQueue,
   newProperties: Partial<NotificationQueue> = {},
 ) => {
   const system = await AppDataSource.getRepository(User).findOne({ where: { Username: 'system' } });
-  // First, cancel the notification
+  // Update notification status from CHES
+  const updatedNotification = await updateNotificationStatus(notif.Id, system);
+  // If it's no longer pending, could already be Completed or Cancelled. Don't do anything.
+  if (updatedNotification.Status !== NotificationStatus.Pending) return updatedNotification;
+  // Cancel the notification
   const chesResult = await chesServices.cancelEmailByIdAsync(notif.ChesMessageId);
   if (chesResult.status === 'cancelled') {
-    await AppDataSource.getRepository(NotificationQueue).save({
-      Id: notif.Id,
-      Status: NotificationStatus.Cancelled,
-      UpdatedById: system.Id,
-    });
     // Cancelled successfully, then requeue with new properties
     const newNotif = await sendNotification(
       { ...notif, ...newProperties },
       system as PimsRequestUser,
     );
     if (newNotif.Status === NotificationStatus.Failed) {
-      const error = `resendNotification: Failed to reque notification Id ${newNotif.Id} (originally ${notif.Id}).`;
+      const error = `resendNotificationWithNewProperties: Failed to requeue notification Id ${newNotif.Id} (originally ${notif.Id}).`;
       logger.error(error);
       throw new Error(error);
     }
     return newNotif;
   } else {
-    const error = `resendNotification: Notification Id ${notif.Id} not cancelled successfully.`;
+    const error = `resendNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully.`;
     logger.error(error);
     throw new Error(error);
   }
@@ -794,7 +793,7 @@ const notificationServices = {
   getNotificationById,
   cancelNotificationById,
   cancelProjectNotifications,
-  resendNotificationWithNewEmails,
+  resendNotificationWithNewProperties,
 };
 
 export default notificationServices;
