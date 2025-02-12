@@ -163,7 +163,9 @@ const _cancelEmailByIdAsync = jest.fn().mockImplementation(
 );
 
 jest.spyOn(chesServices, 'sendEmailAsync').mockImplementation(() => _sendEmailAsync());
-jest.spyOn(chesServices, 'cancelEmailByIdAsync').mockImplementation(() => _cancelEmailByIdAsync());
+const _chesCancelEmailMock = jest
+  .spyOn(chesServices, 'cancelEmailByIdAsync')
+  .mockImplementation(() => _cancelEmailByIdAsync());
 const _getStatusByIdAsync = jest.spyOn(chesServices, 'getStatusByIdAsync').mockResolvedValue({
   status: 'completed',
   tag: 'sampleTag',
@@ -234,13 +236,13 @@ describe('updateNotificationStatus', () => {
     expect(result.UpdatedById).toBe(user.Id);
   });
 
-  it('should throw an error if notification is not found', () => {
+  it('should throw an error if notification is not found', async () => {
     const user = produceUser();
     _notifQueueFindOne.mockImplementationOnce(async () => null);
 
-    expect(
-      async () => await notificationServices.updateNotificationStatus(1, user),
-    ).rejects.toThrow('Notification with id 1 not found.');
+    await expect(notificationServices.updateNotificationStatus(1, user)).rejects.toThrow(
+      'Notification with id 1 not found.',
+    );
   });
 
   it('should not update the status if the CHES status is non-standard', async () => {
@@ -526,5 +528,98 @@ describe('getNotificationById', () => {
     expect(result.Status).toBeDefined();
     expect(result.TemplateId).toBeDefined();
     expect(result.Id).toBeDefined();
+  });
+});
+
+describe('resendNotificationWithNewProperties', () => {
+  it('should return the updated notification if not still pending', async () => {
+    const notificationToSend = produceNotificationQueue();
+    _getStatusByIdAsync.mockResolvedValueOnce({
+      status: 'completed',
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: Date.now(),
+      createdTS: Date.now(),
+      msgId: randomUUID(),
+    });
+    const result =
+      await notificationServices.resendNotificationWithNewProperties(notificationToSend);
+    expect(result).toBeDefined();
+    expect(result.Status).toBe(NotificationStatus.Completed);
+    expect(result.TemplateId).toBeDefined();
+    expect(result.Id).toBeDefined();
+  });
+
+  it('should throw an error if the notification was not cancelled', async () => {
+    const notificationToSend = produceNotificationQueue({ Id: 1 });
+    _getStatusByIdAsync.mockResolvedValueOnce({
+      status: 'pending',
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: Date.now(),
+      createdTS: Date.now(),
+      msgId: randomUUID(),
+    });
+    _chesCancelEmailMock.mockImplementationOnce(
+      async () => ({ status: 'accepted' }) as IChesStatusResponse,
+    );
+    await expect(
+      notificationServices.resendNotificationWithNewProperties(notificationToSend),
+    ).rejects.toThrow(
+      new Error(
+        'resendNotificationWithNewProperties: Notification Id 1 not cancelled successfully.',
+      ),
+    );
+  });
+
+  it('should throw an error if the notification is not requeued successfully', async () => {
+    const notificationToSend = produceNotificationQueue({ Id: 1 });
+    _getStatusByIdAsync.mockResolvedValueOnce({
+      status: 'pending',
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: Date.now(),
+      createdTS: Date.now(),
+      msgId: randomUUID(),
+    });
+    _chesCancelEmailMock.mockImplementationOnce(
+      async () => ({ status: 'cancelled' }) as IChesStatusResponse,
+    );
+    _sendEmailAsync.mockReturnValueOnce({ status: 'failed' } as IChesStatusResponse);
+    await expect(
+      notificationServices.resendNotificationWithNewProperties(notificationToSend),
+    ).rejects.toThrow(
+      new Error(
+        'resendNotificationWithNewProperties: Failed to requeue notification Id 1 (originally 1).',
+      ),
+    );
+  });
+
+  it('should return the updated notification if requeued successfully', async () => {
+    const notificationToSend = produceNotificationQueue({ Id: 1 });
+    _getStatusByIdAsync.mockResolvedValueOnce({
+      status: 'pending',
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: Date.now(),
+      createdTS: Date.now(),
+      msgId: randomUUID(),
+    });
+    _chesCancelEmailMock.mockImplementationOnce(
+      async () => ({ status: 'cancelled' }) as IChesStatusResponse,
+    );
+    _sendEmailAsync.mockReturnValueOnce({
+      status: 'pending',
+      messages: [{ msgId: '3423' }],
+      tag: 'sampleTag',
+      txId: randomUUID(),
+      updatedTS: Date.now(),
+      createdTS: Date.now(),
+      msgId: randomUUID(),
+    } as IChesStatusResponse);
+    const response = await expect(
+      notificationServices.resendNotificationWithNewProperties(notificationToSend),
+    );
+    expect(response).toBeDefined();
   });
 });
