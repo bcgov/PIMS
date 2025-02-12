@@ -274,8 +274,8 @@ const getStatusesAsync = async (filter: ChesFilter) => {
 const cancelEmailByIdAsync = async (messageId: string) => {
   const response = await getStatusByIdAsync(messageId);
   if (response.status === 'accepted' || response.status === 'pending') {
-    await sendAsync(`/cancel/${messageId}`, 'DELETE');
-    response.status = 'cancelled';
+    const result = await sendAsync(`/cancel/${messageId}`, 'DELETE');
+    if (result != null) response.status = 'cancelled';
   }
   return response;
 };
