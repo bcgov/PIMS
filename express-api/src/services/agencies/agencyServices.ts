@@ -11,6 +11,10 @@ import { Brackets, FindOptionsWhere } from 'typeorm';
 import logger from '@/utilities/winstonLogger';
 import { SortOrders } from '@/constants/types';
 import { AgencyJoinView } from '@/typeorm/Entities/views/AgencyJoinView';
+import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+import notificationServices, {
+  NotificationStatus,
+} from '@/services/notifications/notificationServices';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -55,7 +59,7 @@ const sortKeyTranslator: Record<string, string> = {
  * @param filter - The filter criteria to apply when retrieving agencies.
  * @returns { Agency[] } A list of agencies in the database
  */
-export const getAgencies = async (filter: AgencyFilter) => {
+export const getAgencies = async (filter: AgencyFilter = {}) => {
   const options = collectFindOptions(filter);
   const query = AppDataSource.getRepository(AgencyJoinView)
     .createQueryBuilder()
@@ -132,21 +136,21 @@ export const getAgencyById = async (agencyId: number) => {
  * @returns {Agency} Status and information on updated agency.
  */
 export const updateAgencyById = async (agencyIn: Agency) => {
-  const { data: agencies } = await getAgencies({});
-  const findAgency = agencies.find((agency) => agency.Id === agencyIn.Id);
+  const agencyRepo = AppDataSource.getRepository(Agency);
+  const findAgency = await agencyRepo.findOne({ where: { Id: agencyIn.Id } });
   if (findAgency == null) {
     throw new ErrorWithCode('Agency not found.', 404);
   }
 
   // Was a parent agency included?
   if (agencyIn.ParentId != null) {
-    const findParentAgency = agencies.find((agency) => agency.Id === agencyIn.ParentId);
+    const findParentAgency = await agencyRepo.findOne({ where: { Id: agencyIn.ParentId } });
     if (findParentAgency == null) {
       throw new ErrorWithCode(`Requested Parent Agency Id ${agencyIn.ParentId} not found.`, 404);
     }
     // If updated agency is already a parent, it cannot be assigned a parent.
-    const isParent = agencies.some((agency) => agency.ParentId === agencyIn.Id);
-    if (isParent) {
+    const isParent = await agencyRepo.find({ where: { ParentId: agencyIn.Id } });
+    if (isParent.length) {
       throw new ErrorWithCode('Cannot assign Parent Agency to existing Parent Agency.', 400);
     }
     // If the requested parent has its own parent, it cannot be the parent for the updated agency
@@ -154,7 +158,37 @@ export const updateAgencyById = async (agencyIn: Agency) => {
       throw new ErrorWithCode('Cannot assign a child agency as a Parent Agency.', 400);
     }
   }
+
   const updatedAgency = await agencyRepo.save(agencyIn);
+
+  // If the email fields changed, pending notifications for projects need to be requeued with new emails.
+  const emailChanged = agencyIn.Email != null && agencyIn.Email != findAgency.Email;
+  const ccChanged = agencyIn.CCEmail != null && agencyIn.CCEmail != findAgency.CCEmail;
+  if (emailChanged || ccChanged) {
+    // Get all notifications matching the agency they correspond to.
+    const affectedNotifications = await AppDataSource.getRepository(NotificationQueue).find({
+      where: [{ ToAgencyId: findAgency.Id, Status: NotificationStatus.Pending }],
+    });
+    if (affectedNotifications.length) {
+      // Attempt to resend notifications with new info
+      const resendResults = await Promise.allSettled(
+        affectedNotifications.map((notification) =>
+          notificationServices.resendNotificationWithNewProperties(notification, {
+            To: updatedAgency.Email,
+            Cc: updatedAgency.CCEmail,
+          }),
+        ),
+      );
+      // If any of the attempts to resend fail (promises rejected), log and throw error.
+      if (resendResults.some((r) => r.status === 'rejected')) {
+        logger.error(resendResults.filter((r) => r.status === 'rejected').map((r) => r.reason));
+        throw new ErrorWithCode(
+          'Agency updated but not all notifications resent with updated emails.',
+          500,
+        );
+      }
+    }
+  }
   return updatedAgency;
 };
 

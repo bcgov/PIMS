@@ -758,6 +758,42 @@ const getNotificationById = async (id: number) => {
   return AppDataSource.getRepository(NotificationQueue).findOne({ where: { Id: id } });
 };
 
+/**
+ * Takes and existing notification and cancels it, then resends it with new properties.
+ * @param notif The original notification to be cancelled.
+ * @param newProperties The new properties to overwrite before resending.
+ * @returns The newly requeued version of the notification.
+ */
+const resendNotificationWithNewProperties = async (
+  notif: NotificationQueue,
+  newProperties: Partial<NotificationQueue> = {},
+) => {
+  const system = await AppDataSource.getRepository(User).findOne({ where: { Username: 'system' } });
+  // Update notification status from CHES
+  const updatedNotification = await updateNotificationStatus(notif.Id, system);
+  // If it's no longer pending, could already be Completed or Cancelled. Don't do anything.
+  if (updatedNotification.Status !== NotificationStatus.Pending) return updatedNotification;
+  // Cancel the notification
+  const chesResult = await chesServices.cancelEmailByIdAsync(notif.ChesMessageId);
+  if (chesResult.status === 'cancelled') {
+    // Cancelled successfully, then requeue with new properties
+    const newNotif = await sendNotification(
+      { ...notif, ...newProperties },
+      system as PimsRequestUser,
+    );
+    if (newNotif.Status === NotificationStatus.Failed) {
+      const error = `resendNotificationWithNewProperties: Failed to requeue notification Id ${newNotif.Id} (originally ${notif.Id}).`;
+      logger.error(error);
+      throw new Error(error);
+    }
+    return newNotif;
+  } else {
+    const error = `resendNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully.`;
+    logger.error(error);
+    throw new Error(error);
+  }
+};
+
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
@@ -769,6 +805,7 @@ const notificationServices = {
   getNotificationById,
   cancelNotificationById,
   cancelProjectNotifications,
+  resendNotificationWithNewProperties,
 };
 
 export default notificationServices;
