@@ -418,7 +418,7 @@ const handleProjectNotifications = async (
   projectId: number,
   previousStatus: number,
   responses: ProjectAgencyResponse[],
-  user: PimsRequestUser,
+  user: User,
   queryRunner: QueryRunner,
 ) => {
   const projectWithRelations = await queryRunner.manager.findOne(Project, {
@@ -447,27 +447,23 @@ const handleProjectNotifications = async (
   const projectAgency = await queryRunner.manager.findOne(Agency, {
     where: { Id: projectWithRelations.AgencyId },
   });
-  const projectAgencyResponses = await queryRunner.manager.find(ProjectAgencyResponse, {
-    where: { ProjectId: projectWithRelations.Id },
-  });
   const projectNotes = await queryRunner.manager.find(ProjectNote, {
     where: { ProjectId: projectWithRelations.Id },
   });
   projectWithRelations.Agency = projectAgency;
-  projectWithRelations.AgencyResponses = projectAgencyResponses;
   projectWithRelations.Notes = projectNotes;
 
   const notifsToSend: Array<NotificationQueue> = [];
+  const previousStatuses = await queryRunner.manager.find(ProjectStatusHistory, {
+    where: { ProjectId: projectWithRelations.Id },
+  });
+  const statusPreviouslyVisited = previousStatuses.some(
+    (record: ProjectStatusHistory) => record.StatusId === projectWithRelations.StatusId,
+  );
   const queueNotifications = async () => {
     // If the status has been changed
     if (previousStatus !== projectWithRelations.StatusId) {
       // Has the project previously been to this status? If so, don't re-queue notifications.
-      const previousStatuses = await queryRunner.manager.find(ProjectStatusHistory, {
-        where: { ProjectId: projectWithRelations.Id },
-      });
-      const statusPreviouslyVisited = previousStatuses.some(
-        (record: ProjectStatusHistory) => record.StatusId === projectWithRelations.StatusId,
-      );
       if (!statusPreviouslyVisited) {
         const statusChangeNotifs = await notificationServices.generateProjectNotifications(
           projectWithRelations,
@@ -481,7 +477,7 @@ const handleProjectNotifications = async (
   };
 
   const queueWatchNotifications = async () => {
-    if (projectAgencyResponses.length) {
+    if (responses.length && projectWithRelations.StatusId == ProjectStatus.APPROVED_FOR_ERP) {
       const agencyResponseNotifs = await notificationServices.generateProjectWatchNotifications(
         projectWithRelations,
         responses,
@@ -776,16 +772,20 @@ const updateProject = async (
     await handleProjectTimestamps({ ...project, CreatedById: project.UpdatedById }, queryRunner);
 
     // Handle timestamps
-    if (project.StatusId === ProjectStatus.CANCELLED) project.CancelledOn = new Date();
-    else if (project.StatusId === ProjectStatus.DENIED) project.DeniedOn = new Date();
+    if (project.StatusId === ProjectStatus.CANCELLED && project.CancelledOn == null)
+      project.CancelledOn = new Date();
+    else if (project.StatusId === ProjectStatus.DENIED && project.DeniedOn == null)
+      project.DeniedOn = new Date();
     else if (
-      [ProjectStatus.DISPOSED, ProjectStatus.TRANSFERRED_WITHIN_GRE].includes(project.StatusId)
+      [ProjectStatus.DISPOSED, ProjectStatus.TRANSFERRED_WITHIN_GRE].includes(project.StatusId) &&
+      project.CompletedOn == null
     )
       project.CompletedOn = new Date();
     else if (
       [ProjectStatus.APPROVED_FOR_ERP, ProjectStatus.APPROVED_FOR_EXEMPTION].includes(
         project.StatusId,
-      )
+      ) &&
+      project.ApprovedOn == null
     )
       project.ApprovedOn = new Date();
 
