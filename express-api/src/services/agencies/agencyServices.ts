@@ -6,24 +6,21 @@ import {
   constructFindOptionFromQuery,
   constructFindOptionFromQueryBoolean,
   constructFindOptionFromQuerySingleSelect,
-  getDaysBetween,
 } from '@/utilities/helperFunctions';
-import { Brackets, FindOptionsWhere, MoreThan } from 'typeorm';
+import { Brackets, FindOptionsWhere } from 'typeorm';
 import logger from '@/utilities/winstonLogger';
 import { SortOrders } from '@/constants/types';
 import { AgencyJoinView } from '@/typeorm/Entities/views/AgencyJoinView';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import notificationServices, {
   AgencyResponseType,
-  NotificationAudience,
   NotificationStatus,
 } from '@/services/notifications/notificationServices';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectStatus } from '@/constants/projectStatus';
-import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
-import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { PimsRequestUser } from '@/middleware/userAuthCheck';
+import projectServices from '@/services/projects/projectsServices';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -230,117 +227,9 @@ export const updateAgencyById = async (agencyIn: Agency, user: PimsRequestUser) 
         },
       });
       const queueResults = await Promise.allSettled(
-        projectsInErp.map(async (project) => {
-          const queryRunner = AppDataSource.createQueryRunner();
-
-          try {
-            await queryRunner.startTransaction();
-            const projectAgency = await queryRunner.manager.findOne(Agency, {
-              where: { Id: project.AgencyId },
-            });
-            const projectNotes = await queryRunner.manager.find(ProjectNote, {
-              where: { ProjectId: project.Id },
-            });
-            project.Agency = projectAgency;
-            project.Notes = projectNotes;
-
-            // Deal with this project's notifications. Only the 30, 60, 90 days notifications must be queued.
-            // NOTE: Do not use handleProjectNotifcations
-            const notifsToSend: NotificationQueue[] = [];
-            // If this agency owns this project, queue those notifications
-            if (project.AgencyId == agencyIn.Id) {
-              const dateInERP = project.ApprovedOn;
-              const daysSinceThisStatus = getDaysBetween(dateInERP, new Date());
-              const projectStatusNotifs = await queryRunner.manager.find(
-                ProjectStatusNotification,
-                {
-                  where: {
-                    ToStatusId: ProjectStatus.APPROVED_FOR_ERP,
-                    DelayDays: MoreThan(daysSinceThisStatus),
-                    Template: {
-                      Audience: NotificationAudience.OwningAgency,
-                    },
-                  },
-                  relations: { Template: true },
-                },
-              );
-              await Promise.all(
-                projectStatusNotifs.map(async (n) => {
-                  //If there is already a pending notification for this agency with this template, skip.
-                  const notifExists = await queryRunner.manager.exists(NotificationQueue, {
-                    where: [
-                      {
-                        ProjectId: project.Id,
-                        ToAgencyId: agencyIn.Id,
-                        TemplateId: n.TemplateId,
-                        Status: NotificationStatus.Accepted,
-                      },
-                      {
-                        ProjectId: project.Id,
-                        ToAgencyId: agencyIn.Id,
-                        TemplateId: n.TemplateId,
-                        Status: NotificationStatus.Pending,
-                      },
-                    ],
-                  });
-
-                  if (!notifExists) {
-                    // If there is no notification like this already pending, we send one.
-                    const sendOn = new Date(dateInERP.getTime());
-                    sendOn.setDate(dateInERP.getDate() + n.DelayDays);
-                    notifsToSend.push(
-                      await notificationServices.insertProjectNotificationQueue(
-                        n.Template,
-                        n,
-                        project,
-                        updatedAgency,
-                        undefined,
-                        sendOn,
-                        queryRunner,
-                      ),
-                    );
-                  }
-                }),
-              );
-            } else {
-              // Otherwise, handle watch notifications for this agency
-              // Update response
-              const updatedResponse: Partial<ProjectAgencyResponse> = {
-                Response: AgencyResponseType.Subscribe,
-                AgencyId: agencyIn.Id,
-                ProjectId: project.Id,
-                OfferAmount: 0,
-                CreatedById: user.Id,
-              };
-              const savedResponse = await queryRunner.manager.save(
-                ProjectAgencyResponse,
-                updatedResponse,
-              );
-              const watchNotifications =
-                await notificationServices.generateProjectWatchNotifications(
-                  project,
-                  [savedResponse],
-                  queryRunner,
-                );
-              notifsToSend.push(...watchNotifications);
-            }
-
-            const result = await Promise.all(
-              notifsToSend.map((notif) =>
-                notificationServices.sendNotification(notif, user, queryRunner),
-              ),
-            );
-            await queryRunner.commitTransaction();
-            return result;
-          } catch {
-            await queryRunner.rollbackTransaction();
-            return new Error(
-              `Failed to queue notifications for project ID ${project.Id} when updating agency ID ${agencyIn.Id}`,
-            );
-          } finally {
-            await queryRunner.release();
-          }
-        }),
+        projectsInErp.map((project) =>
+          projectServices.queueOutstandingERPNotifications(project, updatedAgency, user),
+        ),
       );
       // If any of the attempts to queue fail (promises rejected), log and throw error.
       if (queueResults.some((r) => r.status === 'rejected')) {
