@@ -1,6 +1,10 @@
 import { AppDataSource } from '@/appDataSource';
 import { Agency } from '@/typeorm/Entities/Agency';
-import { produceAgency, produceNotificationQueue } from 'tests/testUtils/factories';
+import {
+  produceAgency,
+  produceNotificationQueue,
+  producePimsRequestUser,
+} from 'tests/testUtils/factories';
 import * as agencyServices from '@/services/agencies/agencyServices';
 import { DeepPartial } from 'typeorm';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
@@ -109,16 +113,17 @@ describe('UNIT - agency services', () => {
     });
   });
   describe('updateAgencyById', () => {
+    const user = producePimsRequestUser();
     it('should update an agency and return it', async () => {
       const upagency = produceAgency();
-      await agencyServices.updateAgencyById(upagency);
+      await agencyServices.updateAgencyById(upagency, user);
       expect(_agencySave).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an error if the agency is not found', async () => {
       const upagency = produceAgency({ ParentId: 1 });
       _agencyFindOne.mockImplementationOnce(async () => null);
-      await expect(agencyServices.updateAgencyById(upagency)).rejects.toThrow(
+      await expect(agencyServices.updateAgencyById(upagency, user)).rejects.toThrow(
         new ErrorWithCode(`Agency not found.`, 404),
       );
     });
@@ -129,7 +134,7 @@ describe('UNIT - agency services', () => {
       _agencyFindOne
         .mockImplementationOnce(async () => upagency)
         .mockImplementationOnce(async () => null);
-      await expect(agencyServices.updateAgencyById(upagency)).rejects.toThrow(
+      await expect(agencyServices.updateAgencyById(upagency, user)).rejects.toThrow(
         new ErrorWithCode(`Requested Parent Agency Id ${upagency.ParentId} not found.`, 404),
       );
     });
@@ -140,7 +145,7 @@ describe('UNIT - agency services', () => {
       const parentAgency = produceAgency({ Id: agencyId - 1 });
       const upagency = produceAgency({ Id: agencyId, ParentId: parentAgency.Id });
       _agencyFind.mockImplementationOnce(async () => [childAgency]);
-      await expect(agencyServices.updateAgencyById(upagency)).rejects.toThrow(
+      await expect(agencyServices.updateAgencyById(upagency, user)).rejects.toThrow(
         new ErrorWithCode('Cannot assign Parent Agency to existing Parent Agency.', 400),
       );
     });
@@ -153,7 +158,7 @@ describe('UNIT - agency services', () => {
       _agencyFindOne
         .mockImplementationOnce(async () => upagency)
         .mockImplementationOnce(async () => produceAgency({ ParentId: 8 }));
-      await expect(agencyServices.updateAgencyById(upagency)).rejects.toThrow(
+      await expect(agencyServices.updateAgencyById(upagency, user)).rejects.toThrow(
         new ErrorWithCode('Cannot assign a child agency as a Parent Agency.', 400),
       );
     });
@@ -163,7 +168,7 @@ describe('UNIT - agency services', () => {
       _resendNotificationsMock.mockImplementationOnce(async () => {
         throw new Error();
       });
-      await expect(agencyServices.updateAgencyById(upagency)).rejects.toThrow(
+      await expect(agencyServices.updateAgencyById(upagency, user)).rejects.toThrow(
         new ErrorWithCode(
           'Agency updated but not all notifications resent with updated emails.',
           500,

@@ -2,7 +2,10 @@ import { AppDataSource } from '@/appDataSource';
 import { ProjectStatus } from '@/constants/projectStatus';
 import { ProjectType } from '@/constants/projectType';
 import { Roles } from '@/constants/roles';
-import { NotificationStatus } from '@/services/notifications/notificationServices';
+import {
+  AgencyResponseType,
+  NotificationStatus,
+} from '@/services/notifications/notificationServices';
 import projectServices from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
 import { Agency } from '@/typeorm/Entities/Agency';
@@ -618,8 +621,14 @@ describe('UNIT - Project Services', () => {
     });
 
     it('should send notifications when agency responses changed', async () => {
-      const oldProject = produceProject({});
-      const projUpd = { ...oldProject, AgencyResponses: [produceAgencyResponse()] };
+      _projectManagerFindOne.mockImplementationOnce(async () =>
+        produceProject({ StatusId: ProjectStatus.APPROVED_FOR_ERP }),
+      );
+      const oldProject = produceProject({ StatusId: ProjectStatus.APPROVED_FOR_ERP });
+      const projUpd = {
+        ...oldProject,
+        AgencyResponses: [produceAgencyResponse({ Response: AgencyResponseType.Subscribe })],
+      };
       _projectFindOne.mockImplementationOnce(async () => oldProject);
       await projectServices.updateProject(
         projUpd,

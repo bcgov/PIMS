@@ -1237,6 +1237,7 @@ const projectServices = {
   getProjectsForExport,
   handleProjectNotifications,
   queueOutstandingERPNotifications,
+  getAgencyResponseChanges,
 };
 
 export default projectServices;

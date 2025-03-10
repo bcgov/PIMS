@@ -80,7 +80,11 @@ const _statusNotifFind = jest.fn().mockImplementation(async (options) => [
   }),
 ]);
 
-const _agencyFindOne = jest.fn().mockImplementation(async () => produceAgency());
+const _agencyFindOne = jest
+  .fn()
+  .mockImplementation(async () => produceAgency({ SendEmail: true, Email: 'test@gov.bc.ca' }));
+
+const _entityExists = jest.fn().mockReturnValue(false);
 
 jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
   ...jest.requireActual('@/appDataSource').createQueryRunner,
@@ -124,9 +128,7 @@ jest.spyOn(AppDataSource, 'createQueryRunner').mockReturnValue({
     ) => {
       return _notifQueueSave(obj);
     },
-    exists: () => {
-      return false;
-    },
+    exists: _entityExists,
     update: () => {
       return { raw: {}, generatedMaps: [] };
     },
@@ -481,8 +483,11 @@ describe('cancelProjectNotifications', () => {
   });
 });
 describe('generateProjectWatchNotifications', () => {
+  // beforeAll(() => {
+  //   jest.spyOn(notificationServices, 'insertProjectNotificationQueue').mockImplementation(async () => produceNotificationQueue())
+  // })
   it('should generate notifications for list of responses', async () => {
-    const project = produceProject({ Id: 1 });
+    const project = produceProject({ Id: 1, ApprovedOn: new Date() });
     const responses = [
       produceAgencyResponse({ Response: AgencyResponseType.Subscribe }),
       produceAgencyResponse({ Response: AgencyResponseType.Unsubscribe }),
@@ -574,14 +579,23 @@ describe('resendNotificationWithNewProperties', () => {
 
   it('should throw an error if the notification is not requeued successfully', async () => {
     const notificationToSend = produceNotificationQueue({ Id: 1 });
-    _getStatusByIdAsync.mockResolvedValueOnce({
-      status: 'pending',
-      tag: 'sampleTag',
-      txId: randomUUID(),
-      updatedTS: Date.now(),
-      createdTS: Date.now(),
-      msgId: randomUUID(),
-    });
+    _getStatusByIdAsync
+      .mockResolvedValueOnce({
+        status: 'pending',
+        tag: 'sampleTag',
+        txId: randomUUID(),
+        updatedTS: Date.now(),
+        createdTS: Date.now(),
+        msgId: randomUUID(),
+      })
+      .mockResolvedValueOnce({
+        status: 'cancelled',
+        tag: 'sampleTag',
+        txId: randomUUID(),
+        updatedTS: Date.now(),
+        createdTS: Date.now(),
+        msgId: randomUUID(),
+      });
     _chesCancelEmailMock.mockImplementationOnce(
       async () => ({ status: 'cancelled' }) as IChesStatusResponse,
     );
@@ -597,14 +611,23 @@ describe('resendNotificationWithNewProperties', () => {
 
   it('should return the updated notification if requeued successfully', async () => {
     const notificationToSend = produceNotificationQueue({ Id: 1 });
-    _getStatusByIdAsync.mockResolvedValueOnce({
-      status: 'pending',
-      tag: 'sampleTag',
-      txId: randomUUID(),
-      updatedTS: Date.now(),
-      createdTS: Date.now(),
-      msgId: randomUUID(),
-    });
+    _getStatusByIdAsync
+      .mockResolvedValueOnce({
+        status: 'pending',
+        tag: 'sampleTag',
+        txId: randomUUID(),
+        updatedTS: Date.now(),
+        createdTS: Date.now(),
+        msgId: randomUUID(),
+      })
+      .mockResolvedValueOnce({
+        status: 'cancelled',
+        tag: 'sampleTag',
+        txId: randomUUID(),
+        updatedTS: Date.now(),
+        createdTS: Date.now(),
+        msgId: randomUUID(),
+      });
     _chesCancelEmailMock.mockImplementationOnce(
       async () => ({ status: 'cancelled' }) as IChesStatusResponse,
     );
