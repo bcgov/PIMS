@@ -1218,7 +1218,8 @@ const queueOutstandingERPNotifications = async (project: Project, agency: Agency
     );
     await queryRunner.commitTransaction();
     return result;
-  } catch {
+  } catch (e: unknown) {
+    logger.error(e);
     await queryRunner.rollbackTransaction();
     return new Error(
       `Failed to queue notifications for project ID ${project.Id} when updating agency ID ${agency.Id}`,

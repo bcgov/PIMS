@@ -17,6 +17,7 @@ import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse'
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
@@ -34,6 +35,7 @@ import {
   produceProjectJoin,
   produceProjectMonetary,
   produceProjectProperty,
+  produceProjectStatusNotification,
   produceProjectTask,
   produceProjectTimestamp,
   produceUser,
@@ -162,10 +164,17 @@ const _projectManagerSave = jest.fn().mockImplementation((obj) => obj);
 const _projectManagerDelete = jest.fn().mockImplementation(() => _getDeleteResponse(1));
 const _projectPropertiesManagerFindOne = jest.fn().mockImplementation(async () => null);
 
+const _notificationQueueManagerExists = jest.fn().mockImplementation(async () => false);
+const _projectStatusNotificationManagerFind = jest
+  .fn()
+  .mockImplementation(async () => [produceProjectStatusNotification()]);
+
 const _mockEntityManager = {
   find: async <Entity extends ObjectLiteral>(entityClass: EntityTarget<Entity>) => {
     if (entityClass === ProjectProperty) {
       return _projectPropertiesManagerFind();
+    } else if (entityClass == ProjectStatusNotification) {
+      return _projectStatusNotificationManagerFind();
     } else {
       return [produceSwitch(entityClass)];
     }
@@ -211,6 +220,8 @@ const _mockEntityManager = {
       return _projectManagerExists();
     } else if (entityClass === Agency) {
       return _agencyManagerExists();
+    } else if (entityClass == NotificationQueue) {
+      return _notificationQueueManagerExists();
     } else {
       return false;
     }
@@ -264,6 +275,15 @@ jest.mock('@/services/notifications/notificationServices', () => ({
   NotificationStatus: { Accepted: 0, Pending: 1, Cancelled: 2, Failed: 3, Completed: 4 },
   cancelNotificationById: async () => _cancelNotificationById,
   AgencyResponseType: { Unsubscribe: 0, Subscribe: 1, Watch: 2 },
+  insertProjectNotificationQueue: async () => produceNotificationQueue(),
+  NotificationAudience: {
+    ProjectOwner: 'ProjectOwner',
+    OwningAgency: 'OwningAgency',
+    Agencies: 'Agencies',
+    ParentAgencies: 'ParentAgencies',
+    Default: 'Default',
+    WatchingAgencies: 'WatchingAgencies',
+  },
 }));
 
 describe('UNIT - Project Services', () => {
@@ -728,6 +748,34 @@ describe('UNIT - Project Services', () => {
       expect(_projectFind).toHaveBeenCalled();
       // Returned project should be the one based on the agency and status id in the filter
       expect(projects.length).toEqual(1);
+    });
+  });
+  describe('queueOutstandingERPNotifications', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should return a list of sent notifications related to subscribed agencies when project agency != agency', async () => {
+      const projectIn = produceProject({ AgencyId: 1 });
+      const agencyIn = produceAgency({ Id: 2 });
+      const userIn = produceUser();
+      const result = await projectServices.queueOutstandingERPNotifications(
+        projectIn,
+        agencyIn,
+        userIn,
+      );
+      expect(result).toHaveLength(1);
+    });
+
+    it('should return a list of sent notifications related to the owning agency when project agency == agency', async () => {
+      const projectIn = produceProject({ AgencyId: 1, ApprovedOn: new Date() });
+      const agencyIn = produceAgency({ Id: 1 });
+      const userIn = produceUser();
+      const result = await projectServices.queueOutstandingERPNotifications(
+        projectIn,
+        agencyIn,
+        userIn,
+      );
+      expect(result).toHaveLength(1);
     });
   });
 });

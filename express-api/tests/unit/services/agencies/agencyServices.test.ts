@@ -4,6 +4,7 @@ import {
   produceAgency,
   produceNotificationQueue,
   producePimsRequestUser,
+  produceProject,
 } from 'tests/testUtils/factories';
 import * as agencyServices from '@/services/agencies/agencyServices';
 import { DeepPartial } from 'typeorm';
@@ -11,6 +12,9 @@ import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { AgencyJoinView } from '@/typeorm/Entities/views/AgencyJoinView';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import notificationServices from '@/services/notifications/notificationServices';
+import projectServices from '@/services/projects/projectsServices';
+import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
+import { Project } from '@/typeorm/Entities/Project';
 
 const _agencyFind = jest
   .spyOn(AppDataSource.getRepository(Agency), 'find')
@@ -52,6 +56,17 @@ jest
 const _resendNotificationsMock = jest
   .spyOn(notificationServices, 'resendNotificationWithNewProperties')
   .mockImplementation(async () => produceNotificationQueue());
+
+// Project-related mocks
+const _queueOutstanding = jest
+  .spyOn(projectServices, 'queueOutstandingERPNotifications')
+  .mockImplementation(async () => [produceNotificationQueue()]);
+jest
+  .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'update')
+  .mockImplementation(async () => ({ generatedMaps: [], raw: {} }));
+jest
+  .spyOn(AppDataSource.getRepository(Project), 'find')
+  .mockImplementation(async () => [produceProject()]);
 
 describe('UNIT - agency services', () => {
   beforeEach(() => {
@@ -174,6 +189,30 @@ describe('UNIT - agency services', () => {
           500,
         ),
       );
+    });
+
+    it('should attempt to cancel pending emails if the send email flag is false', async () => {
+      const upagency = produceAgency({ SendEmail: false, Email: 'test', CCEmail: 'cc' });
+      _agencyFindOne.mockImplementationOnce(async () => ({
+        ...upagency,
+        SendEmail: true,
+        Email: 'test',
+        CCEmail: 'cc',
+      }));
+      await agencyServices.updateAgencyById(upagency, user);
+      expect(_resendNotificationsMock).toHaveBeenCalled();
+    });
+
+    it('should attempt to queue outstanding notifications if the send email flag is true', async () => {
+      const upagency = produceAgency({ SendEmail: true, Email: 'test', CCEmail: 'cc' });
+      _agencyFindOne.mockImplementationOnce(async () => ({
+        ...upagency,
+        SendEmail: false,
+        Email: 'test',
+        CCEmail: 'cc',
+      }));
+      await agencyServices.updateAgencyById(upagency, user);
+      expect(_queueOutstanding).toHaveBeenCalled();
     });
   });
 

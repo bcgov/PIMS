@@ -13,7 +13,7 @@ import {
   produceNotificationTemplate,
   producePimsRequestUser,
   produceProject,
-  produceProjectNotification,
+  produceProjectStatusNotification,
   produceProjectStatusHistory,
   produceUser,
 } from 'tests/testUtils/factories';
@@ -72,7 +72,7 @@ jest
   .mockImplementation(async (): Promise<UpdateResult> => ({ raw: {}, generatedMaps: [] }));
 
 const _statusNotifFind = jest.fn().mockImplementation(async (options) => [
-  produceProjectNotification({
+  produceProjectStatusNotification({
     FromStatusId: (options.where as FindOptionsWhere<ProjectStatusNotification>)
       .FromStatusId as number,
     ToStatusId: (options.where as FindOptionsWhere<ProjectStatusNotification>).ToStatusId as number,
