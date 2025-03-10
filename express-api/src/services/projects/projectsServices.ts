@@ -1125,6 +1125,17 @@ const getProjectsForExport = async (filter: ProjectFilter) => {
   }));
 };
 
+/**
+ * Queues outstanding ERP notifications for a given project and agency.
+ * Handles notifications differently depending on whether the agency also owns the project.
+ * Notifications are sent only if there are no pending notifications with the same template.
+ *
+ * @param {Project} project - The project for which notifications are to be queued.
+ * @param {Agency} agency - The agency for which notifications are being queued.
+ * @param {User} user - The user initiating the notification process.
+ * @returns {Promise<NotificationQueue[]>} A promise that resolves with the result of the notification sending process.
+ * @throws {Error} If the transaction fails, an error is logged and the transaction is rolled back.
+ */
 const queueOutstandingERPNotifications = async (project: Project, agency: Agency, user: User) => {
   const queryRunner = AppDataSource.createQueryRunner();
 
@@ -1156,9 +1167,10 @@ const queueOutstandingERPNotifications = async (project: Project, agency: Agency
         },
         relations: { Template: true },
       });
+      // For all the relative notification status entries, see if that notification is already queued
       await Promise.all(
         projectStatusNotifs.map(async (n) => {
-          //If there is already a pending notification for this agency with this template, skip.
+          // If there is already a pending notification for this agency with this template, skip.
           const notifExists = await queryRunner.manager.exists(NotificationQueue, {
             where: [
               {

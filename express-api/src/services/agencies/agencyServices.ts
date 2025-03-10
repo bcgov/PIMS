@@ -139,6 +139,7 @@ export const getAgencyById = async (agencyId: number) => {
 /**
  * @description Finds and updates an agency with the given id.
  * @param {Agency} agencyIn An agency object used to update existing agency.
+ * @param {PimsRequestUser} user The user requesting this update action.
  * @returns {Agency} Status and information on updated agency.
  */
 export const updateAgencyById = async (agencyIn: Agency, user: PimsRequestUser) => {

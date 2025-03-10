@@ -719,7 +719,7 @@ const getNotificationById = async (id: number) => {
 /**
  * Takes and existing notification and cancels it, then resends it with new properties.
  * @param notif The original notification to be cancelled.
- * @param newProperties The new properties to overwrite before resending.
+ * @param newProperties The new properties of the notification to overwrite before resending.
  * @param requeue True by default. Set to false to stop requeue process.
  * @returns The newly requeued version of the notification.
  */
