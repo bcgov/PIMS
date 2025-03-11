@@ -19,8 +19,8 @@ import notificationServices, {
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import { Project } from '@/typeorm/Entities/Project';
 import { ProjectStatus } from '@/constants/projectStatus';
-import { PimsRequestUser } from '@/middleware/userAuthCheck';
 import projectServices from '@/services/projects/projectsServices';
+import { User } from '@/typeorm/Entities/User';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -142,7 +142,7 @@ export const getAgencyById = async (agencyId: number) => {
  * @param {PimsRequestUser} user The user requesting this update action.
  * @returns {Agency} Status and information on updated agency.
  */
-export const updateAgencyById = async (agencyIn: Agency, user: PimsRequestUser) => {
+export const updateAgencyById = async (agencyIn: Agency, user: User) => {
   const agencyRepo = AppDataSource.getRepository(Agency);
   const findAgency = await agencyRepo.findOne({ where: { Id: agencyIn.Id } });
   if (findAgency == null) {
