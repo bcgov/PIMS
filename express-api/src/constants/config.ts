@@ -22,7 +22,7 @@ const config = {
     // In previous PIMS, this is also a hardcoded value.
     // May be more robust to make this an environment variable or even a name, but I imagine these values
     // will basically never change.
-    notificationTemplate: 15,
+    // notificationTemplate: 15, Disabled. Duplicate of template ID 17.
     notificationTemplateRPD: 17,
   },
   contact: {
