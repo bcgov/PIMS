@@ -1,7 +1,7 @@
 import config from '@/constants/config';
 import urls from '@/constants/urls';
 import { ChesFilter } from '@/controllers/tools/toolsSchema';
-import { PimsRequestUser } from '@/middleware/userAuthCheck';
+import { User } from '@/typeorm/Entities/User';
 import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
 import { decodeJWT } from '@/utilities/decodeJWT';
 import logger from '@/utilities/winstonLogger';
@@ -168,10 +168,7 @@ export interface IEmailSentResponse {
  * @param user - The SSO user information.
  * @returns A promise that resolves to the response of sending the email or null.
  */
-const sendEmailAsync = async (
-  email: IEmail,
-  user: PimsRequestUser,
-): Promise<IEmailSentResponse | null> => {
+const sendEmailAsync = async (email: IEmail, user: User): Promise<IEmailSentResponse | null> => {
   const cfg = config();
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
