@@ -190,7 +190,7 @@ const insertProjectNotificationQueue = async (
     ToAgencyId: agency?.Id,
   };
   const insertedNotif = await query.manager.save(NotificationQueue, queueObject);
-  if (queryRunner === undefined) {
+  if (queryRunner == null) {
     //If no arg passed we spawned a new query runner and we must release that!
     await query.release();
   }
@@ -377,7 +377,7 @@ const generateProjectNotifications = async (
       );
     }
   }
-  if (queryRunner === undefined) {
+  if (queryRunner == null) {
     await query.release();
   }
   return await Promise.all(returnNotifications);
@@ -431,7 +431,7 @@ const sendNotification = async (
       Status: NotificationStatus.Failed,
     });
   } finally {
-    if (queryRunner === undefined) {
+    if (queryRunner == null) {
       await query.release();
     }
   }
@@ -476,6 +476,7 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
   });
 
   if (!notification || Object.keys(notification).length === 0) {
+    await query.release();
     throw new Error(`Notification with id ${notificationId} not found.`);
   }
 
@@ -484,7 +485,7 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
     const notificationStatus = convertChesStatusToNotificationStatus(statusResponse.status);
     // If the CHES status is non-standard, don't update the notification.
     if (notificationStatus === null) {
-      query.release();
+      await query.release();
       return notification;
     }
     notification.Status = notificationStatus;
@@ -492,7 +493,7 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
     notification.UpdatedById = user.Id;
     const updatedNotification = await query.manager.save(NotificationQueue, notification);
 
-    query.release();
+    await query.release();
     return updatedNotification;
   } else if (typeof statusResponse?.status === 'number') {
     // handle 404, 422 code here....
@@ -503,7 +504,7 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
         notification.UpdatedById = user.Id;
         const updatedNotification = await query.manager.save(NotificationQueue, notification);
         logger.error(`Notification with id ${notificationId} not found on CHES.`);
-        query.release();
+        await query.release();
         return updatedNotification;
       }
 
@@ -528,10 +529,10 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
         logger.error(`Received unexpected status code ${statusResponse.status}.`);
         break;
     }
-    query.release();
+    await query.release();
     return notification;
   } else {
-    query.release();
+    await query.release();
     throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
   }
 };
@@ -623,8 +624,8 @@ const cancelProjectNotifications = async (
       failed: 0,
     };
   } finally {
-    if (queryRunner === undefined) {
-      query.release();
+    if (queryRunner == null) {
+      await query.release();
     }
   }
 };
@@ -731,8 +732,8 @@ const generateProjectWatchNotifications = async (
     );
     logger.error(e.stack);
   } finally {
-    if (queryRunner === undefined) {
-      query.release();
+    if (queryRunner == null) {
+      await query.release();
     }
   }
   return notificationsInserted;
