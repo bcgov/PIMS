@@ -840,7 +840,7 @@ const updateProject = async (
       });
     }
 
-    queryRunner.commitTransaction();
+    await queryRunner.commitTransaction();
     const changedResponses = [];
     if (project.AgencyResponses) {
       changedResponses.push(...(await getAgencyResponseChanges(originalProject, project)));
