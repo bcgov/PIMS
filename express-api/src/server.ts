@@ -28,8 +28,8 @@ const startApp = (app: Application) => {
       logger.info('Failed email check: Completed');
     });
 
-    // 0 1 * * *  == Triggers every 1:00AM
-    cron.schedule('0 1 * * *', async () => {
+    // 0 1 * * 6  == Triggers 1:00AM on Saturday
+    cron.schedule('0 1 * * 6', async () => {
       logger.info('Clear idle database connections: start');
       await clearIdleConnections();
       logger.info('Clear idle database connections: complete');
