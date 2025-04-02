@@ -31,4 +31,6 @@ export const AppDataSource = new DataSource({
   migrations: [`src/typeorm/Migrations/*.{ts,js}`],
   subscribers: [],
   namingStrategy: new SnakeNamingStrategy(),
+  connectTimeoutMS: 30 * 1000, // 30 seconds
+  maxQueryExecutionTime: 30 * 1000, // 30 seconds
 });
