@@ -6,6 +6,7 @@ import { Application } from 'express';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import cron from 'node-cron';
 import failedEmailCheck from '@/utilities/failedEmailCheck';
+import clearIdleConnections from '@/utilities/clearIdleConnections';
 
 const { API_PORT } = constants;
 
@@ -27,9 +28,16 @@ const startApp = (app: Application) => {
       logger.info('Failed email check: Completed');
     });
 
+    // 0 1 * * 6  == Triggers 1:00AM on Saturday
+    cron.schedule('0 1 * * 6', async () => {
+      logger.info('Clear idle database connections: start');
+      await clearIdleConnections();
+      logger.info('Clear idle database connections: complete');
+    });
+
     // creating connection to database
     await AppDataSource.initialize()
-      .then(() => {
+      .then(async () => {
         logger.info('Database connection has been initialized');
       })
       .catch((err?: Error) => {
