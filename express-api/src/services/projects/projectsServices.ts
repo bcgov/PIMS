@@ -22,6 +22,7 @@ import {
   In,
   InsertResult,
   IsNull,
+  MoreThan,
   Not,
   QueryRunner,
 } from 'typeorm';
@@ -30,11 +31,13 @@ import { PropertyType } from '@/constants/propertyType';
 import { ProjectRisk } from '@/constants/projectRisk';
 import notificationServices, {
   AgencyResponseType,
+  NotificationAudience,
   NotificationStatus,
 } from '../notifications/notificationServices';
 import {
   constructFindOptionFromQuery,
   constructFindOptionFromQuerySingleSelect,
+  getDaysBetween,
 } from '@/utilities/helperFunctions';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
@@ -44,6 +47,7 @@ import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
 import { Roles } from '@/constants/roles';
 import { PimsRequestUser } from '@/middleware/userAuthCheck';
 import { User } from '@/typeorm/Entities/User';
+import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -418,7 +422,7 @@ const handleProjectNotifications = async (
   projectId: number,
   previousStatus: number,
   responses: ProjectAgencyResponse[],
-  user: PimsRequestUser,
+  user: User,
   queryRunner: QueryRunner,
 ) => {
   const projectWithRelations = await queryRunner.manager.findOne(Project, {
@@ -447,27 +451,23 @@ const handleProjectNotifications = async (
   const projectAgency = await queryRunner.manager.findOne(Agency, {
     where: { Id: projectWithRelations.AgencyId },
   });
-  const projectAgencyResponses = await queryRunner.manager.find(ProjectAgencyResponse, {
-    where: { ProjectId: projectWithRelations.Id },
-  });
   const projectNotes = await queryRunner.manager.find(ProjectNote, {
     where: { ProjectId: projectWithRelations.Id },
   });
   projectWithRelations.Agency = projectAgency;
-  projectWithRelations.AgencyResponses = projectAgencyResponses;
   projectWithRelations.Notes = projectNotes;
 
   const notifsToSend: Array<NotificationQueue> = [];
+  const previousStatuses = await queryRunner.manager.find(ProjectStatusHistory, {
+    where: { ProjectId: projectWithRelations.Id },
+  });
+  const statusPreviouslyVisited = previousStatuses.some(
+    (record: ProjectStatusHistory) => record.StatusId === projectWithRelations.StatusId,
+  );
   const queueNotifications = async () => {
     // If the status has been changed
     if (previousStatus !== projectWithRelations.StatusId) {
       // Has the project previously been to this status? If so, don't re-queue notifications.
-      const previousStatuses = await queryRunner.manager.find(ProjectStatusHistory, {
-        where: { ProjectId: projectWithRelations.Id },
-      });
-      const statusPreviouslyVisited = previousStatuses.some(
-        (record: ProjectStatusHistory) => record.StatusId === projectWithRelations.StatusId,
-      );
       if (!statusPreviouslyVisited) {
         const statusChangeNotifs = await notificationServices.generateProjectNotifications(
           projectWithRelations,
@@ -481,7 +481,7 @@ const handleProjectNotifications = async (
   };
 
   const queueWatchNotifications = async () => {
-    if (projectAgencyResponses.length) {
+    if (responses.length && projectWithRelations.StatusId == ProjectStatus.APPROVED_FOR_ERP) {
       const agencyResponseNotifs = await notificationServices.generateProjectWatchNotifications(
         projectWithRelations,
         responses,
@@ -776,16 +776,20 @@ const updateProject = async (
     await handleProjectTimestamps({ ...project, CreatedById: project.UpdatedById }, queryRunner);
 
     // Handle timestamps
-    if (project.StatusId === ProjectStatus.CANCELLED) project.CancelledOn = new Date();
-    else if (project.StatusId === ProjectStatus.DENIED) project.DeniedOn = new Date();
+    if (project.StatusId === ProjectStatus.CANCELLED && project.CancelledOn == null)
+      project.CancelledOn = new Date();
+    else if (project.StatusId === ProjectStatus.DENIED && project.DeniedOn == null)
+      project.DeniedOn = new Date();
     else if (
-      [ProjectStatus.DISPOSED, ProjectStatus.TRANSFERRED_WITHIN_GRE].includes(project.StatusId)
+      [ProjectStatus.DISPOSED, ProjectStatus.TRANSFERRED_WITHIN_GRE].includes(project.StatusId) &&
+      project.CompletedOn == null
     )
       project.CompletedOn = new Date();
     else if (
       [ProjectStatus.APPROVED_FOR_ERP, ProjectStatus.APPROVED_FOR_EXEMPTION].includes(
         project.StatusId,
-      )
+      ) &&
+      project.ApprovedOn == null
     )
       project.ApprovedOn = new Date();
 
@@ -1121,6 +1125,122 @@ const getProjectsForExport = async (filter: ProjectFilter) => {
   }));
 };
 
+/**
+ * Queues outstanding ERP notifications for a given project and agency.
+ * Handles notifications differently depending on whether the agency also owns the project.
+ * Notifications are sent only if there are no pending notifications with the same template.
+ *
+ * @param {Project} project - The project for which notifications are to be queued.
+ * @param {Agency} agency - The agency for which notifications are being queued.
+ * @param {User} user - The user initiating the notification process.
+ * @returns {Promise<NotificationQueue[]>} A promise that resolves with the result of the notification sending process.
+ * @throws {Error} If the transaction fails, an error is logged and the transaction is rolled back.
+ */
+const queueOutstandingERPNotifications = async (project: Project, agency: Agency, user: User) => {
+  const queryRunner = AppDataSource.createQueryRunner();
+
+  try {
+    await queryRunner.startTransaction();
+    const projectAgency = await queryRunner.manager.findOne(Agency, {
+      where: { Id: project.AgencyId },
+    });
+    const projectNotes = await queryRunner.manager.find(ProjectNote, {
+      where: { ProjectId: project.Id },
+    });
+    project.Agency = projectAgency;
+    project.Notes = projectNotes;
+
+    // Deal with this project's notifications. Only the 30, 60, 90 days notifications must be queued.
+    // NOTE: Do not use handleProjectNotifcations
+    const notifsToSend: NotificationQueue[] = [];
+    // If this agency owns this project, queue those notifications
+    if (project.AgencyId == agency.Id) {
+      const dateInERP = project.ApprovedOn;
+      const daysSinceThisStatus = getDaysBetween(dateInERP, new Date());
+      const projectStatusNotifs = await queryRunner.manager.find(ProjectStatusNotification, {
+        where: {
+          ToStatusId: ProjectStatus.APPROVED_FOR_ERP,
+          DelayDays: MoreThan(daysSinceThisStatus),
+          Template: {
+            Audience: NotificationAudience.OwningAgency,
+          },
+        },
+        relations: { Template: true },
+      });
+      // For all the relative notification status entries, see if that notification is already queued
+      await Promise.all(
+        projectStatusNotifs.map(async (n) => {
+          // If there is already a pending notification for this agency with this template, skip.
+          const notifExists = await queryRunner.manager.exists(NotificationQueue, {
+            where: [
+              {
+                ProjectId: project.Id,
+                ToAgencyId: agency.Id,
+                TemplateId: n.TemplateId,
+                Status: NotificationStatus.Accepted,
+              },
+              {
+                ProjectId: project.Id,
+                ToAgencyId: agency.Id,
+                TemplateId: n.TemplateId,
+                Status: NotificationStatus.Pending,
+              },
+            ],
+          });
+
+          if (!notifExists) {
+            // If there is no notification like this already pending, we send one.
+            const sendOn = new Date(dateInERP.getTime());
+            sendOn.setDate(dateInERP.getDate() + n.DelayDays);
+            notifsToSend.push(
+              await notificationServices.insertProjectNotificationQueue(
+                n.Template,
+                n,
+                project,
+                agency,
+                undefined,
+                sendOn,
+                queryRunner,
+              ),
+            );
+          }
+        }),
+      );
+    } else {
+      // Otherwise, handle watch notifications for this agency
+      // Update response
+      const updatedResponse: Partial<ProjectAgencyResponse> = {
+        Response: AgencyResponseType.Subscribe,
+        AgencyId: agency.Id,
+        ProjectId: project.Id,
+        OfferAmount: 0,
+        CreatedById: user.Id,
+      };
+      const savedResponse = await queryRunner.manager.save(ProjectAgencyResponse, updatedResponse);
+      const watchNotifications = await notificationServices.generateProjectWatchNotifications(
+        project,
+        [savedResponse],
+        queryRunner,
+      );
+      notifsToSend.push(...watchNotifications);
+    }
+
+    const result = await Promise.all(
+      notifsToSend.map((notif) => notificationServices.sendNotification(notif, user, queryRunner)),
+    );
+    await queryRunner.commitTransaction();
+    return result;
+  } catch (e: unknown) {
+    logger.error(e);
+    await queryRunner.rollbackTransaction();
+    return new Error(
+      `Failed to queue notifications for project ID ${project.Id} when updating agency ID ${agency.Id}`,
+    );
+  } finally {
+    await queryRunner.release();
+  }
+};
+
 const projectServices = {
   addProject,
   getProjectById,
@@ -1129,6 +1249,8 @@ const projectServices = {
   getProjects,
   getProjectsForExport,
   handleProjectNotifications,
+  queueOutstandingERPNotifications,
+  getAgencyResponseChanges,
 };
 
 export default projectServices;
