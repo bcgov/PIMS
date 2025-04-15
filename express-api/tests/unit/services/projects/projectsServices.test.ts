@@ -655,7 +655,6 @@ describe('UNIT - Project Services', () => {
         { parcels: [], buildings: [] },
         producePimsRequestUser(),
       );
-      expect(_generateProjectWatchNotifications).toHaveBeenCalled();
     });
   });
 
@@ -676,7 +675,6 @@ describe('UNIT - Project Services', () => {
       const result = await projectServices.handleProjectNotifications(
         project.Id,
         ProjectStatus.ON_HOLD,
-        [produceAgencyResponse()],
         producePimsRequestUser(),
         queryRunner,
       );

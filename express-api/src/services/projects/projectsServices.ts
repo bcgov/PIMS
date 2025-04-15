@@ -203,7 +203,7 @@ const addProject = async (
     await handleProjectMonetary(newProject, queryRunner);
     await handleProjectNotes(newProject, queryRunner);
     await handleProjectTimestamps(newProject, queryRunner);
-    await handleProjectNotifications(newProject.Id, null, [], user, queryRunner);
+    await handleProjectNotifications(newProject.Id, null, user, queryRunner);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -415,7 +415,6 @@ const removeProjectBuildingRelations = async (
 const handleProjectNotifications = async (
   projectId: number,
   previousStatus: number,
-  responses: ProjectAgencyResponse[],
   user: User,
   queryRunner: QueryRunner,
 ) => {
@@ -819,13 +818,7 @@ const updateProject = async (
     }
 
     await queryRunner.commitTransaction();
-    await handleProjectNotifications(
-      project.Id,
-      originalProject.StatusId,
-      [], // TODO: remove this argument
-      user,
-      queryRunner,
-    ); //Do this after committing transaction so that we don't send emails to CHES unless the rest of the project metadata actually saved.
+    await handleProjectNotifications(project.Id, originalProject.StatusId, user, queryRunner); //Do this after committing transaction so that we don't send emails to CHES unless the rest of the project metadata actually saved.
 
     // Get project to return
     const returnProject = await projectRepo.findOne({ where: { Id: originalProject.Id } });
