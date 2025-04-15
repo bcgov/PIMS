@@ -136,6 +136,7 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
             setAutoCompleteVal(null);
           }
         }}
+        noOptionsText={'Agencies must have Sent Email checked and an email set to appear here.'}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         renderOption={(props, option, state, ownerState) => (
           <Box
