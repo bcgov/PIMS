@@ -8,6 +8,7 @@ import { Project } from '@/typeorm/Entities/Project';
 import { Roles } from '@/constants/roles';
 import notificationServices from '@/services/notifications/notificationServices';
 import { exposedProjectStatuses } from '@/constants/projectStatus';
+import { ProjectAgencyResponseSchema } from '@/services/projects/projectAgencyResponseSchema';
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -167,6 +168,10 @@ export const getProjects = async (req: Request, res: Response) => {
 };
 
 export const updateProjectAgencyResponses = async (req: Request, res: Response) => {
+  const filter = ProjectAgencyResponseSchema.safeParse(req.body);
+  if (!filter.success) {
+    return res.status(400).send('List of agency responses not properly formatted.');
+  }
   const projectId = Number(req.params.projectId);
   if (isNaN(projectId)) {
     return res.status(400).send('Invalid Project ID');
@@ -178,7 +183,6 @@ export const updateProjectAgencyResponses = async (req: Request, res: Response) 
     return res.status(403).send('Projects only editable by Administrator role.');
   }
 
-  // TODO: Validate the body before calling this
   const notificationsSent = await projectServices.updateProjectAgencyResponses(
     projectId,
     req.body.responses,
