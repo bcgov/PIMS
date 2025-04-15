@@ -122,6 +122,7 @@ const AgencySearchTable = (props: IAgencySearchTable) => {
           options.filter(
             (x) =>
               !rows.find((row) => row.Id === x.value) &&
+              x.sendEmail &&
               x.label.toLowerCase().includes(state.inputValue.toLowerCase()),
           )
         }
