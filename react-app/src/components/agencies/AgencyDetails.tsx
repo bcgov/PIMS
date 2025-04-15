@@ -230,7 +230,17 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
         confirmButtonProps={{ loading: submitting }}
         onConfirm={async () => {
           const isValid = await notificationsFormMethods.trigger();
-
+          // Check if SendEmail is true and To is empty. If so, set an error on To.
+          if (
+            notificationsFormMethods.getValues('SendEmail') &&
+            notificationsFormMethods.getValues('To').length === 0
+          ) {
+            notificationsFormMethods.setError('To', {
+              type: 'manual',
+              message: 'At least one email address is required.',
+            });
+            return;
+          }
           if (isValid) {
             const { CC, To, SendEmail } = notificationsFormMethods.getValues();
             submit(+id, {
