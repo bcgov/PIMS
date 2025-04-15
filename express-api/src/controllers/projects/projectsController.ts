@@ -165,3 +165,25 @@ export const getProjects = async (req: Request, res: Response) => {
     : await projectServices.getProjects(filterResult as ProjectFilter);
   return res.status(200).send(projects);
 };
+
+export const updateProjectAgencyResponses = async (req: Request, res: Response) => {
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Invalid Project ID');
+  }
+  // Only admins can edit projects
+  const user = req.pimsUser;
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
+  if (!isAdmin) {
+    return res.status(403).send('Projects only editable by Administrator role.');
+  }
+
+  // TODO: Validate the body before calling this
+  const notificationsSent = await projectServices.updateProjectAgencyResponses(
+    projectId,
+    req.body.responses,
+    req.pimsUser,
+  );
+
+  return res.status(200).send(notificationsSent);
+};

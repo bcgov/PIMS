@@ -203,13 +203,7 @@ const addProject = async (
     await handleProjectMonetary(newProject, queryRunner);
     await handleProjectNotes(newProject, queryRunner);
     await handleProjectTimestamps(newProject, queryRunner);
-    await handleProjectNotifications(
-      newProject.Id,
-      null,
-      newProject.AgencyResponses ?? [],
-      user,
-      queryRunner,
-    );
+    await handleProjectNotifications(newProject.Id, null, [], user, queryRunner);
     await queryRunner.commitTransaction();
     return newProject;
   } catch (e) {
@@ -480,18 +474,6 @@ const handleProjectNotifications = async (
     return [];
   };
 
-  const queueWatchNotifications = async () => {
-    if (responses.length && projectWithRelations.StatusId == ProjectStatus.APPROVED_FOR_ERP) {
-      const agencyResponseNotifs = await notificationServices.generateProjectWatchNotifications(
-        projectWithRelations,
-        responses,
-        queryRunner,
-      );
-      return agencyResponseNotifs;
-    }
-    return [];
-  };
-
   // If the project is cancelled, cancel pending notifications
   if (projectWithRelations.StatusId === ProjectStatus.CANCELLED) {
     const pendingNotifications = await queryRunner.manager.find(NotificationQueue, {
@@ -512,12 +494,8 @@ const handleProjectNotifications = async (
         notificationServices.cancelNotificationById(notification.Id, user);
       }),
     );
-    // Queue cancellation notifications
-    notifsToSend.push(...(await queueNotifications()));
-  } else {
-    notifsToSend.push(...(await queueNotifications()));
-    notifsToSend.push(...(await queueWatchNotifications()));
   }
+  notifsToSend.push(...(await queueNotifications()));
 
   return Promise.all(
     notifsToSend.map((notif) => notificationServices.sendNotification(notif, user, queryRunner)),
@@ -697,22 +675,18 @@ const handleProjectMonetary = async (
 };
 
 const getAgencyResponseChanges = async (
-  oldProject: Project,
-  newProject: DeepPartial<Project>,
-): Promise<Array<ProjectAgencyResponse>> => {
-  const retResponses: Array<ProjectAgencyResponse> = [];
-  for (const response of newProject.AgencyResponses as ProjectAgencyResponse[]) {
-    const originalResponse = oldProject.AgencyResponses.find(
-      (r) => r.AgencyId === response.AgencyId,
-    );
+  originalResponses: Partial<ProjectAgencyResponse>[],
+  newResponses: Partial<ProjectAgencyResponse>[],
+): Promise<Partial<ProjectAgencyResponse>[]> => {
+  const retResponses: Partial<ProjectAgencyResponse>[] = [];
+  for (const response of newResponses) {
+    const originalResponse = originalResponses.find((r) => r.AgencyId === response.AgencyId);
     if (originalResponse == null || originalResponse.Response != response.Response) {
       retResponses.push(response);
     }
   }
-  for (const response of oldProject.AgencyResponses) {
-    const updatedResponse = newProject.AgencyResponses.find(
-      (r) => r.AgencyId === response.AgencyId,
-    );
+  for (const response of originalResponses) {
+    const updatedResponse = newResponses.find((r) => r.AgencyId === response.AgencyId);
     if (updatedResponse == null) {
       response.Response = AgencyResponseType.Unsubscribe;
       retResponses.push(response);
@@ -845,14 +819,10 @@ const updateProject = async (
     }
 
     await queryRunner.commitTransaction();
-    const changedResponses = [];
-    if (project.AgencyResponses) {
-      changedResponses.push(...(await getAgencyResponseChanges(originalProject, project)));
-    }
     await handleProjectNotifications(
       project.Id,
       originalProject.StatusId,
-      changedResponses,
+      [], // TODO: remove this argument
       user,
       queryRunner,
     ); //Do this after committing transaction so that we don't send emails to CHES unless the rest of the project metadata actually saved.
@@ -870,6 +840,67 @@ const updateProject = async (
   } finally {
     await queryRunner.release();
   }
+};
+
+const updateProjectAgencyResponses = async (
+  id: number,
+  updatedResponses: Partial<ProjectAgencyResponse>[],
+  user: User,
+): Promise<NotificationQueue[]> => {
+  if (!(await projectRepo.exists({ where: { Id: id } }))) {
+    throw new ErrorWithCode('Project does not exist.', 404);
+  }
+  const projectWithRelations = await projectRepo.findOne({
+    relations: {
+      ProjectProperties: {
+        Building: {
+          Evaluations: true,
+          Fiscals: true,
+          Agency: true,
+          AdministrativeArea: true,
+          BuildingPredominateUse: true,
+        },
+        Parcel: {
+          Evaluations: true,
+          Fiscals: true,
+          Agency: true,
+          AdministrativeArea: true,
+        },
+      },
+    },
+    where: {
+      Id: id,
+    },
+  });
+
+  const projectAgency = await AppDataSource.getRepository(Agency).findOne({
+    where: { Id: projectWithRelations.AgencyId },
+  });
+  const projectNotes = await AppDataSource.getRepository(ProjectNote).find({
+    where: { ProjectId: projectWithRelations.Id },
+  });
+  projectWithRelations.Agency = projectAgency;
+  projectWithRelations.Notes = projectNotes;
+  const originalResponses = await AppDataSource.getRepository(ProjectAgencyResponse).find({
+    where: { ProjectId: id },
+  });
+  // Identify which incoming responses are different than existing ones on the project
+  const changedResponses = await getAgencyResponseChanges(originalResponses, updatedResponses);
+
+  // Save these new responses to the Database.
+  await AppDataSource.getRepository(ProjectAgencyResponse).save(changedResponses);
+
+  // For each of these changed/new responses, queue for send or cancel the notification as needed
+  // Notifications are cancelled in this function, but only ones to send are returned in the list
+  const notifsToSend = await notificationServices.generateProjectWatchNotifications(
+    projectWithRelations,
+    changedResponses as ProjectAgencyResponse[],
+  );
+
+  // Send new notifcations
+  return await Promise.all(
+    notifsToSend.map((notif) => notificationServices.sendNotification(notif, user)),
+  );
 };
 
 /**
@@ -1251,6 +1282,7 @@ const projectServices = {
   handleProjectNotifications,
   queueOutstandingERPNotifications,
   getAgencyResponseChanges,
+  updateProjectAgencyResponses,
 };
 
 export default projectServices;

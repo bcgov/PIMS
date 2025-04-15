@@ -329,7 +329,41 @@ const generateProjectNotifications = async (
         ),
       );
     } else if (template.Audience == NotificationAudience.WatchingAgencies) {
-      // Leave this blank. Watching agencies are handled by generateProjectWatchNotifications
+      const agencies = await AppDataSource.getRepository(Agency)
+        .createQueryBuilder('a')
+        .leftJoin(
+          ProjectAgencyResponse,
+          'par',
+          'a.id = par.agency_id AND par.project_id = :projectId',
+          {
+            projectId: project.Id,
+          },
+        )
+        .andWhere('a.is_disabled = false')
+        .andWhere('a.send_email = true')
+        .andWhere('a.id <> :project_agency_id', {
+          project_agency_id: project.AgencyId,
+        })
+        .andWhere('a.email IS NOT NULL')
+        .andWhere(`LENGTH(a.email) > 0`)
+        .andWhere('(par.agency_id IS NOT NULL AND par.response = :subscribe)', {
+          subscribe: AgencyResponseType.Subscribe,
+        })
+        .getMany();
+
+      agencies.forEach(async (agc) => {
+        returnNotifications.push(
+          insertProjectNotificationQueue(
+            template,
+            projStatusNotif,
+            project,
+            agc,
+            undefined,
+            undefined,
+            queryRunner,
+          ),
+        );
+      });
     } else if (template.Audience == NotificationAudience.Default) {
       returnNotifications.push(
         insertProjectNotificationQueue(
