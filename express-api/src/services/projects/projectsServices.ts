@@ -529,48 +529,6 @@ const handleProjectTasks = async (project: DeepPartial<Project>, queryRunner: Qu
 };
 
 /**
- * Handles the project agency responses by updating the database with new responses and removing any outdated ones.
- * @param newProject - The new project object containing agency responses to be handled.
- * @param queryRunner - The query runner for managing database transactions.
- */
-const handleProjectAgencyResponses = async (
-  newProject: DeepPartial<Project>,
-  queryRunner: QueryRunner,
-) => {
-  if (newProject.AgencyResponses) {
-    const existingResponses = await queryRunner.manager.find(ProjectAgencyResponse, {
-      where: {
-        ProjectId: newProject.Id,
-      },
-    });
-    const removeResponses = existingResponses.filter(
-      (r) => !newProject.AgencyResponses.find((a) => a.AgencyId === r.AgencyId),
-    );
-    await queryRunner.manager.update(
-      ProjectAgencyResponse,
-      {
-        AgencyId: In(removeResponses.map((a) => a.AgencyId)),
-        ProjectId: newProject.Id,
-      },
-      { DeletedById: newProject.CreatedById, DeletedOn: new Date() },
-    );
-    await queryRunner.manager.save(
-      ProjectAgencyResponse,
-      newProject.AgencyResponses.map(
-        (resp) =>
-          ({
-            ...resp,
-            ProjectId: newProject.Id,
-            CreatedById: newProject.CreatedById,
-            DeletedById: null,
-            DeletedOn: null,
-          }) as ProjectAgencyResponse,
-      ),
-    );
-  }
-};
-
-/**
  * Handles the project notes by saving them in the database if new notes are provided.
  * @param {DeepPartial<Project>} newProject - The new project object containing notes to be handled.
  * @param {QueryRunner} queryRunner - The query runner for managing database transactions.
@@ -740,10 +698,6 @@ const updateProject = async (
   await queryRunner.startTransaction();
   try {
     await handleProjectTasks({ ...project, CreatedById: project.UpdatedById }, queryRunner);
-    await handleProjectAgencyResponses(
-      { ...project, CreatedById: project.UpdatedById },
-      queryRunner,
-    );
     await handleProjectNotes({ ...project, CreatedById: project.UpdatedById }, queryRunner);
     await handleProjectMonetary({ ...project, CreatedById: project.UpdatedById }, queryRunner);
     await handleProjectTimestamps({ ...project, CreatedById: project.UpdatedById }, queryRunner);
@@ -835,6 +789,13 @@ const updateProject = async (
   }
 };
 
+/**
+ * Updates the project agency responses for a given project ID.
+ * @param id ID of project
+ * @param updatedResponses Incoming ProjectAgencyResponse array
+ * @param user User requesting this change
+ * @returns An array of the notifications that were sent
+ */
 const updateProjectAgencyResponses = async (
   id: number,
   updatedResponses: Partial<ProjectAgencyResponse>[],
@@ -877,12 +838,36 @@ const updateProjectAgencyResponses = async (
   const originalResponses = await AppDataSource.getRepository(ProjectAgencyResponse).find({
     where: { ProjectId: id },
   });
-  // Identify which incoming responses are different than existing ones on the project
+
+  // Find out which responses have been removed
+  const removeResponses = originalResponses.filter(
+    (r) => !updatedResponses.find((a) => a.AgencyId === r.AgencyId),
+  );
+  // Mark these responses as deleted
+  await AppDataSource.getRepository(ProjectAgencyResponse).update(
+    {
+      AgencyId: In(removeResponses.map((a) => a.AgencyId)),
+      ProjectId: id,
+    },
+    { DeletedById: user.Id, DeletedOn: new Date() },
+  );
+  // Save the remaining updated responses as current
+  await AppDataSource.getRepository(ProjectAgencyResponse).save(
+    updatedResponses.map(
+      (resp) =>
+        ({
+          ...resp,
+          ProjectId: id,
+          CreatedById: user.Id,
+          DeletedById: null,
+          DeletedOn: null,
+        }) as ProjectAgencyResponse,
+    ),
+  );
+
+  // Identify which incoming responses are different than original ones on the project
+  // This counts deleted ones as unsubscribed
   const changedResponses = await getAgencyResponseChanges(originalResponses, updatedResponses);
-
-  // Save these new responses to the Database.
-  await AppDataSource.getRepository(ProjectAgencyResponse).save(changedResponses);
-
   // For each of these changed/new responses, queue for send or cancel the notification as needed
   // Notifications are cancelled in this function, but only ones to send are returned in the list
   const notifsToSend = await notificationServices.generateProjectWatchNotifications(

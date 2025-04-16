@@ -167,6 +167,12 @@ export const getProjects = async (req: Request, res: Response) => {
   return res.status(200).send(projects);
 };
 
+/**
+ * @description Updates a project's agency responses based on its ID.
+ * @param {Request}     req Incoming request.
+ * @param {Response}    res Outgoing response.
+ * @returns {Response}      A 200 status with the an array of project agency responses.
+ */
 export const updateProjectAgencyResponses = async (req: Request, res: Response) => {
   const filter = ProjectAgencyResponseSchema.safeParse(req.body);
   if (!filter.success) {
