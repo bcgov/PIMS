@@ -841,7 +841,7 @@ const updateProjectAgencyResponses = async (
   user: User,
 ): Promise<NotificationQueue[]> => {
   if (!(await projectRepo.exists({ where: { Id: id } }))) {
-    throw new ErrorWithCode('Project does not exist.', 404);
+    throw new ErrorWithCode('Project matching this internal ID not found.', 404);
   }
   const projectWithRelations = await projectRepo.findOne({
     relations: {
