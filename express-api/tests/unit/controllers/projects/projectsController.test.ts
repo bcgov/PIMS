@@ -11,6 +11,8 @@ import {
   produceParcel,
   produceBuilding,
   produceProjectProperty,
+  produceAgencyResponse,
+  produceNotificationQueue,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
 import { z } from 'zod';
@@ -20,6 +22,9 @@ import { ProjectSchema } from '@/controllers/projects/projectsSchema';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
 import { DeleteResult } from 'typeorm';
 import { faker } from '@faker-js/faker';
+import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
+import { User } from '@/typeorm/Entities/User';
+import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -41,6 +46,14 @@ const _deleteProjectById = jest.fn().mockImplementation(
     raw: {},
   }),
 );
+const _updateProjectAgencyResponses = jest
+  .fn()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  .mockImplementation((_id: number, responses: ProjectAgencyResponse[], user: User) => {
+    return responses.map((r) =>
+      produceNotificationQueue({ ProjectId: r.ProjectId, ToAgencyId: r.AgencyId }),
+    ) as NotificationQueue[];
+  });
 
 jest
   .spyOn(AppDataSource.getRepository(Project), 'find')
@@ -53,6 +66,8 @@ jest.mock('@/services/projects/projectsServices', () => ({
   getProjectById: () => _getProjectById(),
   updateProject: () => _updateProject(),
   deleteProjectById: () => _deleteProjectById(),
+  updateProjectAgencyResponses: (id: number, responses: ProjectAgencyResponse[], user: User) =>
+    _updateProjectAgencyResponses(id, responses, user),
 }));
 
 jest.mock('@/services/users/usersServices', () => ({
@@ -360,6 +375,44 @@ describe('UNIT - Testing controllers for users routes.', () => {
 
       const result = ProjectSchema.safeParse(invalidProject);
       expect(result.success).toBe(false);
+    });
+  });
+
+  describe('PUT /projects/disposal/{id}/responses', () => {
+    it('should return status 200 and a list of sent notifications resulting from the update', async () => {
+      mockRequest.body = { responses: [produceAgencyResponse()] };
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => true });
+      mockRequest.params.projectId = '1';
+      await controllers.updateProjectAgencyResponses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(200);
+      expect(mockResponse.sendValue).toHaveLength(1);
+    });
+
+    it('should return 400 when the body of responses is not properly formatted', async () => {
+      mockRequest.body = [produceAgencyResponse()];
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => true });
+      mockRequest.params.projectId = '1';
+      await controllers.updateProjectAgencyResponses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('List of agency responses not properly formatted.');
+    });
+
+    it('should return 400 when the projectId is not a number', async () => {
+      mockRequest.body = { responses: [produceAgencyResponse()] };
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => true });
+      mockRequest.params.projectId = 'a';
+      await controllers.updateProjectAgencyResponses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe('Invalid Project ID');
+    });
+
+    it('should return 403 when a non-admin attempts to make this change', async () => {
+      mockRequest.body = { responses: [produceAgencyResponse()] };
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER, hasOneOfRoles: () => false });
+      mockRequest.params.projectId = '1';
+      await controllers.updateProjectAgencyResponses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(403);
+      expect(mockResponse.sendValue).toBe('Projects only editable by Administrator role.');
     });
   });
 });

@@ -1261,6 +1261,9 @@ const projectServices = {
   queueOutstandingERPNotifications,
   getAgencyResponseChanges,
   updateProjectAgencyResponses,
+  handleProjectMonetary,
+  handleProjectTimestamps,
+  handleProjectNotes,
 };
 
 export default projectServices;
