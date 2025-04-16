@@ -76,7 +76,7 @@ export const updateAgencyById = async (req: Request, res: Response) => {
     return res.status(403).send('An agency cannot be its own parent.');
   }
   const user = req.pimsUser;
-  const agency = await agencyService.updateAgencyById({ ...req.body, UpdatedById: user.Id });
+  const agency = await agencyService.updateAgencyById({ ...req.body, UpdatedById: user.Id }, user);
   return res.status(200).send(agency);
 };
 

@@ -15,6 +15,7 @@ export interface ISelectMenuItem {
   parentId?: number;
   children?: unknown[];
   tooltip?: string;
+  sendEmail?: boolean;
 }
 
 interface ISelectInputProps {

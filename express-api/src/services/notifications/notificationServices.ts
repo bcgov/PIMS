@@ -19,7 +19,6 @@ import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse'
 import logger from '@/utilities/winstonLogger';
 import getConfig from '@/constants/config';
 import { getDaysBetween } from '@/utilities/helperFunctions';
-import { ProjectStatusHistory } from '@/typeorm/Entities/ProjectStatusHistory';
 import { PimsRequestUser } from '@/middleware/userAuthCheck';
 
 export interface AccessRequestData {
@@ -148,6 +147,7 @@ const generateAccessRequestNotification = async (
  * @param project The project associated with the notification.
  * @param agency The agency to receive the notification (optional).
  * @param overrideTo An override email address to send the notification to (optional).
+ * @param overrideSend An override send date.
  * @param queryRunner The TypeORM query runner to use for the database transaction (optional).
  * @returns The inserted notification object.
  */
@@ -167,6 +167,7 @@ const insertProjectNotificationQueue = async (
     sendDelayFromToday.setDate(sendDelayFromToday.getDate() + projStatusNotif.DelayDays);
     emailSendDate = sendDelayFromToday;
   }
+
   const queueObject = {
     Key: randomUUID(),
     Status: NotificationStatus.Pending,
@@ -345,8 +346,8 @@ const generateProjectNotifications = async (
         })
         .andWhere('a.email IS NOT NULL')
         .andWhere(`LENGTH(a.email) > 0`)
-        .andWhere('(par.agency_id IS NOT NULL AND par.response = :watch)', {
-          watch: AgencyResponseType.Watch,
+        .andWhere('(par.agency_id IS NOT NULL AND par.response = :subscribe)', {
+          subscribe: AgencyResponseType.Subscribe,
         })
         .getMany();
 
@@ -392,7 +393,7 @@ const generateProjectNotifications = async (
  */
 const sendNotification = async (
   notification: NotificationQueue,
-  user: PimsRequestUser,
+  user: User,
   queryRunner?: QueryRunner,
 ) => {
   const query = queryRunner ?? AppDataSource.createQueryRunner();
@@ -659,19 +660,10 @@ const generateProjectWatchNotifications = async (
           const agency = await query.manager.findOne(Agency, {
             where: { Id: response.AgencyId },
           });
-          //No use in queueing an email for an agency with no email address.
-          if (agency?.Email && agency?.Email.length) {
-            /*We get the most recent entry in the status history since the date value of this row would have been populated 
-            at the time this project was placed into its current status value. Note that this value is not necessarily the same as
-            Project.UpdatedOn, as projects can be updated without the status being changed. */
-            const mostRecentStatusChange = await query.manager.findOne(ProjectStatusHistory, {
-              where: { ProjectId: project.Id },
-              order: { CreatedOn: 'DESC' },
-            });
-
-            const mostRecentStatusChangeDate =
-              mostRecentStatusChange?.CreatedOn ?? project.CreatedOn;
-            const daysSinceThisStatus = getDaysBetween(mostRecentStatusChangeDate, new Date());
+          //No use in queueing an email for an agency with no email address or that doesn't want notifications
+          if (agency?.SendEmail && agency?.Email && agency?.Email.length) {
+            const dateInERP = project.ApprovedOn;
+            const daysSinceThisStatus = getDaysBetween(dateInERP, new Date());
             const statusNotifs = await query.manager.find(ProjectStatusNotification, {
               relations: {
                 Template: true,
@@ -704,11 +696,11 @@ const generateProjectWatchNotifications = async (
               });
 
               if (!notifExists) {
-                //If there is no notification like this already pending, we send one.
-                const sendOn = new Date(mostRecentStatusChangeDate.getTime());
-                sendOn.setDate(mostRecentStatusChangeDate.getDate() + statusNotif.DelayDays);
-                //We set the delay by the most recent status change date plus the number of delay days. This should make these new emails
-                //send around the same time as the emails that previously sent when this project changed into its current status.
+                // If there is no notification like this already pending, we send one.
+                const sendOn = new Date(dateInERP.getTime());
+                sendOn.setDate(dateInERP.getDate() + statusNotif.DelayDays);
+                // We set the delay by the date the status entered ERP plus the number of delay days. This should make these new emails
+                // send at the same time as the emails that previously sent when this project changed into its current status.
                 const inserted = await insertProjectNotificationQueue(
                   statusNotif.Template,
                   statusNotif,
@@ -759,6 +751,50 @@ const getNotificationById = async (id: number) => {
   return AppDataSource.getRepository(NotificationQueue).findOne({ where: { Id: id } });
 };
 
+/**
+ * Takes and existing notification and cancels it, then resends it with new properties.
+ * @param notif The original notification to be cancelled.
+ * @param newProperties The new properties of the notification to overwrite before resending.
+ * @param requeue True by default. Set to false to stop requeue process.
+ * @returns The newly requeued version of the notification.
+ */
+const resendNotificationWithNewProperties = async (
+  notif: NotificationQueue,
+  newProperties: Partial<NotificationQueue> = {},
+  requeue: boolean = true,
+) => {
+  const system = await AppDataSource.getRepository(User).findOne({ where: { Username: 'system' } });
+  // Update notification status from CHES
+  const updatedNotification = await updateNotificationStatus(notif.Id, system);
+  // If it's no longer pending, could already be Completed or Cancelled. Don't do anything.
+  if (updatedNotification.Status !== NotificationStatus.Pending) return updatedNotification;
+
+  // Cancel the notification
+  await chesServices.cancelEmailByIdAsync(notif.ChesMessageId);
+  const postCancelNotification = await updateNotificationStatus(notif.Id, system);
+  if (postCancelNotification.Status === NotificationStatus.Cancelled) {
+    // Cancelled successfully, then requeue with new properties
+    if (requeue) {
+      const newNotif = await sendNotification(
+        { ...notif, ...newProperties },
+        system as PimsRequestUser,
+      );
+      if (newNotif.Status === NotificationStatus.Failed) {
+        const error = `resendNotificationWithNewProperties: Failed to requeue notification Id ${newNotif.Id} (originally ${notif.Id}).`;
+        logger.error(error);
+        throw new Error(error);
+      }
+      return newNotif;
+    }
+    const cancelledNotification = await getNotificationById(updatedNotification.Id);
+    return cancelledNotification;
+  } else {
+    const error = `resendNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully.`;
+    logger.error(error);
+    throw new Error(error);
+  }
+};
+
 const notificationServices = {
   generateProjectNotifications,
   generateAccessRequestNotification,
@@ -770,6 +806,8 @@ const notificationServices = {
   getNotificationById,
   cancelNotificationById,
   cancelProjectNotifications,
+  resendNotificationWithNewProperties,
+  insertProjectNotificationQueue,
 };
 
 export default notificationServices;

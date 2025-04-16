@@ -14,6 +14,7 @@ const {
   deleteDisposalProject,
   addDisposalProject,
   getProjects,
+  updateProjectAgencyResponses,
 } = controllers;
 
 //These originally had a separate route for numeric id and projectNumber, but I don't think express supports this pattern.
@@ -22,6 +23,10 @@ router
   .get(userAuthCheck(), catchErrors(getDisposalProject))
   .put(userAuthCheck({ requiredRoles: [Roles.ADMIN] }), catchErrors(updateDisposalProject))
   .delete(userAuthCheck({ requiredRoles: [Roles.ADMIN] }), catchErrors(deleteDisposalProject));
+
+router
+  .route(`${PROJECT_DISPOSAL}/:projectId/responses`)
+  .put(userAuthCheck({ requiredRoles: [Roles.ADMIN] }), catchErrors(updateProjectAgencyResponses));
 
 router.route(`${PROJECT_DISPOSAL}`).post(userAuthCheck(), catchErrors(addDisposalProject));
 
