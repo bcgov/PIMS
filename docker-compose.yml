@@ -39,9 +39,10 @@ services:
     container_name: postgres
     image: postgres:15.7
     restart: unless-stopped
-    user: postgres
     env_file:
       - .env
+    environment:
+      PGDATA: /data/db
     volumes:
       - ./database/postgres/data/db:/data/db
     ports:
