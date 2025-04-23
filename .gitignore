@@ -36,4 +36,4 @@ package-lock.json
 tools/propertyCheck/data/*
 
 # docker volumes
-database/
+database/postgres
