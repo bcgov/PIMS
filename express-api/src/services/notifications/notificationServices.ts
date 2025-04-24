@@ -48,7 +48,6 @@ export enum NotificationAudience {
 export enum AgencyResponseType {
   Unsubscribe = 0,
   Subscribe = 1,
-  Watch = 2,
 }
 export interface ProjectNotificationFilter {
   projectId: number;
@@ -265,13 +264,11 @@ const generateProjectNotifications = async (
         )
         .andWhere('a.is_disabled = false')
         .andWhere('a.send_email = true')
-        .andWhere(
-          '(par.agency_id IS NULL OR (par.response != :unsubscribe AND par.response != :watch))',
-          {
-            unsubscribe: AgencyResponseType.Unsubscribe,
-            watch: AgencyResponseType.Watch,
-          },
-        )
+        .andWhere('a.email IS NOT NULL')
+        .andWhere(`LENGTH(a.email) > 0`)
+        .andWhere('(par.agency_id IS NOT NULL AND par.response = :subscribe)', {
+          subscribe: AgencyResponseType.Subscribe,
+        })
         .getMany();
       agencies.forEach((agc) =>
         returnNotifications.push(
@@ -305,13 +302,9 @@ const generateProjectNotifications = async (
         })
         .andWhere('a.email IS NOT NULL')
         .andWhere(`LENGTH(a.email) > 0`)
-        .andWhere(
-          '(par.agency_id IS NULL OR (par.response != :unsubscribe AND par.response != :watch))',
-          {
-            unsubscribe: AgencyResponseType.Unsubscribe,
-            watch: AgencyResponseType.Watch,
-          },
-        )
+        .andWhere('(par.agency_id IS NOT NULL AND par.response = :subscribe)', {
+          subscribe: AgencyResponseType.Subscribe,
+        })
         .getMany();
 
       agencies.forEach((agc) =>
@@ -345,8 +338,8 @@ const generateProjectNotifications = async (
         })
         .andWhere('a.email IS NOT NULL')
         .andWhere(`LENGTH(a.email) > 0`)
-        .andWhere('(par.agency_id IS NOT NULL AND par.response = :watch)', {
-          watch: AgencyResponseType.Watch,
+        .andWhere('(par.agency_id IS NOT NULL AND par.response = :subscribe)', {
+          subscribe: AgencyResponseType.Subscribe,
         })
         .getMany();
 
@@ -651,7 +644,6 @@ const generateProjectWatchNotifications = async (
     for (const response of responses) {
       switch (response.Response) {
         case AgencyResponseType.Unsubscribe:
-        case AgencyResponseType.Watch:
           //The simple case. Calling this will cancel all pending notifications for this project/agency pair.
           await cancelProjectNotifications(response.ProjectId, response.AgencyId);
           break;
