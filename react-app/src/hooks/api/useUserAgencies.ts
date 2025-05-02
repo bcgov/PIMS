@@ -6,11 +6,13 @@ import { UserContext } from '@/contexts/userContext';
 import usePimsApi from '../usePimsApi';
 import useGroupedAgenciesApi from './useGroupedAgenciesApi';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
+import { LookupContext } from '@/contexts/lookupContext';
 
 const useUserAgencies = () => {
   const { pimsUser } = useContext(UserContext);
+  const { data: lookupData } = useContext(LookupContext);
   const sso = useSSO();
-  const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
+  const { agencyOptions } = useGroupedAgenciesApi();
   const api = usePimsApi();
   const isAdmin = pimsUser?.hasOneOfRoles([Roles.ADMIN]);
   const { data: userAgencies, refreshData: refreshUserAgencies } = useDataLoader(() =>
@@ -22,12 +24,12 @@ const useUserAgencies = () => {
   }, [sso]);
 
   const userAgencyObjects = useMemo(() => {
-    if (ungroupedAgencies && userAgencies) {
-      return ungroupedAgencies.filter((a) => userAgencies.includes(a.Id));
+    if (lookupData?.Agencies && userAgencies) {
+      return lookupData?.Agencies.filter((a) => userAgencies.includes(a.Id));
     } else {
       return [];
     }
-  }, [ungroupedAgencies, userAgencies]);
+  }, [lookupData?.Agencies, userAgencies]);
 
   const menuItems: ISelectMenuItem[] = useMemo(() => {
     if (isAdmin) {

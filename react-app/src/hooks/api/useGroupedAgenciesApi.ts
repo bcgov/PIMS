@@ -6,6 +6,10 @@ import { LookupContext } from '@/contexts/lookupContext';
 export const useGroupedAgenciesApi = () => {
   const { data: lookupData } = useContext(LookupContext);
 
+  const activeAgencies = useMemo(() => {
+    return lookupData?.Agencies?.filter((agency: Agency) => !agency.IsDisabled);
+  }, [lookupData?.Agencies]);
+
   const groupedAgencies = useMemo(() => {
     const groups: { [parentName: string]: Agency[] } = {};
     const parentAgencies: Agency[] = [];
@@ -68,7 +72,11 @@ export const useGroupedAgenciesApi = () => {
     return options;
   }, [groupedAgencies]);
 
-  return { groupedAgencies, ungroupedAgencies: lookupData?.Agencies, agencyOptions };
+  return {
+    groupedAgencies,
+    activeAgencies,
+    agencyOptions,
+  };
 };
 
 export default useGroupedAgenciesApi;

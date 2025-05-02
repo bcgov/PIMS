@@ -28,6 +28,7 @@ import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import BaseDialog from '../dialog/BaseDialog';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
+import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -456,7 +457,6 @@ export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
 interface IProjectAgencyResponseDialog {
   initialValues: ProjectGet;
   open: boolean;
-  agencies: Agency[];
   options: ISelectMenuItem[];
   postSubmit: () => void;
   onCancel: () => void;
@@ -464,21 +464,23 @@ interface IProjectAgencyResponseDialog {
 
 export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog) => {
   const api = usePimsApi();
-  const { initialValues, open, postSubmit, onCancel, options, agencies } = props;
+  const { data: lookupData } = useContext(LookupContext);
+  const { activeAgencies } = useGroupedAgenciesApi();
+  const { initialValues, open, postSubmit, onCancel, options } = props;
   const { submit, submitting } = useDataSubmitter(api.projects.updateProjectWatch);
   const [rows, setRows] = useState([]);
   useEffect(() => {
-    if (initialValues && agencies) {
+    if (initialValues && lookupData?.Agencies) {
       setRows(
         initialValues.AgencyResponses?.map((resp) => ({
-          ...agencies.find((agc) => agc.Id === resp.AgencyId),
+          ...lookupData?.Agencies.find((agc) => agc.Id === resp.AgencyId),
           ReceivedOn: resp.ReceivedOn,
           Note: resp.Note,
           Response: enumReverseLookup(AgencyResponseType, resp.Response),
         })),
       );
     }
-  }, [initialValues, agencies]);
+  }, [initialValues, lookupData?.Agencies]);
   return (
     <ConfirmDialog
       dialogProps={{ maxWidth: 'lg' }}
@@ -500,7 +502,12 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
       onCancel={async () => onCancel()}
     >
       <Box paddingTop={'1rem'}>
-        <AgencySearchTable agencies={agencies} options={options} rows={rows} setRows={setRows} />
+        <AgencySearchTable
+          agencies={activeAgencies as Agency[]}
+          options={options}
+          rows={rows}
+          setRows={setRows}
+        />
       </Box>
     </ConfirmDialog>
   );
