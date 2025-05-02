@@ -169,7 +169,6 @@ export interface ProjectAgencyResponse {
   CreatedOn: string;
   UpdatedById: string | null;
   UpdatedOn: string | null;
-  Id: number;
   ProjectId: number;
   AgencyId: number;
   OfferAmount: string | number;
