@@ -4,7 +4,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import React from 'react';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
-import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import useAgencyOptions from '@/hooks/useAgencyOptions';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
 import { NavigateBackButton } from '@/components/display/DetailViewNavigation';
@@ -17,7 +17,7 @@ const AddAgency = () => {
   const api = usePimsApi();
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const { submit, submitting } = useDataSubmitter(api.agencies.addAgency);
-  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  const agencyOptions = useAgencyOptions().agencyOptions;
 
   const formMethods = useForm({
     defaultValues: {

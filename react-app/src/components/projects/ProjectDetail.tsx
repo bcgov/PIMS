@@ -38,7 +38,7 @@ import {
 } from './ProjectDialog';
 import { AgencySimpleTable } from './AgencyResponseSearchTable';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
-import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import useAgencyOptions from '@/hooks/useAgencyOptions';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
@@ -83,7 +83,7 @@ const ProjectDetail = (props: IProjectDetail) => {
   const { pimsUser } = useContext(UserContext);
   const api = usePimsApi();
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);
-  const { agencyOptions } = useGroupedAgenciesApi();
+  const { agencyOptions } = useAgencyOptions();
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.projects.getProjectById(Number(id)),
   );

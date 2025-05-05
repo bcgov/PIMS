@@ -3,7 +3,7 @@ import TextFormField from '@/components/form/TextFormField';
 import { Roles } from '@/constants/roles';
 import { UserContext } from '@/contexts/userContext';
 import { LookupContext } from '@/contexts/lookupContext';
-import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import useAgencyOptions from '@/hooks/useAgencyOptions';
 import { MapFilter } from '@/hooks/api/usePropertiesApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import usePimsApi from '@/hooks/usePimsApi';
@@ -34,7 +34,7 @@ const FilterControl = (props: FilterControlProps) => {
   const { data: lookupData } = useContext(LookupContext);
 
   // Get lists for dropdowns
-  const { agencyOptions } = useGroupedAgenciesApi();
+  const { agencyOptions } = useAgencyOptions();
   const { data: usersAgenciesData, loadOnce: loadUsersAgencies } = useDataLoader(() =>
     api.users.getUsersAgencyIds(user.pimsUser.data?.Username),
   );

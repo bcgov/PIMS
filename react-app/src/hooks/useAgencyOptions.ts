@@ -3,7 +3,7 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { ISelectMenuItem } from '@/components/form/SelectFormField';
 import { LookupContext } from '@/contexts/lookupContext';
 
-export const useGroupedAgenciesApi = () => {
+export const useAgencyOptions = () => {
   const { data: lookupData } = useContext(LookupContext);
 
   const activeAgencies = useMemo(() => {
@@ -77,4 +77,4 @@ export const useGroupedAgenciesApi = () => {
   };
 };
 
-export default useGroupedAgenciesApi;
+export default useAgencyOptions;

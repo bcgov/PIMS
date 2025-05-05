@@ -12,7 +12,7 @@ import { UserContext } from '@/contexts/userContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
+import { useAgencyOptions } from '@/hooks/useAgencyOptions';
 import { useParams } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Role, Roles } from '@/constants/roles';
@@ -39,7 +39,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   const { data, refreshData, isLoading } = useDataLoader(() => api.users.getUserById(id));
   const { submit, submitting } = useDataSubmitter(api.users.updateUser);
 
-  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  const agencyOptions = useAgencyOptions().agencyOptions;
 
   const rolesOptions = useMemo(
     () => lookupData?.Roles?.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
