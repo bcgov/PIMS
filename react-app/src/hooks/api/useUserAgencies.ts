@@ -4,7 +4,7 @@ import { useContext, useEffect, useMemo } from 'react';
 import useDataLoader from '../useDataLoader';
 import { UserContext } from '@/contexts/userContext';
 import usePimsApi from '../usePimsApi';
-import useGroupedAgenciesApi from './useGroupedAgenciesApi';
+import useAgencyOptions from '../useAgencyOptions';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { LookupContext } from '@/contexts/lookupContext';
 
@@ -12,7 +12,7 @@ const useUserAgencies = () => {
   const { pimsUser } = useContext(UserContext);
   const { data: lookupData } = useContext(LookupContext);
   const sso = useSSO();
-  const { agencyOptions } = useGroupedAgenciesApi();
+  const { agencyOptions } = useAgencyOptions();
   const api = usePimsApi();
   const isAdmin = pimsUser?.hasOneOfRoles([Roles.ADMIN]);
   const { data: userAgencies, refreshData: refreshUserAgencies } = useDataLoader(() =>

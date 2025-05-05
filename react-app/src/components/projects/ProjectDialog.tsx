@@ -28,7 +28,7 @@ import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import BaseDialog from '../dialog/BaseDialog';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
-import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import useAgencyOptions from '@/hooks/useAgencyOptions';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -465,7 +465,7 @@ interface IProjectAgencyResponseDialog {
 export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog) => {
   const api = usePimsApi();
   const { data: lookupData } = useContext(LookupContext);
-  const { activeAgencies } = useGroupedAgenciesApi();
+  const { activeAgencies } = useAgencyOptions();
   const { initialValues, open, postSubmit, onCancel, options } = props;
   const { submit, submitting } = useDataSubmitter(api.projects.updateProjectWatch);
   const [rows, setRows] = useState([]);

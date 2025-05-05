@@ -10,7 +10,7 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
+import { useAgencyOptions } from '@/hooks/useAgencyOptions';
 import { useParams } from 'react-router-dom';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
@@ -38,7 +38,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { data, refreshData, isLoading } = useDataLoader(() => api.agencies.getAgencyById(+id));
   const { submit, submitting } = useDataSubmitter(api.agencies.updateAgencyById);
 
-  const { agencyOptions } = useGroupedAgenciesApi();
+  const { agencyOptions } = useAgencyOptions();
   const isParent = agencyOptions.some((agency) => agency.parentId === +id);
 
   const agencyStatusData = {
