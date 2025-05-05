@@ -25,6 +25,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
 import useUserAgencies from '@/hooks/api/useUserAgencies';
+import useAdministrativeAreaOptions from '@/hooks/useAdministrativeAreaOptions';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -38,7 +39,8 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
 
   const api = usePimsApi();
   const { menuItems: agencyOptions } = useUserAgencies();
-  const { data: lookupData } = useContext(LookupContext);
+  const { adminAreaOptions } = useAdministrativeAreaOptions();
+  const { data: lookupData, getLookupValueById } = useContext(LookupContext);
 
   const { submit, submitting } = useDataSubmitter(api.parcels.updateParcelById);
 
@@ -74,6 +76,47 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
     });
   }, [initialValues]);
 
+  // When the agency is already disabled, it won't show up in the select options otherwise.
+  // We add this to the options if it's not already there. It only seems to apply while this page is up.
+  useEffect(() => {
+    const startingAgency = getLookupValueById('Agencies', initialValues?.AgencyId);
+    if (
+      startingAgency &&
+      startingAgency.IsDisabled &&
+      !agencyOptions.find((a) => a.value === startingAgency.Id)
+    ) {
+      agencyOptions.push({
+        label: startingAgency.Name,
+        value: startingAgency.Id,
+      });
+      // Not ideal to sort again here, but cases where agency is disabled are rare.
+      agencyOptions.sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
+      );
+    }
+  }, [initialValues, agencyOptions]);
+
+  // Same issue with administrative areas
+  useEffect(() => {
+    const startingAdminArea = getLookupValueById(
+      'AdministrativeAreas',
+      initialValues?.AdministrativeAreaId,
+    );
+    if (
+      startingAdminArea &&
+      startingAdminArea.IsDisabled &&
+      !adminAreaOptions.find((a) => a.value === startingAdminArea.Id)
+    ) {
+      adminAreaOptions.push({
+        label: startingAdminArea.Name,
+        value: startingAdminArea.Id,
+      });
+      adminAreaOptions.sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
+      );
+    }
+  }, [initialValues, agencyOptions]);
+
   return (
     <ConfirmDialog
       title={'Edit Parcel Information'}
@@ -98,12 +141,7 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
             agencies={agencyOptions ?? []}
             propertyType={'Parcel'}
             defaultLocationValue={initialValues?.Location}
-            adminAreas={
-              lookupData?.AdministrativeAreas?.map((admin) => ({
-                label: admin.Name,
-                value: admin.Id,
-              })) ?? []
-            }
+            adminAreas={adminAreaOptions ?? []}
           />
           <ParcelInformationForm
             classificationOptions={
@@ -129,6 +167,7 @@ interface IBuildingInformationEditDialog {
 export const BuildingInformationEditDialog = (props: IBuildingInformationEditDialog) => {
   const api = usePimsApi();
   const { menuItems: agencyOptions } = useUserAgencies();
+  const { adminAreaOptions } = useAdministrativeAreaOptions();
   const { data: lookupData } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.buildings.updateBuildingById);
 
@@ -206,12 +245,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
             agencies={agencyOptions}
             propertyType={'Building'}
             defaultLocationValue={initialValues?.Location}
-            adminAreas={
-              lookupData?.AdministrativeAreas.map((admin) => ({
-                label: admin.Name,
-                value: admin.Id,
-              })) ?? []
-            }
+            adminAreas={adminAreaOptions ?? []}
           />
           <BuildingInformationForm
             classificationOptions={lookupData?.Classifications as Classification[]}

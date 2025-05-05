@@ -17,7 +17,7 @@ const AddAgency = () => {
   const api = usePimsApi();
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const { submit, submitting } = useDataSubmitter(api.agencies.addAgency);
-  const agencyOptions = useAgencyOptions().agencyOptions;
+  const { agencyOptions } = useAgencyOptions();
 
   const formMethods = useForm({
     defaultValues: {

@@ -122,6 +122,26 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
     });
   }, [data]);
 
+  // When the parent agency is already disabled, it won't show up in the select options otherwise.
+  // We add this to the options if it's not already there. It only seems to apply while this page is up.
+  useEffect(() => {
+    const parentAgency = getLookupValueById('Agencies', data?.ParentId);
+    if (
+      parentAgency &&
+      parentAgency.IsDisabled &&
+      !agencyOptions.find((a) => a.value === parentAgency.Id)
+    ) {
+      agencyOptions.push({
+        label: parentAgency.Name,
+        value: parentAgency.Id,
+      });
+      // Not ideal to sort again here, but cases where agency is disabled are rare.
+      agencyOptions.sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
+      );
+    }
+  }, [data, agencyOptions]);
+
   return (
     <Box
       display={'flex'}

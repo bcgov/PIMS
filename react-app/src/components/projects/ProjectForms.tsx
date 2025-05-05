@@ -14,9 +14,11 @@ import Help from '@mui/icons-material/Help';
 
 interface IProjectGeneralInfoForm {
   projectStatuses: ISelectMenuItem[];
+  agencyOptions: ISelectMenuItem[];
 }
 
 export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
+  const { agencyOptions } = props;
   const { data: lookupData } = useContext(LookupContext);
   const { pimsUser } = useContext(UserContext);
   const canEdit = pimsUser.hasOneOfRoles([Roles.ADMIN]);
@@ -68,9 +70,7 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
             <AutocompleteFormField
               name={'AgencyId'}
               label={'Agency'}
-              options={
-                lookupData?.Agencies.map((agc) => ({ value: agc.Id, label: agc.Name })) ?? []
-              }
+              options={agencyOptions ?? []}
             />
           </Grid>
           <Grid item xs={4}>

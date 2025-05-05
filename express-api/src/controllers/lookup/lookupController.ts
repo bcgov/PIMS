@@ -355,6 +355,7 @@ export const lookupAll = async (req: Request, res: Response) => {
       Id: true,
       Name: true,
       RegionalDistrictId: true,
+      IsDisabled: true,
     },
     order: { SortOrder: 'asc', Name: 'asc' },
   });
