@@ -30,7 +30,7 @@ interface AgencyStatus extends Agency {
 const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { id } = useParams();
   const api = usePimsApi();
-  const { getLookupValueById } = useContext(LookupContext);
+  const { getLookupValueById, refreshLookup } = useContext(LookupContext);
 
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
   const [openNotificationsDialog, setOpenNotificationsDialog] = useState(false);
@@ -186,9 +186,12 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
               Name,
               Code,
               Description,
-            }).then(() => {
-              refreshData();
-              setOpenStatusDialog(false);
+            }).then((resp) => {
+              if (resp && resp.ok) {
+                refreshLookup(); // so current agency info is available
+                refreshData();
+                setOpenStatusDialog(false);
+              }
             });
           }
         }}

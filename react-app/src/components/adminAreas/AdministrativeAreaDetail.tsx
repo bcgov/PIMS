@@ -25,7 +25,7 @@ const AdministrativeAreaDetail = (props: IAdministrativeAreaDetail) => {
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.administrativeAreas.getAdminAreaById(Number(id)),
   );
-  const { data: lookupData, getLookupValueById } = useContext(LookupContext);
+  const { data: lookupData, getLookupValueById, refreshLookup } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.administrativeAreas.updateAdminArea);
 
   useEffect(() => {
@@ -105,9 +105,12 @@ const AdministrativeAreaDetail = (props: IAdministrativeAreaDetail) => {
             submit(idAsNumber, {
               ...formValues,
               Id: idAsNumber,
-            }).then(() => {
-              refreshData();
-              setOpenEditDialog(false);
+            }).then((resp) => {
+              if (resp && resp.ok) {
+                refreshLookup();
+                refreshData();
+                setOpenEditDialog(false);
+              }
             });
           }
         }}
