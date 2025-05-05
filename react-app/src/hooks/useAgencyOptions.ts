@@ -3,8 +3,12 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { ISelectMenuItem } from '@/components/form/SelectFormField';
 import { LookupContext } from '@/contexts/lookupContext';
 
-export const useGroupedAgenciesApi = () => {
+export const useAgencyOptions = () => {
   const { data: lookupData } = useContext(LookupContext);
+
+  const activeAgencies = useMemo(() => {
+    return lookupData?.Agencies?.filter((agency: Agency) => !agency.IsDisabled);
+  }, [lookupData?.Agencies]);
 
   const groupedAgencies = useMemo(() => {
     const groups: { [parentName: string]: Agency[] } = {};
@@ -66,7 +70,11 @@ export const useGroupedAgenciesApi = () => {
     return options;
   }, [groupedAgencies]);
 
-  return { groupedAgencies, ungroupedAgencies: lookupData?.Agencies, agencyOptions };
+  return {
+    groupedAgencies,
+    activeAgencies,
+    agencyOptions,
+  };
 };
 
-export default useGroupedAgenciesApi;
+export default useAgencyOptions;

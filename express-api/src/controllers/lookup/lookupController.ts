@@ -344,18 +344,18 @@ export const lookupAll = async (req: Request, res: Response) => {
       Name: true,
       Code: true,
       ParentId: true,
+      IsDisabled: true,
     },
     order: { SortOrder: 'asc', Name: 'asc' },
-    where: { IsDisabled: false },
   });
   const AdministrativeAreas = await AppDataSource.getRepository(AdministrativeArea).find({
     select: {
       Id: true,
       Name: true,
       RegionalDistrictId: true,
+      IsDisabled: true,
     },
     order: { SortOrder: 'asc', Name: 'asc' },
-    where: { IsDisabled: false },
   });
 
   const returnObj = {
