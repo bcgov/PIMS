@@ -10,18 +10,14 @@ const useAdministrativeAreaOptions = () => {
     return lookupData?.AdministrativeAreas?.filter((a: AdministrativeArea) => !a.IsDisabled);
   }, [lookupData?.AdministrativeAreas]);
 
-  const adminAreaOptions: ISelectMenuItem[] = useMemo(() => {
-    const options: ISelectMenuItem[] = [];
-
-    activeAdminAreas.forEach((a) => {
-      options.push({
+  const adminAreaOptions: ISelectMenuItem[] = useMemo(
+    () =>
+      activeAdminAreas.map((a) => ({
         label: a.Name,
         value: a.Id,
-      });
-    });
-
-    return options;
-  }, [activeAdminAreas]);
+      })),
+    [activeAdminAreas],
+  );
 
   return {
     activeAdminAreas,
