@@ -34,3 +34,6 @@ package-lock.json
 
 # .csv and txt files created by script
 tools/propertyCheck/data/*
+
+# docker volumes
+database/postgres
