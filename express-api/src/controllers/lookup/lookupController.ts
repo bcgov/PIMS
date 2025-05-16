@@ -344,6 +344,8 @@ export const lookupAll = async (req: Request, res: Response) => {
       Name: true,
       Code: true,
       ParentId: true,
+      SendEmail: true,
+      Email: true,
     },
     order: { SortOrder: 'asc', Name: 'asc' },
     where: { IsDisabled: false },
@@ -371,9 +373,17 @@ export const lookupAll = async (req: Request, res: Response) => {
     PredominateUses,
     Classifications,
     Roles,
-    Agencies: (await Agencies).sort((a, b) =>
-      a.Name.toLowerCase().localeCompare(b.Name.toLowerCase(), undefined, { numeric: true }),
-    ),
+    Agencies: (await Agencies)
+      .sort((a, b) =>
+        a.Name.toLowerCase().localeCompare(b.Name.toLowerCase(), undefined, { numeric: true }),
+      )
+      .map((a) => ({
+        Id: a.Id,
+        Name: a.Name,
+        Code: a.Code,
+        ParentId: a.ParentId,
+        SendEmail: Boolean(a.SendEmail && a.Email && a.Email.length),
+      })),
     AdministrativeAreas,
     RegionalDistricts: (await RegionalDistricts).sort((a, b) =>
       a.Name.toLowerCase().localeCompare(b.Name.toLowerCase()),

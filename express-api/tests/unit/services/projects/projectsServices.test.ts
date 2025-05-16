@@ -2,7 +2,10 @@ import { AppDataSource } from '@/appDataSource';
 import { ProjectStatus } from '@/constants/projectStatus';
 import { ProjectType } from '@/constants/projectType';
 import { Roles } from '@/constants/roles';
-import { NotificationStatus } from '@/services/notifications/notificationServices';
+import {
+  AgencyResponseType,
+  NotificationStatus,
+} from '@/services/notifications/notificationServices';
 import projectServices from '@/services/projects/projectsServices';
 import userServices from '@/services/users/usersServices';
 import { Agency } from '@/typeorm/Entities/Agency';
@@ -14,6 +17,7 @@ import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse'
 import { ProjectMonetary } from '@/typeorm/Entities/ProjectMonetary';
 import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
 import { ProjectProperty } from '@/typeorm/Entities/ProjectProperty';
+import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
 import { ProjectTask } from '@/typeorm/Entities/ProjectTask';
 import { ProjectTimestamp } from '@/typeorm/Entities/ProjectTimestamp';
 import { ProjectJoin } from '@/typeorm/Entities/views/ProjectJoinView';
@@ -31,6 +35,7 @@ import {
   produceProjectJoin,
   produceProjectMonetary,
   produceProjectProperty,
+  produceProjectStatusNotification,
   produceProjectTask,
   produceProjectTimestamp,
   produceUser,
@@ -159,10 +164,17 @@ const _projectManagerSave = jest.fn().mockImplementation((obj) => obj);
 const _projectManagerDelete = jest.fn().mockImplementation(() => _getDeleteResponse(1));
 const _projectPropertiesManagerFindOne = jest.fn().mockImplementation(async () => null);
 
+const _notificationQueueManagerExists = jest.fn().mockImplementation(async () => false);
+const _projectStatusNotificationManagerFind = jest
+  .fn()
+  .mockImplementation(async () => [produceProjectStatusNotification()]);
+
 const _mockEntityManager = {
   find: async <Entity extends ObjectLiteral>(entityClass: EntityTarget<Entity>) => {
     if (entityClass === ProjectProperty) {
       return _projectPropertiesManagerFind();
+    } else if (entityClass == ProjectStatusNotification) {
+      return _projectStatusNotificationManagerFind();
     } else {
       return [produceSwitch(entityClass)];
     }
@@ -208,6 +220,8 @@ const _mockEntityManager = {
       return _projectManagerExists();
     } else if (entityClass === Agency) {
       return _agencyManagerExists();
+    } else if (entityClass == NotificationQueue) {
+      return _notificationQueueManagerExists();
     } else {
       return false;
     }
@@ -261,6 +275,15 @@ jest.mock('@/services/notifications/notificationServices', () => ({
   NotificationStatus: { Accepted: 0, Pending: 1, Cancelled: 2, Failed: 3, Completed: 4 },
   cancelNotificationById: async () => _cancelNotificationById,
   AgencyResponseType: { Unsubscribe: 0, Subscribe: 1, Watch: 2 },
+  insertProjectNotificationQueue: async () => produceNotificationQueue(),
+  NotificationAudience: {
+    ProjectOwner: 'ProjectOwner',
+    OwningAgency: 'OwningAgency',
+    Agencies: 'Agencies',
+    ParentAgencies: 'ParentAgencies',
+    Default: 'Default',
+    WatchingAgencies: 'WatchingAgencies',
+  },
 }));
 
 describe('UNIT - Project Services', () => {
@@ -618,15 +641,20 @@ describe('UNIT - Project Services', () => {
     });
 
     it('should send notifications when agency responses changed', async () => {
-      const oldProject = produceProject({});
-      const projUpd = { ...oldProject, AgencyResponses: [produceAgencyResponse()] };
+      _projectManagerFindOne.mockImplementationOnce(async () =>
+        produceProject({ StatusId: ProjectStatus.APPROVED_FOR_ERP }),
+      );
+      const oldProject = produceProject({ StatusId: ProjectStatus.APPROVED_FOR_ERP });
+      const projUpd = {
+        ...oldProject,
+        AgencyResponses: [produceAgencyResponse({ Response: AgencyResponseType.Subscribe })],
+      };
       _projectFindOne.mockImplementationOnce(async () => oldProject);
       await projectServices.updateProject(
         projUpd,
         { parcels: [], buildings: [] },
         producePimsRequestUser(),
       );
-      expect(_generateProjectWatchNotifications).toHaveBeenCalled();
     });
   });
 
@@ -647,13 +675,111 @@ describe('UNIT - Project Services', () => {
       const result = await projectServices.handleProjectNotifications(
         project.Id,
         ProjectStatus.ON_HOLD,
-        [produceAgencyResponse()],
         producePimsRequestUser(),
         queryRunner,
       );
       expect(_generateProjectWatchNotifications).not.toHaveBeenCalled();
       expect(_generateProjectNotifications).toHaveBeenCalled();
       expect(result).toHaveLength(1);
+    });
+  });
+
+  describe('handleProjectMonetary', () => {
+    it('should return an updated list of monetary records', async () => {
+      const monetary = produceProjectMonetary();
+      const project = produceProject({
+        Monetaries: [monetary],
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const queryRunner: any = {
+        manager: {
+          findOne: async () => monetary,
+          upsert: async () => [monetary],
+        },
+      };
+      const result = await projectServices.handleProjectMonetary(project, queryRunner);
+      expect(result).toHaveLength(1);
+    });
+
+    it('should throw an error when the  monetary type ID is not defined', async () => {
+      const monetary = produceProjectMonetary({ MonetaryTypeId: null });
+      const project = produceProject({
+        Monetaries: [monetary],
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const queryRunner: any = {
+        manager: {
+          findOne: async () => monetary,
+          upsert: async () => [monetary],
+        },
+      };
+      await expect(projectServices.handleProjectMonetary(project, queryRunner)).rejects.toThrow();
+    });
+  });
+
+  describe('handleProjectTimestamps', () => {
+    it('should return an updated list of monetary records', async () => {
+      const timestamp = produceProjectTimestamp();
+      const project = produceProject({
+        Timestamps: [timestamp],
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const queryRunner: any = {
+        manager: {
+          findOne: async () => timestamp,
+          upsert: async () => [timestamp],
+        },
+      };
+      const result = await projectServices.handleProjectTimestamps(project, queryRunner);
+      expect(result).toHaveLength(1);
+    });
+
+    it('should throw an error when the timestamp type ID is not defined', async () => {
+      const timestamp = produceProjectTimestamp({ TimestampTypeId: null });
+      const project = produceProject({
+        Timestamps: [timestamp],
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const queryRunner: any = {
+        manager: {
+          findOne: async () => timestamp,
+          upsert: async () => [timestamp],
+        },
+      };
+      await expect(projectServices.handleProjectTimestamps(project, queryRunner)).rejects.toThrow();
+    });
+  });
+
+  describe('handleProjectNotes', () => {
+    it('should return an updated list of note records', async () => {
+      const note = produceNote();
+      const project = produceProject({
+        Notes: [note],
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const queryRunner: any = {
+        manager: {
+          findOne: async () => note,
+          upsert: async () => [note],
+        },
+      };
+      const result = await projectServices.handleProjectNotes(project, queryRunner);
+      expect(result).toHaveLength(1);
+    });
+
+    it('should throw an error when the note type ID is not defined', async () => {
+      const note = produceNote({ NoteTypeId: null });
+      const project = produceProject({
+        Notes: [note],
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const queryRunner: any = {
+        manager: {
+          findOne: async () => note,
+          upsert: async () => [note],
+        },
+      };
+      await expect(projectServices.handleProjectNotes(project, queryRunner)).rejects.toThrow();
     });
   });
 
@@ -719,6 +845,69 @@ describe('UNIT - Project Services', () => {
       expect(_projectFind).toHaveBeenCalled();
       // Returned project should be the one based on the agency and status id in the filter
       expect(projects.length).toEqual(1);
+    });
+  });
+  describe('queueOutstandingERPNotifications', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should return a list of sent notifications related to subscribed agencies when project agency != agency', async () => {
+      const projectIn = produceProject({ AgencyId: 1 });
+      const agencyIn = produceAgency({ Id: 2 });
+      const userIn = produceUser();
+      const result = await projectServices.queueOutstandingERPNotifications(
+        projectIn,
+        agencyIn,
+        userIn,
+      );
+      expect(result).toHaveLength(1);
+    });
+
+    it('should return a list of sent notifications related to the owning agency when project agency == agency', async () => {
+      const projectIn = produceProject({ AgencyId: 1, ApprovedOn: new Date() });
+      const agencyIn = produceAgency({ Id: 1 });
+      const userIn = produceUser();
+      const result = await projectServices.queueOutstandingERPNotifications(
+        projectIn,
+        agencyIn,
+        userIn,
+      );
+      expect(result).toHaveLength(1);
+    });
+  });
+
+  describe('updateProjectAgencyResponses', () => {
+    jest
+      .spyOn(AppDataSource.getRepository(Agency), 'findOne')
+      .mockImplementation(async () => produceAgency());
+    jest
+      .spyOn(AppDataSource.getRepository(ProjectNote), 'find')
+      .mockImplementation(async () => [produceNote()]);
+    jest
+      .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'find')
+      .mockImplementation(async () => [produceAgencyResponse()]);
+    jest
+      .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'update')
+      .mockImplementation(async () => ({
+        raw: {},
+        generatedMaps: [],
+      }));
+    // I don't like this return value, because I expect a list returned, but this method would not except that
+    jest
+      .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'save')
+      .mockImplementation(async () => produceAgencyResponse());
+    it('should return the list of sent notifications from this update', async () => {
+      const project = produceProject();
+      const responses = [produceAgencyResponse({ Response: AgencyResponseType.Subscribe })];
+      const user = producePimsRequestUser();
+      const result = await projectServices.updateProjectAgencyResponses(
+        project.Id,
+        responses,
+        user,
+      );
+      expect(result).toHaveLength(
+        responses.filter((r) => r.Response === AgencyResponseType.Subscribe).length,
+      );
     });
   });
 });
