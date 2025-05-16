@@ -45,7 +45,8 @@ services:
     environment:
       PGDATA: /data/db
     volumes:
-      - ./database/postgres/data/db:/data/db
+      - postgres_data:/data/db # Named volumes persist on "down" with Podman
+      - ./database/postgres:/backup # A local mount to place dump files for restore/export
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     healthcheck:
@@ -64,3 +65,8 @@ networks:
   pims:
     name: pims-net
     driver: bridge
+
+####################### Volumes Definition #######################
+volumes:
+  postgres_data:
+    name: postgres_data
