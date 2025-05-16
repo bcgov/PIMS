@@ -889,7 +889,7 @@ export const produceProjectMonetary = (props?: Partial<ProjectMonetary>) => {
   return monetary;
 };
 
-export const produceProjectNotification = (props?: Partial<ProjectStatusNotification>) => {
+export const produceProjectStatusNotification = (props?: Partial<ProjectStatusNotification>) => {
   const notif: ProjectStatusNotification = {
     Id: faker.number.int(),
     TemplateId: faker.number.int(),
