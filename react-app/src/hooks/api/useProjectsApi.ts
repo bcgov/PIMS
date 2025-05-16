@@ -254,8 +254,6 @@ export type ProjectAdd = Omit<
   | 'StatusId' // Determined in API
   | 'ProjectType' // Determined in API (Disposal)
   | 'RiskId' // Determined in API
-  // | 'ActualFiscalYear' // TODO: Do we need this?
-  // | 'ReportedFiscalYear' // TODO: Do we need this?
 >;
 
 export interface ProjectPropertyIds {
@@ -338,6 +336,16 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     return response;
   };
 
+  const updateProjectWatch = async (
+    projectId: number,
+    responses: Partial<ProjectAgencyResponse>[],
+  ) => {
+    const response = await absoluteFetch.put(`/projects/disposal/${projectId}/responses`, {
+      responses,
+    });
+    return response;
+  };
+
   return {
     getProjectById,
     updateProject,
@@ -345,6 +353,7 @@ const useProjectsApi = (absoluteFetch: IFetch) => {
     getProjects,
     getProjectsForExcelExport,
     postProject,
+    updateProjectWatch,
   };
 };
 

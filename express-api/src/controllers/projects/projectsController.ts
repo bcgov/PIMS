@@ -8,6 +8,7 @@ import { Project } from '@/typeorm/Entities/Project';
 import { Roles } from '@/constants/roles';
 import notificationServices from '@/services/notifications/notificationServices';
 import { exposedProjectStatuses } from '@/constants/projectStatus';
+import { ProjectAgencyResponseSchema } from '@/services/projects/projectAgencyResponseSchema';
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -164,4 +165,35 @@ export const getProjects = async (req: Request, res: Response) => {
     ? await projectServices.getProjectsForExport(filterResult as ProjectFilter)
     : await projectServices.getProjects(filterResult as ProjectFilter);
   return res.status(200).send(projects);
+};
+
+/**
+ * @description Updates a project's agency responses based on its ID.
+ * @param {Request}     req Incoming request.
+ * @param {Response}    res Outgoing response.
+ * @returns {Response}      A 200 status with the an array of project agency responses.
+ */
+export const updateProjectAgencyResponses = async (req: Request, res: Response) => {
+  const filter = ProjectAgencyResponseSchema.safeParse(req.body);
+  if (!filter.success) {
+    return res.status(400).send('List of agency responses not properly formatted.');
+  }
+  const projectId = Number(req.params.projectId);
+  if (isNaN(projectId)) {
+    return res.status(400).send('Invalid Project ID');
+  }
+  // Only admins can edit projects
+  const user = req.pimsUser;
+  const isAdmin = user.hasOneOfRoles([Roles.ADMIN]);
+  if (!isAdmin) {
+    return res.status(403).send('Projects only editable by Administrator role.');
+  }
+
+  const notificationsSent = await projectServices.updateProjectAgencyResponses(
+    projectId,
+    req.body.responses,
+    req.pimsUser,
+  );
+
+  return res.status(200).send(notificationsSent);
 };

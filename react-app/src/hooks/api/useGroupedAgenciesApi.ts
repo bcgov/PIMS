@@ -48,6 +48,7 @@ export const useGroupedAgenciesApi = () => {
         label: agency.Name,
         value: agency.Id,
         children: agency.children.map((child) => child.Id),
+        sendEmail: agency.SendEmail,
       });
       if (agency.children && agency.children.length > 0) {
         agency.children = agency.children.sort((a: Agency, b: Agency) =>
@@ -58,6 +59,7 @@ export const useGroupedAgenciesApi = () => {
             label: childAgency.Name,
             value: childAgency.Id,
             parentId: agency.Id,
+            sendEmail: childAgency.SendEmail,
           });
         });
       }
