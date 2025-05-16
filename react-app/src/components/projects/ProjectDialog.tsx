@@ -465,7 +465,7 @@ interface IProjectAgencyResponseDialog {
 export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog) => {
   const api = usePimsApi();
   const { initialValues, open, postSubmit, onCancel, options, agencies } = props;
-  const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
+  const { submit, submitting } = useDataSubmitter(api.projects.updateProjectWatch);
   const [rows, setRows] = useState([]);
   useEffect(() => {
     if (initialValues && agencies) {
@@ -486,17 +486,16 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
       open={open}
       confirmButtonProps={{ loading: submitting }}
       onConfirm={async () => {
-        submit(initialValues.Id, {
-          Id: initialValues.Id,
-          ProjectProperties: initialValues.ProjectProperties,
-          AgencyResponses: rows.map((agc) => ({
+        submit(
+          initialValues.Id,
+          rows.map((agc) => ({
             AgencyId: agc.Id,
             OfferAmount: 0,
             Response: Number(AgencyResponseType[agc.Response]),
-            ReceivedOn: agc.ReceivedOn,
             Note: agc.Note,
+            ProjectId: initialValues.Id,
           })),
-        }).then(() => postSubmit());
+        ).then(() => postSubmit());
       }}
       onCancel={async () => onCancel()}
     >
