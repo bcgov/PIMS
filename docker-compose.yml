@@ -39,13 +39,12 @@ services:
     container_name: postgres
     image: postgres:15.7
     restart: unless-stopped
-    user: postgres
     env_file:
       - .env
     environment:
-      PGDATA: /data/db
+      PGDATA: /var/lib/postgresql/data
     volumes:
-      - postgres_data:/data/db # Named volumes persist on "down" with Podman
+      - postgres_data:/var/lib/postgresql/data # Named volumes persist on "down" with Podman
       - ./database/postgres:/backup # A local mount to place dump files for restore/export
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
