@@ -659,7 +659,7 @@ describe('UNIT - Project Services', () => {
   });
 
   describe('handleProjectNotifications', () => {
-    it('should not send notifications when status becomes Cancelled', async () => {
+    it('should only send a cancellation notification when status becomes Cancelled', async () => {
       const project = produceProject({
         AgencyResponses: [produceAgencyResponse()],
         StatusId: ProjectStatus.CANCELLED,
