@@ -659,6 +659,9 @@ describe('UNIT - Project Services', () => {
   });
 
   describe('handleProjectNotifications', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should only send a cancellation notification when status becomes Cancelled', async () => {
       const project = produceProject({
         AgencyResponses: [produceAgencyResponse()],
@@ -685,6 +688,9 @@ describe('UNIT - Project Services', () => {
   });
 
   describe('handleProjectMonetary', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should return an updated list of monetary records', async () => {
       const monetary = produceProjectMonetary();
       const project = produceProject({
@@ -718,6 +724,9 @@ describe('UNIT - Project Services', () => {
   });
 
   describe('handleProjectTimestamps', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should return an updated list of monetary records', async () => {
       const timestamp = produceProjectTimestamp();
       const project = produceProject({
@@ -751,6 +760,9 @@ describe('UNIT - Project Services', () => {
   });
 
   describe('handleProjectNotes', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should return an updated list of note records', async () => {
       const note = produceNote();
       const project = produceProject({
