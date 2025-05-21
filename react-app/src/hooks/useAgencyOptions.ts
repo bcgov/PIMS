@@ -3,6 +3,10 @@ import { Agency } from '@/hooks/api/useAgencyApi';
 import { ISelectMenuItem } from '@/components/form/SelectFormField';
 import { LookupContext } from '@/contexts/lookupContext';
 
+/**
+ * Use this when you need a list of agencies that does not respect the user's permissions.
+ * @returns A hook containing the grouped agencies, active agencies, and agency options.
+ */
 export const useAgencyOptions = () => {
   const { data: lookupData } = useContext(LookupContext);
 

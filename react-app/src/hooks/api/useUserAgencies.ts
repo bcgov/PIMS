@@ -8,6 +8,10 @@ import useAgencyOptions from '../useAgencyOptions';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { LookupContext } from '@/contexts/lookupContext';
 
+/**
+ * @description Custom hook to fetch and manage agencies and agency options depending on a user's current agency and role.
+ * @returns A hook containing the menu items and user agencies.
+ */
 const useUserAgencies = () => {
   const { pimsUser } = useContext(UserContext);
   const { data: lookupData } = useContext(LookupContext);
