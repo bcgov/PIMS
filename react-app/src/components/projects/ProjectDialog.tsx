@@ -86,10 +86,11 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   // We add this to the options if it's not already there.
   const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
     const manipulatedAgencyOptions = [...agencyOptions];
-    const startingAgency = getLookupValueById('Agencies', initialValues?.AgencyId);
+    const startingAgency: Agency = getLookupValueById('Agencies', initialValues?.AgencyId);
+    const parentAgency: Agency = getLookupValueById('Agencies', startingAgency?.ParentId);
     if (
       startingAgency &&
-      startingAgency.IsDisabled &&
+      (startingAgency.IsDisabled || parentAgency?.IsDisabled) &&
       !manipulatedAgencyOptions.find((a) => a.value === startingAgency.Id)
     ) {
       manipulatedAgencyOptions.push({

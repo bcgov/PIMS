@@ -126,10 +126,11 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   // We add this to the options if it's not already there.
   const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
     const manipulatedAgencyOptions = [...agencyOptions];
-    const startingAgency = getLookupValueById('Agencies', userProfileData?.Agency?.Id);
+    const startingAgency: Agency = getLookupValueById('Agencies', userProfileData?.Agency?.Id);
+    const parentAgency: Agency = getLookupValueById('Agencies', startingAgency?.ParentId);
     if (
       startingAgency &&
-      startingAgency.IsDisabled &&
+      (startingAgency.IsDisabled || parentAgency?.IsDisabled) &&
       !manipulatedAgencyOptions.find((a) => a.value === startingAgency.Id)
     ) {
       manipulatedAgencyOptions.push({

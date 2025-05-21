@@ -27,6 +27,7 @@ import { Classification } from '@/hooks/api/useLookupApi';
 import useUserAgencies from '@/hooks/api/useUserAgencies';
 import useAdministrativeAreaOptions from '@/hooks/useAdministrativeAreaOptions';
 import { ISelectMenuItem } from '@/components/form/SelectFormField';
+import { Agency } from '@/hooks/api/useAgencyApi';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -81,10 +82,11 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
   // We add this to the options if it's not already there.
   const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
     const manipulatedAgencyOptions = [...agencyOptions];
-    const startingAgency = getLookupValueById('Agencies', initialValues?.AgencyId);
+    const startingAgency: Agency = getLookupValueById('Agencies', initialValues?.AgencyId);
+    const parentAgency: Agency = getLookupValueById('Agencies', startingAgency?.ParentId);
     if (
       startingAgency &&
-      startingAgency.IsDisabled &&
+      (startingAgency.IsDisabled || parentAgency?.IsDisabled) &&
       !manipulatedAgencyOptions.find((a) => a.value === startingAgency.Id)
     ) {
       manipulatedAgencyOptions.push({
