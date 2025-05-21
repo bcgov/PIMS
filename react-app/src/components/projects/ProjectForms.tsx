@@ -71,6 +71,7 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
               name={'AgencyId'}
               label={'Agency'}
               options={agencyOptions ?? []}
+              allowNestedIndent
             />
           </Grid>
           <Grid item xs={4}>

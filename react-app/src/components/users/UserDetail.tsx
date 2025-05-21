@@ -18,6 +18,7 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Role, Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
 import { getProvider, validateEmail } from '@/utilities/helperFunctions';
+import { ISelectMenuItem } from '@/components/form/SelectFormField';
 
 interface IUserDetail {
   onClose: () => void;
@@ -122,24 +123,23 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   }, [data]);
 
   // When the agency is already disabled, it won't show up in the select options otherwise.
-  // We add this to the options if it's not already there. It only seems to apply while this page is up.
-  useEffect(() => {
-    const startingAgency = getLookupValueById('Agencies', data?.AgencyId);
+  // We add this to the options if it's not already there.
+  const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAgencyOptions = [...agencyOptions];
+    const startingAgency = getLookupValueById('Agencies', userProfileData?.Agency?.Id);
     if (
       startingAgency &&
       startingAgency.IsDisabled &&
-      !agencyOptions.find((a) => a.value === startingAgency.Id)
+      !manipulatedAgencyOptions.find((a) => a.value === startingAgency.Id)
     ) {
-      agencyOptions.push({
+      manipulatedAgencyOptions.push({
         label: startingAgency.Name,
         value: startingAgency.Id,
       });
-      // Not ideal to sort again here, but cases where agency is disabled are rare.
-      agencyOptions.sort((a, b) =>
-        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
-      );
     }
-  }, [data, agencyOptions]);
+    // Don't sort these. Messes up the 2-tiered agency structure.
+    return manipulatedAgencyOptions;
+  }, [userProfileData, agencyOptions]);
 
   return (
     <Box
@@ -220,7 +220,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
                 allowNestedIndent
                 name={'AgencyId'}
                 label={'Agency'}
-                options={agencyOptions}
+                options={manipulatedAgencyOptions}
                 disableClearable={false}
               />
             </Grid>

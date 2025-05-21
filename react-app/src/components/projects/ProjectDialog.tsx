@@ -1,5 +1,5 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { Project, ProjectGet, ProjectMonetary, ProjectTimestamp } from '@/hooks/api/useProjectsApi';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -83,23 +83,22 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const { agencyOptions } = useAgencyOptions();
 
   // When the agency is already disabled, it won't show up in the select options otherwise.
-  // We add this to the options if it's not already there. It only seems to apply while this page is up.
-  useEffect(() => {
+  // We add this to the options if it's not already there.
+  const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAgencyOptions = [...agencyOptions];
     const startingAgency = getLookupValueById('Agencies', initialValues?.AgencyId);
     if (
       startingAgency &&
       startingAgency.IsDisabled &&
-      !agencyOptions.find((a) => a.value === startingAgency.Id)
+      !manipulatedAgencyOptions.find((a) => a.value === startingAgency.Id)
     ) {
-      agencyOptions.push({
+      manipulatedAgencyOptions.push({
         label: startingAgency.Name,
         value: startingAgency.Id,
       });
-      // Not ideal to sort again here, but cases where agency is disabled are rare.
-      agencyOptions.sort((a, b) =>
-        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
-      );
     }
+    // Don't sort these. Messes up the 2-tiered agency structure.
+    return manipulatedAgencyOptions;
   }, [initialValues, agencyOptions]);
 
   const [statusTypes, setStatusTypes] = useState({
@@ -220,7 +219,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             value: st.Id,
             label: st.Name,
           }))}
-          agencyOptions={agencyOptions ?? []}
+          agencyOptions={manipulatedAgencyOptions ?? []}
         />
         {initialValues && statusTypes.Tasks?.length > 0 && (
           <Box mt={'1rem'}>

@@ -383,6 +383,7 @@ export const lookupAll = async (req: Request, res: Response) => {
         Code: a.Code,
         ParentId: a.ParentId,
         SendEmail: Boolean(a.SendEmail && a.Email && a.Email.length),
+        IsDisabled: a.IsDisabled,
       })),
     AdministrativeAreas,
     RegionalDistricts: (await RegionalDistricts).sort((a, b) =>
