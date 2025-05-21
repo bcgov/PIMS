@@ -86,6 +86,9 @@ describe('UNIT - User services', () => {
   const ssoUser: SSOUser = produceSSO();
 
   describe('getUser', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     const user = produceUser();
     it('should return a user when called with a UUID', async () => {
       jest
@@ -105,6 +108,9 @@ describe('UNIT - User services', () => {
   });
 
   describe('getUserById', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should return a user assuming one is found', async () => {
       const user = produceUser();
       _usersFindOne.mockImplementationOnce(async () => user);
@@ -120,6 +126,9 @@ describe('UNIT - User services', () => {
   });
 
   describe('addKeycloakUserOnHold', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should add and return an access request', async () => {
       const agencyId = faker.number.int();
       const req = await userServices.addKeycloakUserOnHold(
@@ -149,6 +158,9 @@ describe('UNIT - User services', () => {
   });
 
   describe('getAgencies', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should return an array of agency ids', async () => {
       const agencies = await userServices.getAgencies('test');
       expect(AppDataSource.getRepository(Agency).find).toHaveBeenCalledTimes(1);
@@ -164,6 +176,9 @@ describe('UNIT - User services', () => {
   });
 
   describe('hasAgencies', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should return true if the user has the corresponding agencies', async () => {
       _agenciesFind.mockImplementationOnce(async () => [produceAgency({ Id: 1 })]);
       const result = await userServices.hasAgencies('test', [1]);
@@ -178,6 +193,9 @@ describe('UNIT - User services', () => {
   });
 
   describe('normalizeKeycloakUser', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should return a normalized user from IDIR', () => {
       const result = userServices.normalizeKeycloakUser(ssoUser);
       expect(result.first_name).toBe(ssoUser.first_name);
@@ -205,6 +223,9 @@ describe('UNIT - User services', () => {
   });
 
   describe('getUsers', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should get a list of all users', async () => {
       const users = await userServices.getUsers({});
       expect(_usersFind).toHaveBeenCalledTimes(1);
@@ -212,6 +233,9 @@ describe('UNIT - User services', () => {
     });
   });
   describe('addUser', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should insert and return the added user', async () => {
       const user = produceUser();
       _usersFindOne.mockResolvedValueOnce(null);
@@ -235,6 +259,9 @@ describe('UNIT - User services', () => {
     });
   });
   describe('updateUser', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should update and return the added user', async () => {
       const user = produceUser();
       // Mocked once for the initial get and again for the return.
@@ -261,6 +288,9 @@ describe('UNIT - User services', () => {
     });
   });
   describe('deleteUser', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
     it('should delete and return the deleted user', async () => {
       const user = produceUser();
       const retUser = await userServices.deleteUser(user);

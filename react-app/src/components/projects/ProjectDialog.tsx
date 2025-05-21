@@ -1,5 +1,5 @@
 import usePimsApi from '@/hooks/usePimsApi';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import { Project, ProjectGet, ProjectMonetary, ProjectTimestamp } from '@/hooks/api/useProjectsApi';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -28,6 +28,7 @@ import { getStatusString } from '@/constants/chesNotificationStatus';
 import { MonetaryType } from '@/constants/monetaryTypes';
 import BaseDialog from '../dialog/BaseDialog';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
+import useAgencyOptions from '@/hooks/useAgencyOptions';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -39,7 +40,7 @@ interface IProjectGeneralInfoDialog {
 export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   const { open, postSubmit, onCancel, initialValues } = props;
   const api = usePimsApi();
-  const { data: lookupData } = useContext(LookupContext);
+  const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.projects.updateProject);
   const [approvedStatus, setApprovedStatus] = useState<number>(null);
   const projectFormMethods = useForm({
@@ -79,6 +80,27 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
       RiskId: initialValues?.RiskId,
     });
   }, [initialValues]);
+  const { agencyOptions } = useAgencyOptions();
+
+  // When the agency is already disabled, it won't show up in the select options otherwise.
+  // We add this to the options if it's not already there.
+  const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAgencyOptions = [...agencyOptions];
+    const startingAgency: Agency = getLookupValueById('Agencies', initialValues?.AgencyId);
+    const parentAgency: Agency = getLookupValueById('Agencies', startingAgency?.ParentId);
+    if (
+      startingAgency &&
+      (startingAgency.IsDisabled || parentAgency?.IsDisabled) &&
+      !manipulatedAgencyOptions.find((a) => a.value === startingAgency.Id)
+    ) {
+      manipulatedAgencyOptions.push({
+        label: startingAgency.Name,
+        value: startingAgency.Id,
+      });
+    }
+    // Don't sort these. Messes up the 2-tiered agency structure.
+    return manipulatedAgencyOptions;
+  }, [initialValues, agencyOptions]);
 
   const [statusTypes, setStatusTypes] = useState({
     Tasks: [],
@@ -198,6 +220,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
             value: st.Id,
             label: st.Name,
           }))}
+          agencyOptions={manipulatedAgencyOptions ?? []}
         />
         {initialValues && statusTypes.Tasks?.length > 0 && (
           <Box mt={'1rem'}>
@@ -456,7 +479,6 @@ export const ProjectPropertiesDialog = (props: IProjectPropertiesDialog) => {
 interface IProjectAgencyResponseDialog {
   initialValues: ProjectGet;
   open: boolean;
-  agencies: Agency[];
   options: ISelectMenuItem[];
   postSubmit: () => void;
   onCancel: () => void;
@@ -464,21 +486,23 @@ interface IProjectAgencyResponseDialog {
 
 export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog) => {
   const api = usePimsApi();
-  const { initialValues, open, postSubmit, onCancel, options, agencies } = props;
+  const { data: lookupData } = useContext(LookupContext);
+  const { activeAgencies } = useAgencyOptions();
+  const { initialValues, open, postSubmit, onCancel, options } = props;
   const { submit, submitting } = useDataSubmitter(api.projects.updateProjectWatch);
   const [rows, setRows] = useState([]);
   useEffect(() => {
-    if (initialValues && agencies) {
+    if (initialValues && lookupData?.Agencies) {
       setRows(
         initialValues.AgencyResponses?.map((resp) => ({
-          ...agencies.find((agc) => agc.Id === resp.AgencyId),
+          ...lookupData?.Agencies.find((agc) => agc.Id === resp.AgencyId),
           ReceivedOn: resp.ReceivedOn,
           Note: resp.Note,
           Response: enumReverseLookup(AgencyResponseType, resp.Response),
         })),
       );
     }
-  }, [initialValues, agencies]);
+  }, [initialValues, lookupData?.Agencies]);
   return (
     <ConfirmDialog
       dialogProps={{ maxWidth: 'lg' }}
@@ -500,7 +524,12 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
       onCancel={async () => onCancel()}
     >
       <Box paddingTop={'1rem'}>
-        <AgencySearchTable agencies={agencies} options={options} rows={rows} setRows={setRows} />
+        <AgencySearchTable
+          agencies={activeAgencies as Agency[]}
+          options={options}
+          rows={rows}
+          setRows={setRows}
+        />
       </Box>
     </ConfirmDialog>
   );

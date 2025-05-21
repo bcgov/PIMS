@@ -10,7 +10,7 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
+import { useAgencyOptions } from '@/hooks/useAgencyOptions';
 import { useParams } from 'react-router-dom';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
@@ -30,7 +30,7 @@ interface AgencyStatus extends Agency {
 const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { id } = useParams();
   const api = usePimsApi();
-  const { getLookupValueById } = useContext(LookupContext);
+  const { getLookupValueById, refreshLookup } = useContext(LookupContext);
 
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
   const [openNotificationsDialog, setOpenNotificationsDialog] = useState(false);
@@ -38,7 +38,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { data, refreshData, isLoading } = useDataLoader(() => api.agencies.getAgencyById(+id));
   const { submit, submitting } = useDataSubmitter(api.agencies.updateAgencyById);
 
-  const { agencyOptions } = useGroupedAgenciesApi();
+  const { agencyOptions } = useAgencyOptions();
   const isParent = agencyOptions.some((agency) => agency.parentId === +id);
 
   const agencyStatusData = {
@@ -122,6 +122,26 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
     });
   }, [data]);
 
+  // When the parent agency is already disabled, it won't show up in the select options otherwise.
+  // We add this to the options if it's not already there. It only seems to apply while this page is up.
+  useEffect(() => {
+    const parentAgency = getLookupValueById('Agencies', data?.ParentId);
+    if (
+      parentAgency &&
+      parentAgency.IsDisabled &&
+      !agencyOptions.find((a) => a.value === parentAgency.Id)
+    ) {
+      agencyOptions.push({
+        label: parentAgency.Name,
+        value: parentAgency.Id,
+      });
+      // Not ideal to sort again here, but cases where agency is disabled are rare.
+      agencyOptions.sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
+      );
+    }
+  }, [data, agencyOptions]);
+
   return (
     <Box
       display={'flex'}
@@ -166,9 +186,12 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
               Name,
               Code,
               Description,
-            }).then(() => {
-              refreshData();
-              setOpenStatusDialog(false);
+            }).then((resp) => {
+              if (resp && resp.ok) {
+                refreshLookup(); // so current agency info is available
+                refreshData();
+                setOpenStatusDialog(false);
+              }
             });
           }
         }}

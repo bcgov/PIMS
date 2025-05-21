@@ -346,18 +346,18 @@ export const lookupAll = async (req: Request, res: Response) => {
       ParentId: true,
       SendEmail: true,
       Email: true,
+      IsDisabled: true,
     },
     order: { SortOrder: 'asc', Name: 'asc' },
-    where: { IsDisabled: false },
   });
   const AdministrativeAreas = await AppDataSource.getRepository(AdministrativeArea).find({
     select: {
       Id: true,
       Name: true,
       RegionalDistrictId: true,
+      IsDisabled: true,
     },
     order: { SortOrder: 'asc', Name: 'asc' },
-    where: { IsDisabled: false },
   });
 
   const returnObj = {
@@ -383,6 +383,7 @@ export const lookupAll = async (req: Request, res: Response) => {
         Code: a.Code,
         ParentId: a.ParentId,
         SendEmail: Boolean(a.SendEmail && a.Email && a.Email.length),
+        IsDisabled: a.IsDisabled,
       })),
     AdministrativeAreas,
     RegionalDistricts: (await RegionalDistricts).sort((a, b) =>

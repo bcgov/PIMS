@@ -9,7 +9,7 @@ import { Parcel, ParcelEvaluation, ParcelFiscal } from '@/hooks/api/useParcelsAp
 import usePimsApi from '@/hooks/usePimsApi';
 import { Box } from '@mui/material';
 import dayjs from 'dayjs';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import ConfirmDialog from '../dialog/ConfirmDialog';
 import {
@@ -25,6 +25,9 @@ import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
 import useUserAgencies from '@/hooks/api/useUserAgencies';
+import useAdministrativeAreaOptions from '@/hooks/useAdministrativeAreaOptions';
+import { ISelectMenuItem } from '@/components/form/SelectFormField';
+import { Agency } from '@/hooks/api/useAgencyApi';
 
 interface IParcelInformationEditDialog {
   initialValues: Parcel;
@@ -38,7 +41,8 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
 
   const api = usePimsApi();
   const { menuItems: agencyOptions } = useUserAgencies();
-  const { data: lookupData } = useContext(LookupContext);
+  const { adminAreaOptions } = useAdministrativeAreaOptions();
+  const { data: lookupData, getLookupValueById } = useContext(LookupContext);
 
   const { submit, submitting } = useDataSubmitter(api.parcels.updateParcelById);
 
@@ -74,6 +78,49 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
     });
   }, [initialValues]);
 
+  // When the agency is already disabled, it won't show up in the select options otherwise.
+  // We add this to the options if it's not already there.
+  const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAgencyOptions = [...agencyOptions];
+    const startingAgency: Agency = getLookupValueById('Agencies', initialValues?.AgencyId);
+    const parentAgency: Agency = getLookupValueById('Agencies', startingAgency?.ParentId);
+    if (
+      startingAgency &&
+      (startingAgency.IsDisabled || parentAgency?.IsDisabled) &&
+      !manipulatedAgencyOptions.find((a) => a.value === startingAgency.Id)
+    ) {
+      manipulatedAgencyOptions.push({
+        label: startingAgency.Name,
+        value: startingAgency.Id,
+      });
+    }
+    // Don't sort these. Messes up the 2-tiered agency structure.
+    return manipulatedAgencyOptions;
+  }, [initialValues, agencyOptions]);
+
+  // Same issue with administrative areas
+  const manipulatedAdminAreaOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAdminAreaOptions = [...adminAreaOptions];
+    const startingAdminArea = getLookupValueById(
+      'AdministrativeAreas',
+      initialValues?.AdministrativeAreaId,
+    );
+    if (
+      startingAdminArea &&
+      startingAdminArea.IsDisabled &&
+      !manipulatedAdminAreaOptions.find((a) => a.value === startingAdminArea.Id)
+    ) {
+      manipulatedAdminAreaOptions.push({
+        label: startingAdminArea.Name,
+        value: startingAdminArea.Id,
+      });
+      manipulatedAdminAreaOptions.sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
+      );
+    }
+    return manipulatedAdminAreaOptions;
+  }, [initialValues, adminAreaOptions]);
+
   return (
     <ConfirmDialog
       title={'Edit Parcel Information'}
@@ -95,15 +142,10 @@ export const ParcelInformationEditDialog = (props: IParcelInformationEditDialog)
       <FormProvider {...infoFormMethods}>
         <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
           <GeneralInformationForm
-            agencies={agencyOptions ?? []}
+            agencies={manipulatedAgencyOptions ?? []}
             propertyType={'Parcel'}
             defaultLocationValue={initialValues?.Location}
-            adminAreas={
-              lookupData?.AdministrativeAreas?.map((admin) => ({
-                label: admin.Name,
-                value: admin.Id,
-              })) ?? []
-            }
+            adminAreas={manipulatedAdminAreaOptions ?? []}
           />
           <ParcelInformationForm
             classificationOptions={
@@ -129,7 +171,8 @@ interface IBuildingInformationEditDialog {
 export const BuildingInformationEditDialog = (props: IBuildingInformationEditDialog) => {
   const api = usePimsApi();
   const { menuItems: agencyOptions } = useUserAgencies();
-  const { data: lookupData } = useContext(LookupContext);
+  const { adminAreaOptions } = useAdministrativeAreaOptions();
+  const { data: lookupData, getLookupValueById } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.buildings.updateBuildingById);
 
   const { initialValues, open, onCancel, postSubmit } = props;
@@ -180,6 +223,48 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
     });
   }, [initialValues]);
 
+  // When the agency is already disabled, it won't show up in the select options otherwise.
+  // We add this to the options if it's not already there.
+  const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAgencyOptions = [...agencyOptions];
+    const startingAgency = getLookupValueById('Agencies', initialValues?.AgencyId);
+    if (
+      startingAgency &&
+      startingAgency.IsDisabled &&
+      !manipulatedAgencyOptions.find((a) => a.value === startingAgency.Id)
+    ) {
+      manipulatedAgencyOptions.push({
+        label: startingAgency.Name,
+        value: startingAgency.Id,
+      });
+    }
+    // Don't sort these. Messes up the 2-tiered agency structure.
+    return manipulatedAgencyOptions;
+  }, [initialValues, agencyOptions]);
+
+  // Same issue with administrative areas
+  const manipulatedAdminAreaOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAdminAreaOptions = [...adminAreaOptions];
+    const startingAdminArea = getLookupValueById(
+      'AdministrativeAreas',
+      initialValues?.AdministrativeAreaId,
+    );
+    if (
+      startingAdminArea &&
+      startingAdminArea.IsDisabled &&
+      !manipulatedAdminAreaOptions.find((a) => a.value === startingAdminArea.Id)
+    ) {
+      manipulatedAdminAreaOptions.push({
+        label: startingAdminArea.Name,
+        value: startingAdminArea.Id,
+      });
+      manipulatedAdminAreaOptions.sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
+      );
+    }
+    return manipulatedAdminAreaOptions;
+  }, [initialValues, adminAreaOptions]);
+
   return (
     <ConfirmDialog
       title={'Edit Building Information'}
@@ -203,15 +288,10 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
       <FormProvider {...infoFormMethods}>
         <Box display={'flex'} flexDirection={'column'} gap={'1rem'}>
           <GeneralInformationForm
-            agencies={agencyOptions}
+            agencies={manipulatedAgencyOptions}
             propertyType={'Building'}
             defaultLocationValue={initialValues?.Location}
-            adminAreas={
-              lookupData?.AdministrativeAreas.map((admin) => ({
-                label: admin.Name,
-                value: admin.Id,
-              })) ?? []
-            }
+            adminAreas={manipulatedAdminAreaOptions ?? []}
           />
           <BuildingInformationForm
             classificationOptions={lookupData?.Classifications as Classification[]}

@@ -4,13 +4,19 @@ import { useContext, useEffect, useMemo } from 'react';
 import useDataLoader from '../useDataLoader';
 import { UserContext } from '@/contexts/userContext';
 import usePimsApi from '../usePimsApi';
-import useGroupedAgenciesApi from './useGroupedAgenciesApi';
+import useAgencyOptions from '../useAgencyOptions';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
+import { LookupContext } from '@/contexts/lookupContext';
 
+/**
+ * @description Custom hook to fetch and manage agencies and agency options depending on a user's current agency and role.
+ * @returns A hook containing the menu items and user agencies.
+ */
 const useUserAgencies = () => {
   const { pimsUser } = useContext(UserContext);
+  const { data: lookupData } = useContext(LookupContext);
   const sso = useSSO();
-  const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
+  const { agencyOptions } = useAgencyOptions();
   const api = usePimsApi();
   const isAdmin = pimsUser?.hasOneOfRoles([Roles.ADMIN]);
   const { data: userAgencies, refreshData: refreshUserAgencies } = useDataLoader(() =>
@@ -22,12 +28,12 @@ const useUserAgencies = () => {
   }, [sso]);
 
   const userAgencyObjects = useMemo(() => {
-    if (ungroupedAgencies && userAgencies) {
-      return ungroupedAgencies.filter((a) => userAgencies.includes(a.Id));
+    if (lookupData?.Agencies && userAgencies) {
+      return lookupData?.Agencies.filter((a) => userAgencies.includes(a.Id));
     } else {
       return [];
     }
-  }, [ungroupedAgencies, userAgencies]);
+  }, [lookupData?.Agencies, userAgencies]);
 
   const menuItems: ISelectMenuItem[] = useMemo(() => {
     if (isAdmin) {

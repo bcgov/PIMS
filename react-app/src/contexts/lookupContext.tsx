@@ -8,6 +8,7 @@ import React, { createContext, useCallback, useMemo } from 'react';
 type LookupContextValue = {
   data: LookupAll | undefined;
   getLookupValueById: (a: keyof LookupAll, b: number) => any | undefined;
+  refreshLookup: () => void;
 };
 export const LookupContext = createContext<LookupContextValue>(undefined);
 
@@ -19,7 +20,7 @@ export const LookupContext = createContext<LookupContextValue>(undefined);
  */
 export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) => {
   const api = usePimsApi();
-  const { data, loadOnce, isLoading } = useDataLoader(api.lookup.getAll);
+  const { data, loadOnce, isLoading, refreshData } = useDataLoader(api.lookup.getAll);
   const sso = useSSO();
   if (!data && sso.isAuthenticated) {
     loadOnce();
@@ -46,7 +47,7 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
   // Retrieves record from lookupTables based on table name and record Id.
   const getLookupValueById = useCallback(
     (tableName: keyof LookupAll, id: number) => {
-      if (lookupTables === undefined) {
+      if (lookupTables === undefined || id == null) {
         return undefined;
       } else {
         return lookupTables[tableName][id];
@@ -55,7 +56,7 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
     [data],
   );
 
-  const contextValue = { data, getLookupValueById };
+  const contextValue = { data, getLookupValueById, refreshLookup: refreshData };
   if (isLoading) return <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%' }} />;
   return <LookupContext.Provider value={contextValue}>{props.children}</LookupContext.Provider>;
 };

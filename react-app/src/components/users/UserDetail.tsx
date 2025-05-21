@@ -12,12 +12,13 @@ import { UserContext } from '@/contexts/userContext';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
+import { useAgencyOptions } from '@/hooks/useAgencyOptions';
 import { useParams } from 'react-router-dom';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { Role, Roles } from '@/constants/roles';
 import { LookupContext } from '@/contexts/lookupContext';
 import { getProvider, validateEmail } from '@/utilities/helperFunctions';
+import { ISelectMenuItem } from '@/components/form/SelectFormField';
 
 interface IUserDetail {
   onClose: () => void;
@@ -39,7 +40,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
   const { data, refreshData, isLoading } = useDataLoader(() => api.users.getUserById(id));
   const { submit, submitting } = useDataSubmitter(api.users.updateUser);
 
-  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  const agencyOptions = useAgencyOptions().agencyOptions;
 
   const rolesOptions = useMemo(
     () => lookupData?.Roles?.map((role) => ({ label: role.Name, value: role.Name })) ?? [],
@@ -121,6 +122,26 @@ const UserDetail = ({ onClose }: IUserDetail) => {
     });
   }, [data]);
 
+  // When the agency is already disabled, it won't show up in the select options otherwise.
+  // We add this to the options if it's not already there.
+  const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAgencyOptions = [...agencyOptions];
+    const startingAgency: Agency = getLookupValueById('Agencies', userProfileData?.Agency?.Id);
+    const parentAgency: Agency = getLookupValueById('Agencies', startingAgency?.ParentId);
+    if (
+      startingAgency &&
+      (startingAgency.IsDisabled || parentAgency?.IsDisabled) &&
+      !manipulatedAgencyOptions.find((a) => a.value === startingAgency.Id)
+    ) {
+      manipulatedAgencyOptions.push({
+        label: startingAgency.Name,
+        value: startingAgency.Id,
+      });
+    }
+    // Don't sort these. Messes up the 2-tiered agency structure.
+    return manipulatedAgencyOptions;
+  }, [userProfileData, agencyOptions]);
+
   return (
     <Box
       display={'flex'}
@@ -200,7 +221,7 @@ const UserDetail = ({ onClose }: IUserDetail) => {
                 allowNestedIndent
                 name={'AgencyId'}
                 label={'Agency'}
-                options={agencyOptions}
+                options={manipulatedAgencyOptions}
                 disableClearable={false}
               />
             </Grid>
