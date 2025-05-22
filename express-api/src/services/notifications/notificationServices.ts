@@ -19,7 +19,6 @@ import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse'
 import logger from '@/utilities/winstonLogger';
 import getConfig from '@/constants/config';
 import { getDaysBetween } from '@/utilities/helperFunctions';
-import { PimsRequestUser } from '@/middleware/userAuthCheck';
 
 export interface AccessRequestData {
   FirstName: string;
@@ -386,7 +385,7 @@ const generateProjectNotifications = async (
  */
 const sendNotification = async (
   notification: NotificationQueue,
-  user: User,
+  user?: User,
   queryRunner?: QueryRunner,
 ) => {
   const query = queryRunner ?? AppDataSource.createQueryRunner();
@@ -767,10 +766,7 @@ const resendNotificationWithNewProperties = async (
   if (postCancelNotification.Status === NotificationStatus.Cancelled) {
     // Cancelled successfully, then requeue with new properties
     if (requeue) {
-      const newNotif = await sendNotification(
-        { ...notif, ...newProperties },
-        system as PimsRequestUser,
-      );
+      const newNotif = await sendNotification({ ...notif, ...newProperties });
       if (newNotif.Status === NotificationStatus.Failed) {
         const error = `resendNotificationWithNewProperties: Failed to requeue notification Id ${newNotif.Id} (originally ${notif.Id}).`;
         logger.error(error);
