@@ -191,6 +191,7 @@ export const BuildingInformationEditDialog = (props: IBuildingInformationEditDia
           const formValues: any = { ...infoFormMethods.getValues(), Id: initialValues.Id };
           formValues.PID = parseIntOrNull(formValues.PID.replace(/-/g, ''));
           formValues.PIN = parseIntOrNull(formValues.PIN);
+          formValues.Postal = formValues.Postal?.replace(/ /g, '').toUpperCase();
           formValues.TotalArea = parseFloatOrNull(formValues.TotalArea);
           formValues.RentableArea = parseFloatOrNull(formValues.RentableArea);
           formValues.BuildingTenancyUpdatedOn =

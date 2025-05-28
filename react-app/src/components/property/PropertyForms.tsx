@@ -251,10 +251,11 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
             name={'Postal'}
             label={'Postal code'}
             rules={{
+              // Order matters here. If the first condition is true, the second will not be checked.
               validate: (val) =>
+                !!String(val).replace(/ /g, '').match(postalRegex) ||
                 val === null ||
                 val.length === 0 ||
-                !!String(val).replace(/ /g, '').match(postalRegex) ||
                 'Should be a valid postal code or left blank.',
             }}
           />
