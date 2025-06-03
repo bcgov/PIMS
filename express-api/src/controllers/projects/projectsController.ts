@@ -164,27 +164,26 @@ export const getProjects = async (req: Request, res: Response) => {
     const usersAgencies = await userServices.getAgencies(user.Username);
     filterResult.agencyId = usersAgencies;
   }
-  // Get projects associated with agencies of the requesting user
-  const filterPrivateNotes = async (notes: ProjectNote[]) => {
-    const privateNoteType = await AppDataSource.getRepository(NoteType).findOne({
-      where: { Name: 'Private' },
-    });
-    if (privateNoteType) {
-      return notes.filter((note: ProjectNote) => note.NoteTypeId !== privateNoteType.Id);
-    } else {
-      logger.error('filterPrivateNotes: Private note type not found.');
-      return notes;
-    }
-  };
 
   if (forExcelExport) {
     const projects = await projectServices.getProjectsForExport(filterResult as ProjectFilter);
     // If the user is not an admin, filter out notes with Private type
     if (!isAdmin) {
-      const promises = projects.map(async (project) => {
-        project.Notes = await filterPrivateNotes(project.Notes);
+      const privateNoteType = await AppDataSource.getRepository(NoteType).findOne({
+        where: { Name: 'Private' },
       });
-      await Promise.all(promises);
+      // If private notes aren't found, skip filtering.
+      if (!privateNoteType) {
+        logger.warn('Controller getProjects: Private note type not found.');
+      } else {
+        await Promise.all(
+          projects.map(async (project) => {
+            project.Notes = project.Notes.filter(
+              (note: ProjectNote) => note.NoteTypeId !== privateNoteType.Id,
+            );
+          }),
+        );
+      }
     }
     return res.status(200).send(projects);
   } else {

@@ -13,6 +13,7 @@ import {
   produceProjectProperty,
   produceAgencyResponse,
   produceNotificationQueue,
+  produceNote,
 } from '../../../testUtils/factories';
 import { AppDataSource } from '@/appDataSource';
 import { z } from 'zod';
@@ -25,6 +26,7 @@ import { faker } from '@faker-js/faker';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import { User } from '@/typeorm/Entities/User';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
+import { NoteType } from '@/typeorm/Entities/NoteType';
 
 const agencyRepo = AppDataSource.getRepository(Agency);
 
@@ -168,12 +170,63 @@ describe('UNIT - Testing controllers for users routes.', () => {
       expect(_getProjectsForExport).toHaveBeenCalledTimes(1);
     });
 
+    it('should filter out private notes in excel export if not an admin', async () => {
+      // Mock an admin user
+      const { mockReq, mockRes } = getRequestHandlerMocks();
+      mockRequest = mockReq;
+      mockRequest.query.excelExport = 'true';
+      mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER, hasOneOfRoles: () => false });
+      mockResponse = mockRes;
+      jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
+        success: true,
+        data: {
+          projectNumber: '123',
+          name: 'Project Name',
+          statusId: 1,
+          agencyId: [1, 2],
+          page: 1,
+          quantity: 10,
+          sortOrder: 'asc',
+          sortKey: 'ProjectNumber',
+        },
+      });
+      const keptNote = produceNote({ NoteTypeId: 1, Note: 'Public Note' });
+      const discardedNote = produceNote({ NoteTypeId: 2, Note: 'Private Note' });
+      const originalProject = produceProject({ Notes: [keptNote, discardedNote] });
+      _getProjectsForExport.mockResolvedValueOnce([originalProject]);
+      jest.spyOn(AppDataSource.getRepository(NoteType), 'findOne').mockResolvedValueOnce({
+        Id: 2,
+        Name: 'Private',
+        IsDisabled: false,
+        StatusId: 1,
+        SortOrder: 1,
+        Description: '',
+        IsOptional: false,
+        Status: null,
+        CreatedById: '00000000-0000-0000-0000-000000000000',
+        UpdatedById: '00000000-0000-0000-0000-000000000000',
+        CreatedOn: new Date(),
+        UpdatedOn: new Date(),
+        CreatedBy: null,
+        UpdatedBy: null,
+      } as NoteType);
+
+      // Call filterProjects controller function
+      await controllers.getProjects(mockRequest, mockResponse);
+
+      // Assert response status and content
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect((mockResponse.sendValue as Project[]).at(0).Notes).toHaveLength(1);
+      expect((mockResponse.sendValue as Project[]).at(0).Notes.at(0)).toEqual(keptNote);
+    });
+
     it('should return projects for a general user', async () => {
       // Mock an general user
       const { mockReq, mockRes } = getRequestHandlerMocks();
       mockRequest = mockReq;
       mockRequest.setUser({ client_roles: [Roles.GENERAL_USER] });
-      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER });
+      mockRequest.setPimsUser({ RoleId: Roles.GENERAL_USER, hasOneOfRoles: () => false });
       mockResponse = mockRes;
       jest.spyOn(ProjectFilterSchema, 'safeParse').mockReturnValueOnce({
         success: true,
@@ -220,18 +273,6 @@ describe('UNIT - Testing controllers for users routes.', () => {
         agencyId: [1],
       };
 
-      const result = ProjectFilterSchema.safeParse(validFilter);
-      expect(result.success).toBe(true);
-    });
-
-    it('should pass valid project filter', () => {
-      jest.spyOn(ProjectFilterSchema, 'safeParse').mockRestore();
-      const validFilter = {
-        projectNumber: '123',
-        name: 'Project Name',
-        statusId: 1,
-        agencyId: [1, 2],
-      };
       const result = ProjectFilterSchema.safeParse(validFilter);
       expect(result.success).toBe(true);
     });
