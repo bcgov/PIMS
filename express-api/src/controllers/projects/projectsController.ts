@@ -172,7 +172,7 @@ export const getProjects = async (req: Request, res: Response) => {
       const privateNoteType = await AppDataSource.getRepository(NoteType).findOne({
         where: { Name: 'Private' },
       });
-      // If private notes aren't found, skip filtering.
+      // If private note type doesn't exist, skip filtering.
       if (!privateNoteType) {
         logger.warn('Controller getProjects: Private note type not found.');
       } else {
