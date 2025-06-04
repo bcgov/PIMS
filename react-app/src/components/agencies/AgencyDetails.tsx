@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Checkbox, Chip, Grid, Typography } from '@mui/material';
 import { dateFormatter } from '@/utilities/formatters';
@@ -16,6 +16,7 @@ import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
+import { ISelectMenuItem } from '@/components/form/SelectFormField';
 
 interface IAgencyDetail {
   onClose: () => void;
@@ -123,23 +124,25 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   }, [data]);
 
   // When the parent agency is already disabled, it won't show up in the select options otherwise.
-  // We add this to the options if it's not already there. It only seems to apply while this page is up.
-  useEffect(() => {
+  // We add this to the options if it's not already there.
+  const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAgencyOptions = [...agencyOptions];
     const parentAgency = getLookupValueById('Agencies', data?.ParentId);
     if (
       parentAgency &&
       parentAgency.IsDisabled &&
-      !agencyOptions.find((a) => a.value === parentAgency.Id)
+      !manipulatedAgencyOptions.find((a) => a.value === parentAgency.Id)
     ) {
-      agencyOptions.push({
+      manipulatedAgencyOptions.push({
         label: parentAgency.Name,
         value: parentAgency.Id,
       });
       // Not ideal to sort again here, but cases where agency is disabled are rare.
-      agencyOptions.sort((a, b) =>
+      manipulatedAgencyOptions.sort((a, b) =>
         a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
       );
     }
+    return manipulatedAgencyOptions;
   }, [data, agencyOptions]);
 
   return (
@@ -220,7 +223,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                 label={'Parent Agency'}
                 // Only agencies that don't have a parent can be chosen.
                 // Set parent to false to avoid bold font.
-                options={agencyOptions
+                options={manipulatedAgencyOptions
                   .filter((agency) => agency.parentId == null)
                   .map((agency) => ({ ...agency, parent: false }))}
                 disableClearable={false}
@@ -228,7 +231,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                 disableOptionsFunction={
                   (option) =>
                     option.value === +id || // Can't assign to self
-                    agencyOptions
+                    manipulatedAgencyOptions
                       .find((parent) => parent.value === +id)
                       ?.children?.includes(option.value) // Can't assign to current children
                 }
