@@ -9,6 +9,10 @@ import { Roles } from '@/constants/roles';
 import notificationServices from '@/services/notifications/notificationServices';
 import { exposedProjectStatuses } from '@/constants/projectStatus';
 import { ProjectAgencyResponseSchema } from '@/services/projects/projectAgencyResponseSchema';
+import { ProjectNote } from '@/typeorm/Entities/ProjectNote';
+import { NoteType } from '@/typeorm/Entities/NoteType';
+import { AppDataSource } from '@/appDataSource';
+import logger from '@/utilities/winstonLogger';
 
 /**
  * @description Get disposal project by either the numeric id or projectNumber.
@@ -160,11 +164,33 @@ export const getProjects = async (req: Request, res: Response) => {
     const usersAgencies = await userServices.getAgencies(user.Username);
     filterResult.agencyId = usersAgencies;
   }
-  // Get projects associated with agencies of the requesting user
-  const projects = forExcelExport
-    ? await projectServices.getProjectsForExport(filterResult as ProjectFilter)
-    : await projectServices.getProjects(filterResult as ProjectFilter);
-  return res.status(200).send(projects);
+
+  if (forExcelExport) {
+    const projects = await projectServices.getProjectsForExport(filterResult as ProjectFilter);
+    // If the user is not an admin, filter out notes with Private type
+    if (!isAdmin) {
+      const privateNoteType = await AppDataSource.getRepository(NoteType).findOne({
+        where: { Name: 'Private' },
+      });
+      // If private note type doesn't exist, skip filtering.
+      if (!privateNoteType) {
+        logger.warn('Controller getProjects: Private note type not found.');
+      } else {
+        await Promise.all(
+          projects.map(async (project) => {
+            project.Notes = project.Notes.filter(
+              (note: ProjectNote) => note.NoteTypeId !== privateNoteType.Id,
+            );
+          }),
+        );
+      }
+    }
+    return res.status(200).send(projects);
+  } else {
+    const projects = await projectServices.getProjects(filterResult as ProjectFilter);
+    // Notes are not returned in this case, so no need to filter them
+    return res.status(200).send(projects);
+  }
 };
 
 /**
