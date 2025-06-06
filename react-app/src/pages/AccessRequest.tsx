@@ -15,7 +15,7 @@ import { AccessRequest as AccessRequestType } from '@/hooks/api/useUsersApi';
 import { UserContext } from '@/contexts/userContext';
 import { Navigate } from 'react-router-dom';
 import TextFormField from '@/components/form/TextFormField';
-import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
+import { useAgencyOptions } from '@/hooks/useAgencyOptions';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { LookupContext } from '@/contexts/lookupContext';
 import { getProvider, validateEmail } from '@/utilities/helperFunctions';
@@ -43,7 +43,7 @@ const StatusPageTemplate = (props: StatusPageTemplateProps) => {
 
 const RequestForm = ({ submitHandler }: { submitHandler: (d: any) => void }) => {
   const sso = useSSO();
-  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  const agencyOptions = useAgencyOptions().agencyOptions;
   const lookup = useContext(LookupContext);
   const theme = useTheme();
 
