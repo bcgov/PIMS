@@ -3,11 +3,11 @@ import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/
-// This configuration is only relevant when running dev locally using Vite.
+// This configuration is only relevant when running dev locally using Vite or in development container.
 // Production build is handled by NGINX, which has its own settings.
 export default () => {
   const frontendPort: number = 3000;
-  const target = `http://localhost:5000`;
+  const target = process.env.CONTAINERIZED ? process.env.API_PROXY : `http://localhost:5000`;
 
   return defineConfig({
     plugins: [react(), tsconfigPaths()],
