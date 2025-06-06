@@ -165,10 +165,18 @@ export interface IEmailSentResponse {
  * Handles configurations for email sending, including setting 'from', 'bcc', 'cc', 'delayTS', 'to', based on the organization's settings.
  * Returns the response of sending the email if email sending is enabled, otherwise returns null.
  * @param email - The email details to be sent.
- * @param user - The SSO user information.
+ * @param user - Optional - The user information that triggered the email.
  * @returns A promise that resolves to the response of sending the email or null.
  */
-const sendEmailAsync = async (email: IEmail, user: User): Promise<IEmailSentResponse | null> => {
+const sendEmailAsync = async (email: IEmail, user?: User): Promise<IEmailSentResponse | null> => {
+  // NOTE: Never send an email to the system user. It will bounce back and notify the PO.
+  if (user?.Username === 'system') {
+    logger.error(
+      'Attempted to send email involving system user. This is not allowed. Leave user undefined instead.',
+    );
+    return null;
+  }
+
   const cfg = config();
   if (email == null) {
     throw new ErrorWithCode('Null argument for email.', 400);
@@ -176,15 +184,21 @@ const sendEmailAsync = async (email: IEmail, user: User): Promise<IEmailSentResp
 
   email.from = email.from ?? cfg.ches.defaultFrom;
 
-  if (cfg.ches.bccCurrentUser) {
-    email.bcc = [user.Email, ...(email.bcc ?? [])];
+  // Include the current user in BCC if specified in the configuration.
+  if (cfg.ches.bccCurrentUser && user?.Email) {
+    email.bcc = email.bcc ?? []; // Make sure bcc is initialized
+    email.bcc.push(user.Email);
   }
+
+  // Apply default users to BCC if specified in the configuration.
   if (cfg.ches.usersToBcc && typeof cfg.ches.usersToBcc === 'string') {
     email.bcc = [
       ...(email.bcc ?? []),
       ...(cfg.ches.usersToBcc?.split(';').map((email) => email.trim()) ?? []),
     ];
   }
+
+  // If a default delay is set, apply that to the email.
   if (cfg.ches.secondsToDelay) {
     const numSeconds = parseInt(cfg.ches.secondsToDelay);
     if (!isNaN(numSeconds)) {
@@ -194,14 +208,26 @@ const sendEmailAsync = async (email: IEmail, user: User): Promise<IEmailSentResp
       email.delayTS += Number(cfg.ches.secondsToDelay);
     }
   }
+
+  // This section for local development and DEV/TEST environments only.
+  // Prevents emails from being sent to the anyone but override or current testing user.
   if (cfg.ches.overrideTo || !cfg.ches.sendToLive) {
-    email.to = cfg.ches.overrideTo
-      ? cfg.ches.overrideTo.split(';').map((email) => email.trim())
-      : [user.Email];
-    email.cc = email.cc?.length ? [user.Email] : [];
+    logger.warn(
+      'OverrideTo or SendToLive is set. Emails will be sent to overrideTo or current user only.',
+    );
+    if (cfg.ches.overrideTo) {
+      email.to = cfg.ches.overrideTo.split(';').map((email) => email.trim());
+    } else if (user?.Email) {
+      email.to = [user.Email];
+    } else {
+      logger.error('No overrideTo or user provided. Cannot send notification.');
+      return null;
+    }
+    email.cc = [];
     email.bcc = [];
   }
 
+  // Filter out any unintended falsy values from the email fields.
   email.to = email.to?.filter((a) => !!a);
   email.cc = email.cc?.filter((a) => !!a);
   email.bcc = email.bcc?.filter((a) => !!a);

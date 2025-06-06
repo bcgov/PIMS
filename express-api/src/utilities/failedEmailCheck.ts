@@ -9,7 +9,6 @@ import { IsNull, LessThan, Not } from 'typeorm';
 import nunjucks from 'nunjucks';
 import getConfig from '@/constants/config';
 import chesServices, { EmailBody, IEmail } from '@/services/ches/chesServices';
-import { PimsRequestUser } from '@/middleware/userAuthCheck';
 import { Project } from '@/typeorm/Entities/Project';
 import networking from '@/constants/networking';
 
@@ -75,7 +74,7 @@ const failedEmailCheck = async () => {
         subject: 'PIMS Notifications Warning',
         body: emailBody,
       };
-      const sendResult = await chesServices.sendEmailAsync(email, system as PimsRequestUser);
+      const sendResult = await chesServices.sendEmailAsync(email);
       // If the email fails to send, throw an error for logging purposes.
       if (sendResult == null) {
         throw new Error('Email was attempted but not sent. This feature could be disabled.');
