@@ -37,7 +37,7 @@ services:
   ####################### Postgres #######################
   postgres:
     container_name: postgres
-    image: postgres:15.7
+    image: postgres:17.5
     restart: unless-stopped
     env_file:
       - .env
