@@ -273,7 +273,7 @@ const PropertyDetail = (props: IPropertyDetail) => {
       info.Tenancy = (data as Building)?.BuildingTenancy;
       info.TenancyDate = dateFormatter((data as Building)?.BuildingTenancyUpdatedOn);
     } else {
-      info.LandArea = (data as Parcel)?.LandArea;
+      info.LandArea = (data as Parcel)?.LandArea ?? '0';
     }
     return info;
   }, [parcel, building, getLookupValueById]);

@@ -12,7 +12,7 @@ import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 
 const AddAdministrativeArea = () => {
   const api = usePimsApi();
-  const { data: lookupData } = useContext(LookupContext);
+  const { data: lookupData, refreshLookup } = useContext(LookupContext);
   const { submit, submitting } = useDataSubmitter(api.administrativeAreas.addAdministrativeArea);
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const formMethods = useForm({
@@ -68,7 +68,10 @@ const AddAdministrativeArea = () => {
                 IsDisabled: false,
                 ProvinceId: 'BC',
               }).then((resp) => {
-                if (resp && resp.ok) goToFromStateOrSetRoute('/admin/adminAreas');
+                if (resp && resp.ok) {
+                  refreshLookup();
+                  goToFromStateOrSetRoute('/admin/adminAreas');
+                }
               });
             } else {
               console.log('Error!');
