@@ -38,7 +38,7 @@ import {
 } from './ProjectDialog';
 import { AgencySimpleTable } from './AgencyResponseSearchTable';
 import CollapsibleSidebar from '../layout/CollapsibleSidebar';
-import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import useAgencyOptions from '@/hooks/useAgencyOptions';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 import { AgencyResponseType } from '@/constants/agencyResponseTypes';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
@@ -81,9 +81,9 @@ const ProjectDetail = (props: IProjectDetail) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { pimsUser } = useContext(UserContext);
-  const lookup = useContext(LookupContext);
   const api = usePimsApi();
   const { data: lookupData, getLookupValueById } = useContext(LookupContext);
+  const { agencyOptions } = useAgencyOptions();
   const { data, refreshData, isLoading } = useDataLoader(() =>
     api.projects.getProjectById(Number(id)),
   );
@@ -139,7 +139,6 @@ const ProjectDetail = (props: IProjectDetail) => {
     }
   }, [data]);
 
-  const { ungroupedAgencies, agencyOptions } = useGroupedAgenciesApi();
   interface IStatusHistoryStruct {
     Notes: Array<ProjectNote & { Name: string }>;
     Tasks: Array<ProjectTask & { Name: string }>;
@@ -426,9 +425,9 @@ const ProjectDetail = (props: IProjectDetail) => {
                   },
                 }}
                 rows={
-                  data?.parsedBody.AgencyResponses && ungroupedAgencies
+                  data?.parsedBody.AgencyResponses && lookupData?.Agencies
                     ? (data?.parsedBody.AgencyResponses?.map((resp) => ({
-                        ...ungroupedAgencies?.find((agc) => agc.Id === resp.AgencyId),
+                        ...lookupData?.Agencies?.find((agc) => agc.Id === resp.AgencyId),
                         ReceivedOn: resp.ReceivedOn,
                         Note: resp.Note,
                         Response: enumReverseLookup(AgencyResponseType, resp.Response),
@@ -524,7 +523,7 @@ const ProjectDetail = (props: IProjectDetail) => {
                 rows={
                   notifications?.items
                     ? notifications.items.map((resp) => ({
-                        AgencyName: lookup.getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
+                        AgencyName: getLookupValueById('Agencies', resp.ToAgencyId)?.Name,
                         ChesStatusName: getStatusString(resp.Status),
                         ...resp,
                       }))
@@ -581,7 +580,6 @@ const ProjectDetail = (props: IProjectDetail) => {
           onCancel={() => setOpenDisposalPropDialog(false)}
         />
         <ProjectAgencyResponseDialog
-          agencies={ungroupedAgencies as Agency[]}
           options={agencyOptions}
           initialValues={data?.parsedBody}
           open={openAgencyInterestDialog}
@@ -595,7 +593,7 @@ const ProjectDetail = (props: IProjectDetail) => {
           }}
         />
         <ProjectNotificationDialog
-          ungroupedAgencies={ungroupedAgencies as Agency[]}
+          ungroupedAgencies={lookupData?.Agencies as Agency[]}
           initialValues={notifications?.items ?? []}
           open={openNotificationDialog}
           onRowCancelClick={(id: number) =>
