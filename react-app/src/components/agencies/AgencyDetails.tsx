@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import DataCard from '../display/DataCard';
 import { Box, Checkbox, Chip, Grid, Typography } from '@mui/material';
 import { dateFormatter } from '@/utilities/formatters';
@@ -10,12 +10,13 @@ import useDataLoader from '@/hooks/useDataLoader';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import TextFormField from '../form/TextFormField';
 import DetailViewNavigation from '../display/DetailViewNavigation';
-import { useGroupedAgenciesApi } from '@/hooks/api/useGroupedAgenciesApi';
+import { useAgencyOptions } from '@/hooks/useAgencyOptions';
 import { useParams } from 'react-router-dom';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LookupContext } from '@/contexts/lookupContext';
+import { ISelectMenuItem } from '@/components/form/SelectFormField';
 
 interface IAgencyDetail {
   onClose: () => void;
@@ -30,7 +31,7 @@ interface AgencyStatus extends Agency {
 const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { id } = useParams();
   const api = usePimsApi();
-  const { getLookupValueById } = useContext(LookupContext);
+  const { getLookupValueById, refreshLookup } = useContext(LookupContext);
 
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
   const [openNotificationsDialog, setOpenNotificationsDialog] = useState(false);
@@ -38,7 +39,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
   const { data, refreshData, isLoading } = useDataLoader(() => api.agencies.getAgencyById(+id));
   const { submit, submitting } = useDataSubmitter(api.agencies.updateAgencyById);
 
-  const { agencyOptions } = useGroupedAgenciesApi();
+  const { agencyOptions } = useAgencyOptions();
   const isParent = agencyOptions.some((agency) => agency.parentId === +id);
 
   const agencyStatusData = {
@@ -122,6 +123,28 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
     });
   }, [data]);
 
+  // When the parent agency is already disabled, it won't show up in the select options otherwise.
+  // We add this to the options if it's not already there.
+  const manipulatedAgencyOptions: ISelectMenuItem[] = useMemo(() => {
+    const manipulatedAgencyOptions = [...agencyOptions];
+    const parentAgency = getLookupValueById('Agencies', data?.ParentId);
+    if (
+      parentAgency &&
+      parentAgency.IsDisabled &&
+      !manipulatedAgencyOptions.find((a) => a.value === parentAgency.Id)
+    ) {
+      manipulatedAgencyOptions.push({
+        label: parentAgency.Name,
+        value: parentAgency.Id,
+      });
+      // Not ideal to sort again here, but cases where agency is disabled are rare.
+      manipulatedAgencyOptions.sort((a, b) =>
+        a.label.localeCompare(b.label, undefined, { numeric: true, sensitivity: 'base' }),
+      );
+    }
+    return manipulatedAgencyOptions;
+  }, [data, agencyOptions]);
+
   return (
     <Box
       display={'flex'}
@@ -166,9 +189,12 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
               Name,
               Code,
               Description,
-            }).then(() => {
-              refreshData();
-              setOpenStatusDialog(false);
+            }).then((resp) => {
+              if (resp && resp.ok) {
+                refreshLookup(); // so current agency info is available
+                refreshData();
+                setOpenStatusDialog(false);
+              }
             });
           }
         }}
@@ -197,7 +223,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                 label={'Parent Agency'}
                 // Only agencies that don't have a parent can be chosen.
                 // Set parent to false to avoid bold font.
-                options={agencyOptions
+                options={manipulatedAgencyOptions
                   .filter((agency) => agency.parentId == null)
                   .map((agency) => ({ ...agency, parent: false }))}
                 disableClearable={false}
@@ -205,7 +231,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
                 disableOptionsFunction={
                   (option) =>
                     option.value === +id || // Can't assign to self
-                    agencyOptions
+                    manipulatedAgencyOptions
                       .find((parent) => parent.value === +id)
                       ?.children?.includes(option.value) // Can't assign to current children
                 }
