@@ -28,6 +28,7 @@ import { LookupContext } from '@/contexts/lookupContext';
 import { Classification } from '@/hooks/api/useLookupApi';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 import useUserAgencies from '@/hooks/api/useUserAgencies';
+import useAdministrativeAreaOptions from '@/hooks/useAdministrativeAreaOptions';
 
 const AddProperty = () => {
   //const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
@@ -35,6 +36,7 @@ const AddProperty = () => {
   const [showErrorText, setShowErrorText] = useState(false);
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const api = usePimsApi();
+  const { adminAreaOptions } = useAdministrativeAreaOptions();
   const { data: lookupData } = useContext(LookupContext);
   const { submit: submitParcel, submitting: submittingParcel } = useDataSubmitter(
     api.parcels.addParcel,
@@ -115,10 +117,7 @@ const AddProperty = () => {
           agencies={agencyOptions}
           defaultLocationValue={undefined}
           propertyType={propertyType}
-          adminAreas={
-            lookupData?.AdministrativeAreas.map((area) => ({ label: area.Name, value: area.Id })) ??
-            []
-          }
+          adminAreas={adminAreaOptions ?? []}
         />
         {propertyType === 'Parcel' ? (
           <ParcelInformationForm

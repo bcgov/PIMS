@@ -1,10 +1,10 @@
 import TextFormField from '@/components/form/TextFormField';
 import { Box, Grid, Typography } from '@mui/material';
 import { FormProvider, useForm } from 'react-hook-form';
-import React from 'react';
+import React, { useContext } from 'react';
 import AutocompleteFormField from '@/components/form/AutocompleteFormField';
 import usePimsApi from '@/hooks/usePimsApi';
-import useGroupedAgenciesApi from '@/hooks/api/useGroupedAgenciesApi';
+import useAgencyOptions from '@/hooks/useAgencyOptions';
 import EmailChipFormField from '@/components/form/EmailChipFormField';
 import SingleSelectBoxFormField from '@/components/form/SingleSelectBoxFormField';
 import { NavigateBackButton } from '@/components/display/DetailViewNavigation';
@@ -12,12 +12,14 @@ import { AgencyAdd } from '@/hooks/api/useAgencyApi';
 import useDataSubmitter from '@/hooks/useDataSubmitter';
 import { LoadingButton } from '@mui/lab';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
+import { LookupContext } from '@/contexts/lookupContext';
 
 const AddAgency = () => {
   const api = usePimsApi();
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
   const { submit, submitting } = useDataSubmitter(api.agencies.addAgency);
-  const agencyOptions = useGroupedAgenciesApi().agencyOptions;
+  const { agencyOptions } = useAgencyOptions();
+  const { refreshLookup } = useContext(LookupContext);
 
   const formMethods = useForm({
     defaultValues: {
@@ -118,7 +120,10 @@ const AddAgency = () => {
               SortOrder: 0,
             };
             submit(newAgency).then((res) => {
-              if (res && res.ok) goToFromStateOrSetRoute('/admin/agencies');
+              if (res && res.ok) {
+                refreshLookup(); // Refresh lookup data so this new agency is included
+                goToFromStateOrSetRoute('/admin/agencies');
+              }
             });
           }
         }}
