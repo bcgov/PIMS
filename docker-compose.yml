@@ -77,7 +77,7 @@ services:
       - CHOKIDAR_USEPOLLING=true # Enable polling for Vite/React dev servers
       - FAST_REFRESH=true # Ensure fast refresh is enabled
     env_file: .env
-    command: npm run dev
+    command: sh -c "npm install && npm run dev"
     networks:
       - pims
   
@@ -96,7 +96,7 @@ services:
       - POSTGRES_PORT=5432 # Must be for internal network
       - CHOKIDAR_USEPOLLING=true
     env_file: .env
-    command: npx nodemon --exec ts-node -r tsconfig-paths/register ./src/server.ts
+    command: sh -c "npm install && npx nodemon --exec ts-node -r tsconfig-paths/register ./src/server.ts"
     networks:
       - pims
 
