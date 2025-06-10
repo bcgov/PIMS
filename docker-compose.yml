@@ -59,6 +59,49 @@ services:
     networks:
       - pims
 
+####################### Hotloading Dev Containers #######################
+  pims-app-dev:
+    tty: true
+    restart: "no"
+    image: node:22.9-bullseye-slim
+    container_name: pims-app-dev
+    volumes:
+      - ./react-app:/app
+      - app_node_modules:/app/node_modules # Use named volume to persist node_modules
+    working_dir: /app
+    ports:
+      - ${APP_HTTP_PORT:-3000}:3000
+    environment:
+      - CONTAINERIZED=true # So it targets container directly
+      - API_PROXY=http://pims-api-dev:5000 
+      - WATCHPACK_POLLING=true # Enable polling for file changes
+      - CHOKIDAR_USEPOLLING=true # Enable polling for Vite/React dev servers
+      - FAST_REFRESH=true # Ensure fast refresh is enabled
+    env_file: .env
+    command: sh -c "npm install && npm run dev"
+    networks:
+      - pims
+  
+  pims-api-dev:
+    tty: true
+    restart: "no"
+    image: node:22.9-bullseye-slim
+    container_name: pims-api-dev
+    volumes:
+      - ./express-api:/app
+      - api_node_modules:/app/node_modules # Use named volume to persist node_modules
+    working_dir: /app
+    ports:
+      - ${API_HTTP_PORT:-5000}:5000
+    environment:
+      - CONTAINERIZED=true # So it targets container directly
+      - POSTGRES_PORT=5432 # Must be for internal network
+      - CHOKIDAR_USEPOLLING=true
+    env_file: .env
+    command: sh -c "npm install && npx nodemon --exec ts-node -r tsconfig-paths/register ./src/server.ts"
+    networks:
+      - pims
+
 ####################### Networks Definition #######################
 networks:
   pims:
@@ -69,3 +112,7 @@ networks:
 volumes:
   postgres_data:
     name: postgres_data
+  app_node_modules:
+    name: app_node_modules
+  api_node_modules:
+    name: api_node_modules
