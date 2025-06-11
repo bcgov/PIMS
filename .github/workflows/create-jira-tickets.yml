@@ -29,11 +29,8 @@ jobs:
                   "https://api.github.com/repos/${{ github.repository }}/issues?state=open" | \
                   jq -r '.[] | select(.title == "express-api NPM Dependency Report") | .body')
                 
-                # Make sure content is JSON-safe by encoding it
-                ENCODED_API_CONTENT=$(echo "$API_CONTENT" | jq -sR .)
-                
-                # Store the encoded content
-                echo "API_CONTENT=$ENCODED_API_CONTENT" >> $GITHUB_ENV
+                # Store the content directly to a file for later use
+                echo "$API_CONTENT" > api_content.json
                 
                 echo "Found issue content for express-api NPM Dependency Report"
             
@@ -45,11 +42,8 @@ jobs:
                   "https://api.github.com/repos/${{ github.repository }}/issues?state=open" | \
                   jq -r '.[] | select(.title == "react-app NPM Dependency Report") | .body')
                 
-                # Make sure content is JSON-safe by encoding it
-                ENCODED_APP_CONTENT=$(echo "$APP_CONTENT" | jq -sR .)
-                
-                # Store the encoded content
-                echo "APP_CONTENT=$ENCODED_APP_CONTENT" >> $GITHUB_ENV
+                # Store the content directly to a file for later use
+                echo "$APP_CONTENT" > app_content.json
                 
                 echo "Found issue content for react-app NPM Dependency Report"
           
@@ -57,12 +51,8 @@ jobs:
             - name: Create JIRA Tickets
               run: |
                 # Create JIRA ticket for API issues
-                if [ -n "${{ env.API_CONTENT }}" ]; then
+                if [ -s api_content.json ]; then
                   echo "Sending API dependency report to Jira..."
-
-                  # Write the content to a temporary file using printf to avoid interpretation
-                  printf '%s' "${{ env.API_CONTENT }}" > api_content_encoded.txt
-                  cat api_content_encoded.txt | jq -r . > api_content.json
 
                   # Debug: check the content
                   echo "File size: $(wc -c api_content.json)"
@@ -94,12 +84,13 @@ jobs:
                 fi
                 
                 # Create JIRA ticket for APP issues
-                if [ -n "${{ env.APP_CONTENT }}" ]; then
+                if [ -s app_content.json ]; then
                   echo "Sending APP dependency report to Jira..."
 
-                  # Write the content to a temporary file using printf to avoid interpretation
-                  printf '%s' "${{ env.APP_CONTENT }}" > app_content_encoded.txt
-                  cat app_content_encoded.txt | jq -r . > app_content.json
+                  # Debug: check the content
+                  echo "File size: $(wc -c app_content.json)"
+                  echo "First few characters:"
+                  head -c 100 app_content.json
                   
                   APP_RESPONSE=$(curl -X POST \
                     -H "Content-Type: application/json" \
