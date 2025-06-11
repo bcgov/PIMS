@@ -199,6 +199,12 @@ jobs:
         run: |
           node .github/helpers/npm-deps/create-report-issues.cjs
 
+      # Install jq for JSON processing
+      - name: Install jq
+        run: |
+         apt-get update
+         apt-get install -y jq curl
+
       # Send issue content to JIRA webhook using curl
       - name: Create JIRA Tickets
         run: |
