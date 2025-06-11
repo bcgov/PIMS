@@ -29,10 +29,11 @@ jobs:
                   "https://api.github.com/repos/${{ github.repository }}/issues?state=open" | \
                   jq -r '.[] | select(.title == "express-api NPM Dependency Report") | .body')
                 
-                # Store the content in an environment variable for use in the next steps
-                echo "API_CONTENT<<EOF" >> $GITHUB_ENV
-                echo "$API_CONTENT" >> $GITHUB_ENV
-                echo "EOF" >> $GITHUB_ENV
+                # Make sure content is JSON-safe by encoding it
+                ENCODED_API_CONTENT=$(echo "$API_CONTENT" | jq -sR .)
+                
+                # Store the encoded content
+                echo "API_CONTENT=$ENCODED_API_CONTENT" >> $GITHUB_ENV
                 
                 echo "Found issue content for express-api NPM Dependency Report"
             
@@ -44,10 +45,11 @@ jobs:
                   "https://api.github.com/repos/${{ github.repository }}/issues?state=open" | \
                   jq -r '.[] | select(.title == "react-app NPM Dependency Report") | .body')
                 
-                # Store the content in an environment variable for use in the next steps
-                echo "APP_CONTENT<<EOF" >> $GITHUB_ENV
-                echo "$APP_CONTENT" >> $GITHUB_ENV
-                echo "EOF" >> $GITHUB_ENV
+                # Make sure content is JSON-safe by encoding it
+                ENCODED_APP_CONTENT=$(echo "$APP_CONTENT" | jq -sR .)
+                
+                # Store the encoded content
+                echo "APP_CONTENT=$ENCODED_APP_CONTENT" >> $GITHUB_ENV
                 
                 echo "Found issue content for react-app NPM Dependency Report"
           
