@@ -2,15 +2,17 @@ name: Create JIRA Dependency Tickets
 # This workflow creates JIRA tickets for any issues found during the validate workflow.
 
 on:
-    workflow_run:
-        workflows: ['NPM Dependency Reports']
-        types: [completed]
-        branches:
-            - 'main'
-    pull_request:
-        branches:
-            - 'main'
-        types: [synchronize]
+    # workflow_run:
+    #     workflows: ['NPM Dependency Reports']
+    #     types: [completed]
+    #     branches:
+    #         - 'main'
+    # pull_request:
+    #     branches:
+    #         - 'main'
+    #     paths:
+    #         - '.github/workflows/create-jira-tickets.yml'
+    #     types: [synchronize]
     workflow_dispatch:
 
 jobs:
