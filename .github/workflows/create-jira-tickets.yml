@@ -26,7 +26,7 @@ jobs:
               run: |
                 # Get issue content
                 ISSUES_JSON=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                  "https://api.github.com/repos/${{ github.repository }}/issues?labels=npm-dependency-report&state=open")
+                  "https://api.github.com/repos/${{ github.repository }}/issues?state=open")
                 
                 # Debug: Check what issues we're getting
                 echo "Found issues:"
@@ -56,7 +56,7 @@ jobs:
               run: |
                 # Get issue content
                 ISSUES_JSON=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-                  "https://api.github.com/repos/${{ github.repository }}/issues?labels=npm-dependency-report&state=open")
+                  "https://api.github.com/repos/${{ github.repository }}/issues?state=open")
                 
                 # Extract APP content
                 APP_CONTENT=$(echo "$ISSUES_JSON" | jq -r '.[] | select(.title == "react-app NPM Dependency Report") | .body')
