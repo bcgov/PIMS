@@ -58,11 +58,18 @@ jobs:
                   echo "File size: $(wc -c api_content.json)"
                   echo "First few characters:"
                   head -c 100 api_content.json
+
+                  # Prepare the payload by wrapping the content in the expected structure
+                  jq -n --arg content "$(cat api_content.json)" '{data: $content}' > api_payload.json
+                  
+                  # Debug the final payload
+                  echo "\nFinal payload structure:"
+                  cat api_payload.json | jq '.'
                   
                   API_RESPONSE=$(curl -X POST \
                     -H "Content-Type: application/json" \
                     -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
-                    --data @api_content.json \
+                    --data @api_payload.json \
                     -w "\n%{http_code}" \
                     -s \
                     "${{ secrets.JIRA_WEBHOOK_URL }}")
@@ -70,7 +77,7 @@ jobs:
                   API_HTTP_CODE=$(echo "$API_RESPONSE" | tail -n1)
                   API_CONTENT_RESPONSE=$(echo "$API_RESPONSE" | sed '$d')
                   
-                  echo "API Request Status Code: $API_HTTP_CODE"
+                  echo "\nAPI Request Status Code: $API_HTTP_CODE"
                   
                   if [ "$API_HTTP_CODE" -ge 200 ] && [ "$API_HTTP_CODE" -lt 300 ]; then
                     echo "✅ API Jira ticket created successfully"
@@ -91,11 +98,18 @@ jobs:
                   echo "File size: $(wc -c app_content.json)"
                   echo "First few characters:"
                   head -c 100 app_content.json
+
+                   # Prepare the payload by wrapping the content in the expected structure
+                  jq -n --arg content "$(cat app_content.json)" '{data: $content}' > app_payload.json
+                  
+                  # Debug the final payload
+                  echo "\nFinal payload structure:"
+                  cat app_payload.json | jq '.'
                   
                   APP_RESPONSE=$(curl -X POST \
                     -H "Content-Type: application/json" \
                     -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
-                    --data @app_content.json \
+                    --data @app_payload.json \
                     -w "\n%{http_code}" \
                     -s \
                     "${{ secrets.JIRA_WEBHOOK_URL }}")
@@ -103,7 +117,7 @@ jobs:
                   APP_HTTP_CODE=$(echo "$APP_RESPONSE" | tail -n1)
                   APP_CONTENT_RESPONSE=$(echo "$APP_RESPONSE" | sed '$d')
                   
-                  echo "APP Request Status Code: $APP_HTTP_CODE"
+                  echo "\nAPP Request Status Code: $APP_HTTP_CODE"
                   
                   if [ "$APP_HTTP_CODE" -ge 200 ] && [ "$APP_HTTP_CODE" -lt 300 ]; then
                     echo "✅ APP Jira ticket created successfully"
