@@ -224,6 +224,108 @@ jobs:
               echo "First few characters:"
               echo "$API_CONTENT" | head -c 100
               
+              # Write content to file and properly escape it for JSON
+              echo "$API_CONTENT" > api_temp.txt
+              ESCAPED_API_CONTENT=$(cat api_temp.txt | jq -Rs .)
+              
+              # Create payload with properly escaped content
+              echo '{
+                "data": {
+                  "title": "express-api NPM Dependency Report",
+                  "body": '"$ESCAPED_API_CONTENT"'
+                }
+              }' > api_payload.json
+              
+              # Debug the final payload
+              echo "Final payload structure:"
+              cat api_payload.json | jq '.'
+              
+              API_RESPONSE=$(curl -X POST \
+                -H "Content-Type: application/json" \
+                -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
+                --data @api_payload.json \
+                -w "\n%{http_code}" \
+                -s \
+                "${{ secrets.JIRA_WEBHOOK_URL }}")
+              
+              API_HTTP_CODE=$(echo "$API_RESPONSE" | tail -n1)
+              API_CONTENT_RESPONSE=$(echo "$API_RESPONSE" | sed '$d')
+              
+              echo "API Request Status Code: $API_HTTP_CODE"
+              
+              if [ "$API_HTTP_CODE" -ge 200 ] && [ "$API_HTTP_CODE" -lt 300 ]; then
+                echo "✅ API Jira ticket created successfully"
+              else
+                echo "❌ Failed to create API Jira ticket. Status code: $API_HTTP_CODE"
+                echo "Response: $API_CONTENT_RESPONSE"
+              fi
+            else
+              echo "No API content found to send to Jira"
+            fi
+            
+            # Create JIRA ticket for APP issues
+            if [ -n "$APP_CONTENT" ] && [ "$APP_CONTENT" != "null" ]; then
+              echo "Sending APP dependency report to Jira..."
+              
+              # Debug: check the content
+              echo "Content length: ${#APP_CONTENT}"
+              echo "First few characters:"
+              echo "$APP_CONTENT" | head -c 100
+              
+              # Write content to file and properly escape it for JSON
+              echo "$APP_CONTENT" > app_temp.txt
+              ESCAPED_APP_CONTENT=$(cat app_temp.txt | jq -Rs .)
+              
+              # Create payload with properly escaped content
+              echo '{
+                "data": {
+                  "title": "react-app NPM Dependency Report",
+                  "body": '"$ESCAPED_APP_CONTENT"'
+                }
+              }' > app_payload.json
+              
+              # Debug the final payload
+              echo "Final payload structure:"
+              cat app_payload.json | jq '.'
+              
+              APP_RESPONSE=$(curl -X POST \
+                -H "Content-Type: application/json" \
+                -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
+                --data @app_payload.json \
+                -w "\n%{http_code}" \
+                -s \
+                "${{ secrets.JIRA_WEBHOOK_URL }}")
+              
+              APP_HTTP_CODE=$(echo "$APP_RESPONSE" | tail -n1)
+              APP_CONTENT_RESPONSE=$(echo "$APP_RESPONSE" | sed '$d')
+              
+              echo "APP Request Status Code: $APP_HTTP_CODE"
+              
+              if [ "$APP_HTTP_CODE" -ge 200 ] && [ "$APP_HTTP_CODE" -lt 300 ]; then
+                echo "✅ APP Jira ticket created successfully"
+              else
+                echo "❌ Failed to create APP Jira ticket. Status code: $APP_HTTP_CODE"
+                echo "Response: $APP_CONTENT_RESPONSE" 
+              fi
+            else
+              echo "No APP content found to send to Jira"
+            fi        run: |
+            # Extract the content from the commentContents JSON
+            COMMENT_JSON='${{ env.commentContents }}'
+            
+            # Extract API and APP content using jq
+            API_CONTENT=$(echo $COMMENT_JSON | jq -r '.["express-api"]')
+            APP_CONTENT=$(echo $COMMENT_JSON | jq -r '.["react-app"]')
+            
+            # Create JIRA ticket for API issues
+            if [ -n "$API_CONTENT" ] && [ "$API_CONTENT" != "null" ]; then
+              echo "Sending API dependency report to Jira..."
+              
+              # Debug: check the content
+              echo "Content length: ${#API_CONTENT}"
+              echo "First few characters:"
+              echo "$API_CONTENT" | head -c 100
+              
               # Prepare the payload by wrapping the content in the expected structure
               jq -n --arg title "express-api NPM Dependency Report" \
                     --arg body "$API_CONTENT" \
