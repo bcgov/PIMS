@@ -60,9 +60,15 @@ jobs:
                 if [ -n "${{ env.API_CONTENT }}" ]; then
                   echo "Sending API dependency report to Jira..."
 
-                  # Write the content to a temporary file to avoid shell interpretation issues
-                  echo ${{ env.API_CONTENT }} | jq -r . > api_content.json
+                  # Write the content to a temporary file using printf to avoid interpretation
+                  printf '%s' "${{ env.API_CONTENT }}" > api_content_encoded.txt
+                  cat api_content_encoded.txt | jq -r . > api_content.json
 
+                  # Debug: check the content
+                  echo "File size: $(wc -c api_content.json)"
+                  echo "First few characters:"
+                  head -c 100 api_content.json
+                  
                   API_RESPONSE=$(curl -X POST \
                     -H "Content-Type: application/json" \
                     -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
@@ -91,9 +97,10 @@ jobs:
                 if [ -n "${{ env.APP_CONTENT }}" ]; then
                   echo "Sending APP dependency report to Jira..."
 
-                  # Write the content to a temporary file to avoid shell interpretation issues
-                  echo ${{ env.APP_CONTENT }} | jq -r . > app_content.json
-
+                  # Write the content to a temporary file using printf to avoid interpretation
+                  printf '%s' "${{ env.APP_CONTENT }}" > app_content_encoded.txt
+                  cat app_content_encoded.txt | jq -r . > app_content.json
+                  
                   APP_RESPONSE=$(curl -X POST \
                     -H "Content-Type: application/json" \
                     -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
@@ -111,11 +118,9 @@ jobs:
                     echo "✅ APP Jira ticket created successfully"
                   else
                     echo "❌ Failed to create APP Jira ticket. Status code: $APP_HTTP_CODE"
-                    echo "Response: $APP_CONTENT_RESPONSE"
+                    echo "Response: $APP_CONTENT_RESPONSE" 
                     exit 1
                   fi
                 else
                   echo "No APP content found to send to Jira"
                 fi
-
-
