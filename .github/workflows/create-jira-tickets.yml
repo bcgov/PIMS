@@ -30,7 +30,7 @@ jobs:
                   jq -r '.[] | select(.title == "express-api NPM Dependency Report") | .body')
                 
                 # Store the content directly to a file for later use
-                echo "$API_CONTENT" > api_content.json
+                echo "$API_CONTENT" > api_content.txt
                 
                 echo "Found issue content for express-api NPM Dependency Report"
             
@@ -43,7 +43,7 @@ jobs:
                   jq -r '.[] | select(.title == "react-app NPM Dependency Report") | .body')
                 
                 # Store the content directly to a file for later use
-                echo "$APP_CONTENT" > app_content.json
+                echo "$APP_CONTENT" > app_content.txt
                 
                 echo "Found issue content for react-app NPM Dependency Report"
           
@@ -51,16 +51,23 @@ jobs:
             - name: Create JIRA Tickets
               run: |
                 # Create JIRA ticket for API issues
-                if [ -s api_content.json ]; then
+                if [ -s api_content.txt ]; then
                   echo "Sending API dependency report to Jira..."
 
                   # Debug: check the content
-                  echo "File size: $(wc -c api_content.json)"
+                  echo "File size: $(wc -c api_content.txt)"
                   echo "First few characters:"
-                  head -c 100 api_content.json
+                  head -c 100 api_content.txt
 
                   # Prepare the payload by wrapping the content in the expected structure
-                  jq -n --arg content "$(cat api_content.json)" '{data: $content}' > api_payload.json
+                  jq -n --arg title "express-api NPM Dependency Report" \
+                        --arg body "$(cat api_content.txt)" \
+                        '{
+                          "data": {
+                            "title": $title,
+                            "body": $body
+                          }
+                        }' > api_payload.json
                   
                   # Debug the final payload
                   echo "\nFinal payload structure:"
@@ -91,16 +98,23 @@ jobs:
                 fi
                 
                 # Create JIRA ticket for APP issues
-                if [ -s app_content.json ]; then
+                if [ -s app_content.txt ]; then
                   echo "Sending APP dependency report to Jira..."
 
                   # Debug: check the content
-                  echo "File size: $(wc -c app_content.json)"
+                  echo "File size: $(wc -c app_content.txt)"
                   echo "First few characters:"
-                  head -c 100 app_content.json
+                  head -c 100 app_content.txt
 
-                   # Prepare the payload by wrapping the content in the expected structure
-                  jq -n --arg content "$(cat app_content.json)" '{data: $content}' > app_payload.json
+                  # Prepare the payload by wrapping the content in the expected structure
+                  jq -n --arg title "react-app NPM Dependency Report" \
+                        --arg body "$(cat app_content.txt)" \
+                        '{
+                          "data": {
+                            "title": $title,
+                            "body": $body
+                          }
+                        }' > app_payload.json
                   
                   # Debug the final payload
                   echo "\nFinal payload structure:"
