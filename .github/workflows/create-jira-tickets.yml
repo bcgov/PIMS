@@ -59,10 +59,14 @@ jobs:
                 # Create JIRA ticket for API issues
                 if [ -n "${{ env.API_CONTENT }}" ]; then
                   echo "Sending API dependency report to Jira..."
+
+                  # Write the content to a temporary file to avoid shell interpretation issues
+                  echo ${{ env.API_CONTENT }} | jq -r . > api_content.json
+
                   API_RESPONSE=$(curl -X POST \
                     -H "Content-Type: application/json" \
                     -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
-                    --data "${{ env.API_CONTENT }}" \
+                    --data @api_content.json \
                     -w "\n%{http_code}" \
                     -s \
                     "${{ secrets.JIRA_WEBHOOK_URL }}")
@@ -86,10 +90,14 @@ jobs:
                 # Create JIRA ticket for APP issues
                 if [ -n "${{ env.APP_CONTENT }}" ]; then
                   echo "Sending APP dependency report to Jira..."
+
+                  # Write the content to a temporary file to avoid shell interpretation issues
+                  echo ${{ env.APP_CONTENT }} | jq -r . > app_content.json
+
                   APP_RESPONSE=$(curl -X POST \
                     -H "Content-Type: application/json" \
                     -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
-                    --data "${{ env.APP_CONTENT }}" \
+                    --data @app_content.json \
                     -w "\n%{http_code}" \
                     -s \
                     "${{ secrets.JIRA_WEBHOOK_URL }}")
