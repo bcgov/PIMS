@@ -203,6 +203,8 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - create-comment-text
+    env:
+      commentContents: ${{ needs.create-comment-text.outputs.commentContents }}
     steps:
 
       # setup Python environment
