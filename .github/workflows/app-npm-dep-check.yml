@@ -212,14 +212,15 @@ jobs:
             COMMENT_JSON='${{ env.commentContents }}'
             echo "Comment JSON: $COMMENT_JSON"
 
-            # Write the comment contents to a file first
-            echo '${{ env.commentContents }}' > comment.json
+            # Write the comment contents to a temporary file, preserving the content exactly as is
+            echo '${{ env.commentContents }}' > raw_comment.json
             
-            # Extract API and APP content using jq from the file
+            # Use jq to properly escape all control characters
+            jq . raw_comment.json > comment.json
+            
+            # Extract API and APP content using jq from the properly escaped file
             API_CONTENT=$(jq -r '.["express-api"]' comment.json)
             APP_CONTENT=$(jq -r '.["react-app"]' comment.json)
-            echo "API Content: $API_CONTENT"
-            echo "APP Content: $APP_CONTENT"
             
             # Create JIRA ticket for API issues
             if [ -n "$API_CONTENT" ] && [ "$API_CONTENT" != "null" ]; then
@@ -232,7 +233,7 @@ jobs:
               
               # Write content to file and properly escape it for JSON
               echo "$API_CONTENT" > api_temp.txt
-              ESCAPED_API_CONTENT=$(cat api_temp.txt | jq -Rs .)
+              ESCAPED_API_CONTENT=$(cat api_temp.txt | jq -Rns .)
               
               # Create payload with properly escaped content
               echo '{
@@ -280,7 +281,7 @@ jobs:
               
               # Write content to file and properly escape it for JSON
               echo "$APP_CONTENT" > app_temp.txt
-              ESCAPED_APP_CONTENT=$(cat app_temp.txt | jq -Rs .)
+              ESCAPED_APP_CONTENT=$(cat app_temp.txt | jq -Rns .)
               
               # Create payload with properly escaped content
               echo '{
