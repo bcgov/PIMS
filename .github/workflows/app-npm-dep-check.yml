@@ -198,7 +198,7 @@ jobs:
       - name: Create GitHub Issues
         run: |
           node .github/helpers/npm-deps/create-report-issues.cjs
-          
+
   create-jira-tickets:
     runs-on: ubuntu-22.04
     needs:
@@ -211,12 +211,17 @@ jobs:
         with:
           python-version: '3.11' # current Python version
 
+       # Save comment data to JSON file
+      - name: Save comment data to file
+        run: |
+          echo '${{ env.commentContents }}' > comment_data.json
+          echo "Saved comment data to JSON file"
+
       # Extract react-app property from commentContents
       - name: Extract React App Dependencies
         run: |
-          echo '${{ env.commentContents }}' > comment_data.json
           echo "Extracting react-app data from comment contents"
-          REACT_APP_CONTENT=$(cat comment_data.json | python -c "import json, sys; data=json.load(sys.stdin); print(data.get('react-app', ''))")
+          REACT_APP_CONTENT=$(python -c "import json; with open('comment_data.json', 'r') as f: print(json.loads(f.read()).get('react-app', ''))")
           echo "REACT_APP_CONTENT<<EOF" >> $GITHUB_ENV
           echo "$REACT_APP_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -225,13 +230,11 @@ jobs:
       # Extract express-api property from commentContents
       - name: Extract Express API Dependencies
         run: |
-          echo '${{ env.commentContents }}' > comment_data.json
           echo "Extracting express-api data from comment contents"
-          EXPRESS_API_CONTENT=$(cat comment_data.json | python -c "import json, sys; data=json.load(sys.stdin); print(data.get('express-api', ''))")
+          EXPRESS_API_CONTENT=$(python -c "import json; with open('comment_data.json', 'r') as f: print(json.loads(f.read()).get('express-api', ''))")
           echo "EXPRESS_API_CONTENT<<EOF" >> $GITHUB_ENV
           echo "$EXPRESS_API_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-          echo "Successfully extracted express-api dependency information"
 
       # Send issue content to JIRA webhook using curl
       - name: Create JIRA Tickets
