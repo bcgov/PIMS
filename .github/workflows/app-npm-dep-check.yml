@@ -344,4 +344,3 @@ jobs:
             else
               echo "No APP content found to send to Jira"
             fi
-            
