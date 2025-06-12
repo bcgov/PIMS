@@ -254,7 +254,7 @@ jobs:
           echo "$EXPRESS_API_CONTENT" > api_content.txt
 
       # Send issue content to JIRA webhook using curl
-      - name: Create JIRA Tickets
+      - name: Create API JIRA Ticket
         run: |           
             # Create JIRA ticket for API issues
             if [ -s api_content.txt ]; then
@@ -298,6 +298,8 @@ jobs:
               echo "No API content found to send to Jira"
             fi
             
+      - name: Create APP JIRA Ticket
+        run: | 
             # Create JIRA ticket for APP issues
             if [ -s app_content.txt ]; then
               echo "Sending APP dependency report to Jira..."
@@ -338,5 +340,5 @@ jobs:
               fi
             else
               echo "No APP content found to send to Jira"
-            fi        run: |
+            fi
             
