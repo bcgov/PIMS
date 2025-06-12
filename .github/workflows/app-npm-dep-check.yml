@@ -221,7 +221,17 @@ jobs:
       - name: Extract React App Dependencies
         run: |
           echo "Extracting react-app data from comment contents"
-          REACT_APP_CONTENT=$(python -c "import json; with open('comment_data.json', 'r') as f: print(json.loads(f.read()).get('react-app', ''))")
+          cat > extract_react.py << 'EOL'
+          import json
+          try:
+              with open('comment_data.json', 'r') as f:
+                  data = json.loads(f.read())
+                  print(data.get('react-app', ''))
+          except Exception as e:
+              print(f"Error: {e}")
+              exit(1)
+          EOL
+          REACT_APP_CONTENT=$(python extract_react.py)
           echo "REACT_APP_CONTENT<<EOF" >> $GITHUB_ENV
           echo "$REACT_APP_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
@@ -231,7 +241,17 @@ jobs:
       - name: Extract Express API Dependencies
         run: |
           echo "Extracting express-api data from comment contents"
-          EXPRESS_API_CONTENT=$(python -c "import json; with open('comment_data.json', 'r') as f: print(json.loads(f.read()).get('express-api', ''))")
+          cat > extract_express.py << 'EOL'
+          import json
+          try:
+              with open('comment_data.json', 'r') as f:
+                  data = json.loads(f.read())
+                  print(data.get('express-api', ''))
+          except Exception as e:
+              print(f"Error: {e}")
+              exit(1)
+          EOL
+          EXPRESS_API_CONTENT=$(python extract_express.py)
           echo "EXPRESS_API_CONTENT<<EOF" >> $GITHUB_ENV
           echo "$EXPRESS_API_CONTENT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
