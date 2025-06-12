@@ -1,5 +1,8 @@
 name: NPM Dependency Reports
 
+permissions:
+  contents: read
+  issues: write
 on:
   schedule:
     - cron: '0 15 * * 2' # Tuesday morning at 7:00-8:00am Pacific Time.
@@ -297,7 +300,7 @@ jobs:
             else
               echo "No API content found to send to Jira"
             fi
-            
+
       - name: Create APP JIRA Ticket
         run: | 
             # Create JIRA ticket for APP issues
