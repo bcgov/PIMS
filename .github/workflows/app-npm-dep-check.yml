@@ -278,7 +278,7 @@ jobs:
               echo '{
                 "data": {
                   "title": "express-api NPM Dependency Report",
-                  "body": '"$API_CONTENT"'
+                  "body": "$API_CONTENT"
                 }
               }' > api_payload.json
               
@@ -318,7 +318,7 @@ jobs:
               echo '{
                 "data": {
                   "title": "react-app NPM Dependency Report",
-                  "body": '"$APP_CONTENT"'
+                  "body": "$APP_CONTENT"
                 }
               }' > app_payload.json
               
