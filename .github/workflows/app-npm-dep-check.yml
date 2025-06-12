@@ -198,6 +198,12 @@ jobs:
       - name: Create GitHub Issues
         run: |
           node .github/helpers/npm-deps/create-report-issues.cjs
+          
+  create-jira-tickets:
+    runs-on: ubuntu-22.04
+    needs:
+      - create-comment-text
+    steps:
 
       # setup Python environment
       - name: setup Python
