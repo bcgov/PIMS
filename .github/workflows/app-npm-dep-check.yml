@@ -199,28 +199,40 @@ jobs:
         run: |
           node .github/helpers/npm-deps/create-report-issues.cjs
 
-      # Install jq for JSON processing
-      - name: Install jq
+      # setup Python environment
+      - name: setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # current Python version
+
+      # Extract react-app property from commentContents
+      - name: Extract React App Dependencies
         run: |
-         apt-get update
-         apt-get install -y jq curl
+          echo '${{ env.commentContents }}' > comment_data.json
+          echo "Extracting react-app data from comment contents"
+          REACT_APP_CONTENT=$(cat comment_data.json | python -c "import json, sys; data=json.load(sys.stdin); print(data.get('react-app', ''))")
+          echo "REACT_APP_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$REACT_APP_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "Successfully extracted react-app dependency information"
+      
+      # Extract express-api property from commentContents
+      - name: Extract Express API Dependencies
+        run: |
+          echo '${{ env.commentContents }}' > comment_data.json
+          echo "Extracting express-api data from comment contents"
+          EXPRESS_API_CONTENT=$(cat comment_data.json | python -c "import json, sys; data=json.load(sys.stdin); print(data.get('express-api', ''))")
+          echo "EXPRESS_API_CONTENT<<EOF" >> $GITHUB_ENV
+          echo "$EXPRESS_API_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "Successfully extracted express-api dependency information"
 
       # Send issue content to JIRA webhook using curl
       - name: Create JIRA Tickets
         run: |
-            # Extract the content from the commentContents JSON
-            COMMENT_JSON='${{ env.commentContents }}'
-            echo "Comment JSON: $COMMENT_JSON"
-
-            # Write the comment contents to a temporary file, preserving the content exactly as is
-            echo '${{ env.commentContents }}' > raw_comment.json
-            
-            # Use jq to properly escape all control characters
-            jq . raw_comment.json > comment.json
-            
-            # Extract API and APP content using jq from the properly escaped file
-            API_CONTENT=$(jq -r '.["express-api"]' comment.json)
-            APP_CONTENT=$(jq -r '.["react-app"]' comment.json)
+            # Load the API and APP content from environment variables
+            API_CONTENT="${{ env.EXPRESS_API_CONTENT }}"
+            APP_CONTENT="${{ env.REACT_APP_CONTENT }}"
             
             # Create JIRA ticket for API issues
             if [ -n "$API_CONTENT" ] && [ "$API_CONTENT" != "null" ]; then
@@ -231,21 +243,13 @@ jobs:
               echo "First few characters:"
               echo "$API_CONTENT" | head -c 100
               
-              # Write content to file and properly escape it for JSON
-              echo "$API_CONTENT" > api_temp.txt
-              ESCAPED_API_CONTENT=$(cat api_temp.txt | jq -Rns .)
-              
               # Create payload with properly escaped content
               echo '{
                 "data": {
                   "title": "express-api NPM Dependency Report",
-                  "body": '"$ESCAPED_API_CONTENT"'
+                  "body": '"$API_CONTENT"'
                 }
               }' > api_payload.json
-              
-              # Debug the final payload
-              echo "Final payload structure:"
-              cat api_payload.json | jq '.'
               
               API_RESPONSE=$(curl -X POST \
                 -H "Content-Type: application/json" \
@@ -279,21 +283,13 @@ jobs:
               echo "First few characters:"
               echo "$APP_CONTENT" | head -c 100
               
-              # Write content to file and properly escape it for JSON
-              echo "$APP_CONTENT" > app_temp.txt
-              ESCAPED_APP_CONTENT=$(cat app_temp.txt | jq -Rns .)
-              
               # Create payload with properly escaped content
               echo '{
                 "data": {
                   "title": "react-app NPM Dependency Report",
-                  "body": '"$ESCAPED_APP_CONTENT"'
+                  "body": '"$APP_CONTENT"'
                 }
               }' > app_payload.json
-              
-              # Debug the final payload
-              echo "Final payload structure:"
-              cat app_payload.json | jq '.'
               
               APP_RESPONSE=$(curl -X POST \
                 -H "Content-Type: application/json" \
