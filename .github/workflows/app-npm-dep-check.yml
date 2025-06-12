@@ -234,10 +234,7 @@ jobs:
               exit(1)
           EOL
           REACT_APP_CONTENT=$(python extract_react.py)
-          echo "REACT_APP_CONTENT<<EOF" >> $GITHUB_ENV
-          echo "$REACT_APP_CONTENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-          echo "Successfully extracted react-app dependency information"
+          echo "$REACT_APP_CONTENT" > app_content.txt
       
       # Extract express-api property from commentContents
       - name: Extract Express API Dependencies
@@ -254,33 +251,29 @@ jobs:
               exit(1)
           EOL
           EXPRESS_API_CONTENT=$(python extract_express.py)
-          echo "EXPRESS_API_CONTENT<<EOF" >> $GITHUB_ENV
-          echo "$EXPRESS_API_CONTENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "$EXPRESS_API_CONTENT" > api_content.txt
 
       # Send issue content to JIRA webhook using curl
       - name: Create JIRA Tickets
-        run: |
-            # Load the API and APP content from environment variables
-            API_CONTENT="${{ env.EXPRESS_API_CONTENT }}"
-            APP_CONTENT="${{ env.REACT_APP_CONTENT }}"
-            
+        run: |           
             # Create JIRA ticket for API issues
-            if [ -n "$API_CONTENT" ] && [ "$API_CONTENT" != "null" ]; then
+            if [ -s api_content.txt ]; then
               echo "Sending API dependency report to Jira..."
               
               # Debug: check the content
-              echo "Content length: ${#API_CONTENT}"
+              echo "File size: $(wc -c api_content.txt)"
               echo "First few characters:"
-              echo "$API_CONTENT" | head -c 100
+              head -c 100 api_content.txt
               
-              # Create payload with properly escaped content
-              echo '{
-                "data": {
-                  "title": "express-api NPM Dependency Report",
-                  "body": "$API_CONTENT"
-                }
-              }' > api_payload.json
+              # Prepare the payload by wrapping the content in the expected structure
+              jq -n --arg title "express-api NPM Dependency Report" \
+                    --arg body "$(cat api_content.txt)" \
+                    '{
+                      "data": {
+                        "title": $title,
+                        "body": $body
+                      }
+                    }' > api_payload.json
               
               API_RESPONSE=$(curl -X POST \
                 -H "Content-Type: application/json" \
@@ -306,21 +299,23 @@ jobs:
             fi
             
             # Create JIRA ticket for APP issues
-            if [ -n "$APP_CONTENT" ] && [ "$APP_CONTENT" != "null" ]; then
+            if [ -s app_content.txt ]; then
               echo "Sending APP dependency report to Jira..."
               
               # Debug: check the content
-              echo "Content length: ${#APP_CONTENT}"
+              echo "File size: $(wc -c app_content.txt)"
               echo "First few characters:"
-              echo "$APP_CONTENT" | head -c 100
+              head -c 100 app_content.txt
               
-              # Create payload with properly escaped content
-              echo '{
-                "data": {
-                  "title": "react-app NPM Dependency Report",
-                  "body": "$APP_CONTENT"
-                }
-              }' > app_payload.json
+              # Prepare the payload by wrapping the content in the expected structure
+              jq -n --arg title "react-app NPM Dependency Report" \
+                    --arg body "$(cat app_content.txt)" \
+                    '{
+                      "data": {
+                        "title": $title,
+                        "body": $body
+                      }
+                    }' > app_payload.json
               
               APP_RESPONSE=$(curl -X POST \
                 -H "Content-Type: application/json" \
