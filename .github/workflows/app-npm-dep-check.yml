@@ -211,9 +211,9 @@ jobs:
             # Extract the content from the commentContents JSON
             COMMENT_JSON='${{ env.commentContents }}'
             echo "Comment JSON: $COMMENT_JSON"
-            # Extract API and APP content using jq
-            API_CONTENT=$(echo $COMMENT_JSON | jq -r '.["express-api"]')
-            APP_CONTENT=$(echo $COMMENT_JSON | jq -r '.["react-app"]')
+            # Extract API and APP content using jq from the file
+            API_CONTENT=$(jq -r '.["express-api"]' comment.json)
+            APP_CONTENT=$(jq -r '.["react-app"]' comment.json)
             echo "API Content: $API_CONTENT"
             echo "APP Content: $APP_CONTENT"
             
