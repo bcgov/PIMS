@@ -10,7 +10,7 @@ on:
       branches:
           - 'main'
       paths:
-          - '.github/workflows/create-jira-tickets.yml'
+          - '.github/workflows/app-npm-dep-check.yml'
       types: [synchronize]
   workflow_dispatch:
 
