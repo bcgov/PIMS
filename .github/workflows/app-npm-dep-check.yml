@@ -1,8 +1,17 @@
 name: NPM Dependency Reports
 
+permissions:
+  contents: read
+  issues: write
 on:
   schedule:
     - cron: '0 15 * * 2' # Tuesday morning at 7:00-8:00am Pacific Time.
+  pull_request:
+      branches:
+          - 'main'
+      paths:
+          - '.github/workflows/app-npm-dep-check.yml'
+      types: [synchronize]
   workflow_dispatch:
 
 # START HERE! v
@@ -192,3 +201,146 @@ jobs:
       - name: Create GitHub Issues
         run: |
           node .github/helpers/npm-deps/create-report-issues.cjs
+
+  create-jira-tickets:
+    runs-on: ubuntu-22.04
+    needs:
+      - create-comment-text
+    env:
+      commentContents: ${{ needs.create-comment-text.outputs.commentContents }}
+    steps:
+
+      # setup Python environment
+      - name: setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' # current Python version
+
+       # Save comment data to JSON file
+      - name: Save comment data to file
+        run: |
+          echo '${{ env.commentContents }}' > comment_data.json
+          echo "Saved comment data to JSON file"
+
+      # Extract react-app property from commentContents
+      - name: Extract React App Dependencies
+        run: |
+          echo "Extracting react-app data from comment contents"
+          cat > extract_react.py << 'EOL'
+          import json
+          try:
+              with open('comment_data.json', 'r') as f:
+                  data = json.loads(f.read())
+                  print(data.get('react-app', ''))
+          except Exception as e:
+              print(f"Error: {e}")
+              exit(1)
+          EOL
+          REACT_APP_CONTENT=$(python extract_react.py)
+          echo "$REACT_APP_CONTENT" > app_content.txt
+      
+      # Extract express-api property from commentContents
+      - name: Extract Express API Dependencies
+        run: |
+          echo "Extracting express-api data from comment contents"
+          cat > extract_express.py << 'EOL'
+          import json
+          try:
+              with open('comment_data.json', 'r') as f:
+                  data = json.loads(f.read())
+                  print(data.get('express-api', ''))
+          except Exception as e:
+              print(f"Error: {e}")
+              exit(1)
+          EOL
+          EXPRESS_API_CONTENT=$(python extract_express.py)
+          echo "$EXPRESS_API_CONTENT" > api_content.txt
+
+      # Send issue content to JIRA webhook using curl
+      - name: Create API JIRA Ticket
+        run: |           
+            # Create JIRA ticket for API issues
+            if [ -s api_content.txt ]; then
+              echo "Sending API dependency report to Jira..."
+              
+              # Debug: check the content
+              echo "File size: $(wc -c api_content.txt)"
+              echo "First few characters:"
+              head -c 100 api_content.txt
+              
+              # Prepare the payload by wrapping the content in the expected structure
+              jq -n --arg title "express-api NPM Dependency Report" \
+                    --arg body "$(cat api_content.txt)" \
+                    '{
+                      "data": {
+                        "title": $title,
+                        "body": $body
+                      }
+                    }' > api_payload.json
+              
+              API_RESPONSE=$(curl -X POST \
+                -H "Content-Type: application/json" \
+                -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
+                --data @api_payload.json \
+                -w "\n%{http_code}" \
+                -s \
+                "${{ secrets.JIRA_WEBHOOK_URL }}")
+              
+              API_HTTP_CODE=$(echo "$API_RESPONSE" | tail -n1)
+              API_CONTENT_RESPONSE=$(echo "$API_RESPONSE" | sed '$d')
+              
+              echo "API Request Status Code: $API_HTTP_CODE"
+              
+              if [ "$API_HTTP_CODE" -ge 200 ] && [ "$API_HTTP_CODE" -lt 300 ]; then
+                echo "✅ API Jira ticket created successfully"
+              else
+                echo "❌ Failed to create API Jira ticket. Status code: $API_HTTP_CODE"
+                echo "Response: $API_CONTENT_RESPONSE"
+              fi
+            else
+              echo "No API content found to send to Jira"
+            fi
+
+      - name: Create APP JIRA Ticket
+        run: | 
+            # Create JIRA ticket for APP issues
+            if [ -s app_content.txt ]; then
+              echo "Sending APP dependency report to Jira..."
+              
+              # Debug: check the content
+              echo "File size: $(wc -c app_content.txt)"
+              echo "First few characters:"
+              head -c 100 app_content.txt
+              
+              # Prepare the payload by wrapping the content in the expected structure
+              jq -n --arg title "react-app NPM Dependency Report" \
+                    --arg body "$(cat app_content.txt)" \
+                    '{
+                      "data": {
+                        "title": $title,
+                        "body": $body
+                      }
+                    }' > app_payload.json
+              
+              APP_RESPONSE=$(curl -X POST \
+                -H "Content-Type: application/json" \
+                -H "X-Automation-Webhook-Token: ${{ secrets.JIRA_API_TOKEN }}" \
+                --data @app_payload.json \
+                -w "\n%{http_code}" \
+                -s \
+                "${{ secrets.JIRA_WEBHOOK_URL }}")
+              
+              APP_HTTP_CODE=$(echo "$APP_RESPONSE" | tail -n1)
+              APP_CONTENT_RESPONSE=$(echo "$APP_RESPONSE" | sed '$d')
+              
+              echo "APP Request Status Code: $APP_HTTP_CODE"
+              
+              if [ "$APP_HTTP_CODE" -ge 200 ] && [ "$APP_HTTP_CODE" -lt 300 ]; then
+                echo "✅ APP Jira ticket created successfully"
+              else
+                echo "❌ Failed to create APP Jira ticket. Status code: $APP_HTTP_CODE"
+                echo "Response: $APP_CONTENT_RESPONSE" 
+              fi
+            else
+              echo "No APP content found to send to Jira"
+            fi
