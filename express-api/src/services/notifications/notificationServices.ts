@@ -331,6 +331,8 @@ const generateProjectNotifications = async (
             projectId: project.Id,
           },
         )
+        // Only child agencies, as parents are handled above and don't want to send duplicates.
+        .where('a.parent_id IS NOT NULL')
         .andWhere('a.is_disabled = false')
         .andWhere('a.send_email = true')
         .andWhere('a.id <> :project_agency_id', {
@@ -451,6 +453,10 @@ const convertChesStatusToNotificationStatus = (chesStatus: string): Notification
     case '404':
       return NotificationStatus.NotFound;
     default:
+      logger.warn(
+        'Received non-standard CHES status, not updating notification. Status: ',
+        chesStatus,
+      );
       return null;
   }
 };
@@ -470,6 +476,7 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
 
   if (!notification || Object.keys(notification).length === 0) {
     await query.release();
+    logger.error(`Notification with id ${notificationId} not found.`);
     throw new Error(`Notification with id ${notificationId} not found.`);
   }
 
@@ -501,6 +508,20 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
         return updatedNotification;
       }
 
+      // This generally only happens when we request a state it's already in.
+      // Only business case for this is cancellation.
+      case 409: {
+        logger.error(
+          `Notification with id ${notificationId} has already been processed, but CHES returned a 409 conflict.`,
+        );
+        notification.Status = NotificationStatus.Cancelled;
+        notification.UpdatedOn = new Date();
+        notification.UpdatedById = user.Id;
+        const updatedNotification = await query.manager.save(NotificationQueue, notification);
+        await query.release();
+        return updatedNotification;
+      }
+
       case 422:
         logger.error(
           `Notification with id ${notificationId} could not be processed, some of the data could be formatted incorrectly.`,
@@ -526,6 +547,11 @@ const updateNotificationStatus = async (notificationId: number, user: User) => {
     return notification;
   } else {
     await query.release();
+    logger.error(
+      `Failed to retrieve status for notification with id ${notificationId}. Response: ${JSON.stringify(
+        statusResponse,
+      )}`,
+    );
     throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
   }
 };
@@ -761,8 +787,13 @@ const resendNotificationWithNewProperties = async (
   if (updatedNotification.Status !== NotificationStatus.Pending) return updatedNotification;
 
   // Cancel the notification
-  await chesServices.cancelEmailByIdAsync(notif.ChesMessageId);
+  const output = await chesServices.cancelEmailByIdAsync(notif.ChesMessageId);
+  logger.info('resendNotificationWithNewProperties: Ches cancel output', output);
   const postCancelNotification = await updateNotificationStatus(notif.Id, system);
+  logger.info(
+    'resendNotificationWithNewProperties: postCancelNotification',
+    postCancelNotification,
+  );
   if (postCancelNotification.Status === NotificationStatus.Cancelled) {
     // Cancelled successfully, then requeue with new properties
     if (requeue) {
@@ -777,7 +808,7 @@ const resendNotificationWithNewProperties = async (
     const cancelledNotification = await getNotificationById(updatedNotification.Id);
     return cancelledNotification;
   } else {
-    const error = `resendNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully.`;
+    const error = `resendNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully. PIMS system status is ${postCancelNotification.Status}.`;
     logger.error(error);
     throw new Error(error);
   }

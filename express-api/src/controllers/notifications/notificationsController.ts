@@ -61,6 +61,18 @@ export const resendNotificationById = async (req: Request, res: Response) => {
   if (!notification) {
     return res.status(404).send('Notification not found.');
   }
+  // Cancel the original notification first if it's still Pending!
+  if (notification.Status === NotificationStatus.Pending) {
+    const resultantNotification = await notificationServices.cancelNotificationById(
+      notification.Id,
+      user,
+    );
+    if (resultantNotification.Status !== NotificationStatus.Cancelled) {
+      return res
+        .status(500)
+        .send(`Failed to cancel original notification: ${notification.Id}. Resend aborted.`);
+    }
+  }
   const resultantNotification = await notificationServices.sendNotification(notification, user);
   const updatedNotification = await notificationServices.updateNotificationStatus(
     resultantNotification.Id,

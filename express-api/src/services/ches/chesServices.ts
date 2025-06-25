@@ -298,6 +298,7 @@ const cancelEmailByIdAsync = async (messageId: string) => {
   const response = await getStatusByIdAsync(messageId);
   if (response.status === 'accepted' || response.status === 'pending') {
     const result = await sendAsync(`/cancel/${messageId}`, 'DELETE');
+    logger.info('CHES cancelEmailByIdAsync result:', result);
     if (result != null) response.status = 'cancelled';
   }
   return response;
