@@ -233,28 +233,10 @@ describe('UNIT - Ches Services', () => {
       _fetch.mockImplementationOnce(() => ({
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
+      // CHES doesn't return text on successful cancelation. This is just null.
       _fetch.mockImplementationOnce(() => ({
         ok: true,
-        text: () => `
-
-          {
-          
-              "createdTS": 1560000000,
-              "delayTS": 1570000000,
-              "msgId": "00000000-0000-0000-0000-000000000000",
-              "smtpResponse": 
-          
-                  {},
-                  "status": "accepted",
-                  "statusHistory": 
-          
-                  [],
-                  "tag": "tag",
-                  "txId": "00000000-0000-0000-0000-000000000000",
-                  "updatedTS": 1570000000
-              }
-          
-          `,
+        text: () => ``,
       }));
       const response = await chesServices.cancelEmailByIdAsync(
         '00000000-0000-0000-0000-000000000000',
