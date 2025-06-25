@@ -787,8 +787,13 @@ const resendNotificationWithNewProperties = async (
   if (updatedNotification.Status !== NotificationStatus.Pending) return updatedNotification;
 
   // Cancel the notification
-  await chesServices.cancelEmailByIdAsync(notif.ChesMessageId);
+  const output = await chesServices.cancelEmailByIdAsync(notif.ChesMessageId);
+  logger.info('resendNotificationWithNewProperties: Ches cancel output', output);
   const postCancelNotification = await updateNotificationStatus(notif.Id, system);
+  logger.info(
+    'resendNotificationWithNewProperties: postCancelNotification',
+    postCancelNotification,
+  );
   if (postCancelNotification.Status === NotificationStatus.Cancelled) {
     // Cancelled successfully, then requeue with new properties
     if (requeue) {
@@ -803,7 +808,7 @@ const resendNotificationWithNewProperties = async (
     const cancelledNotification = await getNotificationById(updatedNotification.Id);
     return cancelledNotification;
   } else {
-    const error = `resendNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully.`;
+    const error = `resendNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully. PIMS system status is ${postCancelNotification.Status}.`;
     logger.error(error);
     throw new Error(error);
   }
