@@ -233,6 +233,14 @@ describe('UNIT - Ches Services', () => {
       _fetch.mockImplementationOnce(() => ({
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
+      // CHES doesn't return text on successful cancelation. This is just null.
+      _fetch.mockImplementationOnce(() => ({
+        ok: true,
+        text: () => ``,
+      }));
+      _fetch.mockImplementationOnce(() => ({
+        text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
+      }));
       _fetch.mockImplementationOnce(() => ({
         ok: true,
         text: () => `
@@ -245,7 +253,7 @@ describe('UNIT - Ches Services', () => {
               "smtpResponse": 
           
                   {},
-                  "status": "accepted",
+                  "status": "cancelled",
                   "statusHistory": 
           
                   [],

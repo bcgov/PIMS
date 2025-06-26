@@ -196,7 +196,7 @@ export const updateAgencyById = async (agencyIn: Agency, user: User) => {
       );
       // If any of the attempts to resend fail (promises rejected), log and throw error.
       if (resendResults.some((r) => r.status === 'rejected')) {
-        logger.error(resendResults.filter((r) => r.status === 'rejected').map((r) => r.reason));
+        logger.error(resendResults.filter((r) => r.status === 'rejected').map((r) => r));
         throw new ErrorWithCode(
           'Agency updated but not all notifications resent with updated emails.',
           500,
@@ -234,7 +234,7 @@ export const updateAgencyById = async (agencyIn: Agency, user: User) => {
       );
       // If any of the attempts to queue fail (promises rejected), log and throw error.
       if (queueResults.some((r) => r.status === 'rejected')) {
-        logger.error(queueResults.filter((r) => r.status === 'rejected').map((r) => r.reason));
+        logger.error(queueResults.filter((r) => r.status === 'rejected').map((r) => r));
         throw new ErrorWithCode(
           'Agency updated but not all projects successfully queued notifications.',
           500,

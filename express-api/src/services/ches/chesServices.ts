@@ -297,8 +297,13 @@ const getStatusesAsync = async (filter: ChesFilter) => {
 const cancelEmailByIdAsync = async (messageId: string) => {
   const response = await getStatusByIdAsync(messageId);
   if (response.status === 'accepted' || response.status === 'pending') {
-    const result = await sendAsync(`/cancel/${messageId}`, 'DELETE');
-    if (result != null) response.status = 'cancelled';
+    await sendAsync(`/cancel/${messageId}`, 'DELETE');
+    // CHES only sends back the 202 status for a cancelled notification, so result will be null.
+    // Must confirm the cancellation by checking the status of the message again.
+    const confirmation = await getStatusByIdAsync(messageId);
+    if (confirmation.status === 'cancelled') {
+      response.status = 'cancelled';
+    }
   }
   return response;
 };
