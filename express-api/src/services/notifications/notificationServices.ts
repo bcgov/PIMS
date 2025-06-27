@@ -777,6 +777,7 @@ const getNotificationById = async (id: number) => {
  */
 const resendNotificationWithNewProperties = async (
   notif: NotificationQueue,
+  user: User,
   newProperties: Partial<NotificationQueue> = {},
   requeue: boolean = true,
 ) => {
@@ -792,7 +793,7 @@ const resendNotificationWithNewProperties = async (
   if (postCancelNotification.Status === NotificationStatus.Cancelled) {
     // Cancelled successfully, then requeue with new properties
     if (requeue) {
-      const newNotif = await sendNotification({ ...notif, ...newProperties });
+      const newNotif = await sendNotification({ ...notif, ...newProperties }, user);
       if (newNotif.Status === NotificationStatus.Failed) {
         const error = `resendNotificationWithNewProperties: Failed to requeue notification Id ${newNotif.Id} (originally ${notif.Id}).`;
         logger.error(error);
