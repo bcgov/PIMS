@@ -754,12 +754,15 @@ const cancelNotificationById = async (id: number, user: User) => {
   });
   const chesResult = await chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
   if (chesResult.status === 'cancelled') {
-    return AppDataSource.getRepository(NotificationQueue).save({
+    return await AppDataSource.getRepository(NotificationQueue).save({
       Id: notification.Id,
       Status: NotificationStatus.Cancelled,
       UpdatedById: user.Id,
     });
   } else {
+    logger.warn(
+      `notificationServices.cancelNotificationById: Failed to cancel notification Id ${id} on CHES. Response: ${JSON.stringify(chesResult)}`,
+    );
     return notification;
   }
 };
