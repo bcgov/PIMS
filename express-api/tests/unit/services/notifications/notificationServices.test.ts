@@ -547,8 +547,11 @@ describe('resendNotificationWithNewProperties', () => {
       createdTS: Date.now(),
       msgId: randomUUID(),
     });
-    const result =
-      await notificationServices.resendNotificationWithNewProperties(notificationToSend);
+    const user = produceUser();
+    const result = await notificationServices.resendNotificationWithNewProperties(
+      notificationToSend,
+      user,
+    );
     expect(result).toBeDefined();
     expect(result.Status).toBe(NotificationStatus.Completed);
     expect(result.TemplateId).toBeDefined();
@@ -568,8 +571,9 @@ describe('resendNotificationWithNewProperties', () => {
     _chesCancelEmailMock.mockImplementationOnce(
       async () => ({ status: 'accepted' }) as IChesStatusResponse,
     );
+    const user = produceUser();
     await expect(
-      notificationServices.resendNotificationWithNewProperties(notificationToSend),
+      notificationServices.resendNotificationWithNewProperties(notificationToSend, user),
     ).rejects.toThrow(
       new Error(
         'resendNotificationWithNewProperties: Notification Id 1 not cancelled successfully.',
@@ -600,8 +604,9 @@ describe('resendNotificationWithNewProperties', () => {
       async () => ({ status: 'cancelled' }) as IChesStatusResponse,
     );
     _sendEmailAsync.mockReturnValueOnce({ status: 'failed' } as IChesStatusResponse);
+    const user = produceUser();
     await expect(
-      notificationServices.resendNotificationWithNewProperties(notificationToSend),
+      notificationServices.resendNotificationWithNewProperties(notificationToSend, user),
     ).rejects.toThrow(
       new Error(
         'resendNotificationWithNewProperties: Failed to requeue notification Id 1 (originally 1).',
@@ -640,8 +645,9 @@ describe('resendNotificationWithNewProperties', () => {
       createdTS: Date.now(),
       msgId: randomUUID(),
     } as IChesStatusResponse);
+    const user = produceUser();
     const response = await expect(
-      notificationServices.resendNotificationWithNewProperties(notificationToSend),
+      notificationServices.resendNotificationWithNewProperties(notificationToSend, user),
     );
     expect(response).toBeDefined();
   });
