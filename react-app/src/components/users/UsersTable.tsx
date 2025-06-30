@@ -258,14 +258,10 @@ const UsersTable = (props: IUsersTable) => {
           customExcelMap={excelDataMap}
           addTooltip="Adding a new user from this table is not supported yet. Please advise users to use the access request form."
           getRowId={(row) => row.Id}
+          rowCountProp={users.length}
           columns={columns}
           rows={users}
           loading={isLoading}
-          // initialState={{
-          //   sorting: {
-          //     sortModel: [{ field: 'Status', sort: 'desc' }],
-          //   },
-          // }}
           onPresetFilterChange={selectPresetFilter}
           presetFilterSelectOptions={[
             <CustomMenuItem key={'All Users'} value={'All Users'}>
