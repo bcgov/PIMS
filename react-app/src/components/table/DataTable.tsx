@@ -203,7 +203,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [dataSourceRows, setDataSourceRows] = useState([]);
-  const [rowCount, setRowCount] = useState<number>(0);
   const [keywordSearchContents, setKeywordSearchContents] = useState<string>('');
   const [gridFilterItems, setGridFilterItems] = useState([]);
   const [selectValue, setSelectValue] = useState<string>(props.defaultFilter);
@@ -434,10 +433,8 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
   }, [tableApiRef]);
 
   const tableHeaderRowCount = useMemo(() => {
-    return props.tableOperationMode === 'client'
-      ? `(${rowCount ?? 0} rows)`
-      : `(${props.rowCountProp ?? 0} rows)`;
-  }, [props.tableOperationMode, rowCount, props.rowCountProp]);
+    return `(${props.rowCountProp ?? 0} rows)`;
+  }, [props.rowCountProp]);
 
   const { pimsUser } = useContext(UserContext);
   const isAuditor = pimsUser.hasOneOfRoles([Roles.AUDITOR]);
@@ -590,12 +587,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
         </Box>
       </Box>
       <CustomDataGrid
-        onStateChange={(e) => {
-          // Keep track of row count separately
-          if (!props.dataSource) {
-            setRowCount(Object.values(e.filter.filteredRowsLookup).filter((value) => value).length);
-          }
-        }}
         onFilterModelChange={(e) => {
           // Can only filter by 1 at a time without DataGrid Pro
           const model: ITableModelCollection = {};
