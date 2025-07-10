@@ -106,6 +106,19 @@ const sendAsync = async (endpoint: string, method: string, data: Record<string, 
   }
 
   const text = await response.text();
+
+  if (config().ches.debug) {
+    logger.info({
+      message: 'CHES Response',
+      chesResponse: {
+        text: text.length ? JSON.parse(text) : null,
+        status: response.status,
+        url: url,
+        method: method,
+      },
+    });
+  }
+
   if (text.length) {
     return JSON.parse(text);
   } else {

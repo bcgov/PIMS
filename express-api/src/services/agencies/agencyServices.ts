@@ -186,6 +186,7 @@ export const updateAgencyById = async (agencyIn: Agency, user: User) => {
         affectedNotifications.map((notification) =>
           notificationServices.resendNotificationWithNewProperties(
             notification,
+            user,
             {
               To: updatedAgency.Email,
               Cc: updatedAgency.CCEmail,
