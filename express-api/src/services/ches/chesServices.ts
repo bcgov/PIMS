@@ -303,6 +303,17 @@ const cancelEmailByIdAsync = async (messageId: string) => {
     const confirmation = await getStatusByIdAsync(messageId);
     if (confirmation.status === 'cancelled') {
       response.status = 'cancelled';
+    } else {
+      // Because the status is not necessarily updated immediately in CHES, we must have retries.
+      // Retry up to 3 times to confirm cancellation.
+      for (let i = 0; i < 3; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second before retrying
+        const retryConfirmation = await getStatusByIdAsync(messageId);
+        if (retryConfirmation.status === 'cancelled') {
+          response.status = 'cancelled';
+          break;
+        }
+      }
     }
   }
   return response;
