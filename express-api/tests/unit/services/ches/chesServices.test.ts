@@ -4,6 +4,7 @@ import { produceEmail, producePimsRequestUser } from 'tests/testUtils/factories'
 import * as config from '@/constants/config';
 const _fetch = jest.fn().mockImplementation(() => {
   return {
+    ok: true,
     text: () => '{ a: 1 }',
   };
 });
@@ -238,6 +239,105 @@ describe('UNIT - Ches Services', () => {
         ok: true,
         text: () => ``,
       }));
+      _fetch.mockImplementationOnce(() => ({
+        text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
+      }));
+      _fetch.mockImplementationOnce(() => ({
+        ok: true,
+        text: () => `
+
+          {
+          
+              "createdTS": 1560000000,
+              "delayTS": 1570000000,
+              "msgId": "00000000-0000-0000-0000-000000000000",
+              "smtpResponse": 
+          
+                  {},
+                  "status": "cancelled",
+                  "statusHistory": 
+          
+                  [],
+                  "tag": "tag",
+                  "txId": "00000000-0000-0000-0000-000000000000",
+                  "updatedTS": 1570000000
+              }
+          
+          `,
+      }));
+      const response = await chesServices.cancelEmailByIdAsync(
+        '00000000-0000-0000-0000-000000000000',
+      );
+      expect(response.status).toBeDefined();
+      expect(response.tag).toBeDefined();
+      expect(response.txId).toBeDefined();
+      expect(response.status).toBe('cancelled');
+    });
+    it('should trigger the retry flow if the initial response is not cancelled', async () => {
+      // Initial status check
+      _fetch.mockImplementationOnce(() => ({
+        text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
+      }));
+      _fetch.mockImplementationOnce(() => ({
+        ok: true,
+        text: () => `
+
+          {
+          
+              "createdTS": 1560000000,
+              "delayTS": 1570000000,
+              "msgId": "00000000-0000-0000-0000-000000000000",
+              "smtpResponse": 
+          
+                  {},
+                  "status": "accepted",
+                  "statusHistory": 
+          
+                  [],
+                  "tag": "tag",
+                  "txId": "00000000-0000-0000-0000-000000000000",
+                  "updatedTS": 1570000000
+              }
+          
+          `,
+      }));
+      // Cancellation request
+      _fetch.mockImplementationOnce(() => ({
+        text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
+      }));
+      // CHES doesn't return text on successful cancelation. This is just null.
+      _fetch.mockImplementationOnce(() => ({
+        ok: true,
+        text: () => ``,
+      }));
+      // First status check after cancellation
+      _fetch.mockImplementationOnce(() => ({
+        text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
+      }));
+      _fetch.mockImplementationOnce(() => ({
+        ok: true,
+        text: () => `
+
+          {
+          
+              "createdTS": 1560000000,
+              "delayTS": 1570000000,
+              "msgId": "00000000-0000-0000-0000-000000000000",
+              "smtpResponse": 
+          
+                  {},
+                  "status": "pending",
+                  "statusHistory": 
+          
+                  [],
+                  "tag": "tag",
+                  "txId": "00000000-0000-0000-0000-000000000000",
+                  "updatedTS": 1570000000
+              }
+          
+          `,
+      }));
+      // First retry attempt
       _fetch.mockImplementationOnce(() => ({
         text: () => '{"access_token":"eyAiYSI6IDEgfQ==.ewoiZXhwIjoxCn0="}',
       }));
