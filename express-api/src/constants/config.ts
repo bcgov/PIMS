@@ -9,6 +9,7 @@ const config = {
     secondsToDelay: process.env.CHES_SECONDS_TO_DELAY, // Added in seconds to the delayTS to delay the email send date.
     emailEnabled: process.env.CHES_EMAIL_ENABLED === 'true', // If false, emails will not send at all.
     sendToLive: process.env.CHES_SEND_TO_LIVE === 'true', //For use in live testing environments. If this is false, and there is no overrideTo set, the requesting SSO user's email will be used as the "To" field.
+    debug: process.env.CHES_DEBUG === 'true', // If true, log all responses from CHES.
   },
   ltsa: {
     authurl: process.env.LTSA_AUTH_URL,
