@@ -11,13 +11,14 @@ import {
   SxProps,
   IconButton,
   useTheme,
+  Tooltip,
 } from '@mui/material';
 import { GridColDef, DataGrid, DataGridProps } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import { Agency } from '@/hooks/api/useAgencyApi';
 import { dateFormatter } from '@/utilities/formatters';
-import { AgencyResponseType } from '@/constants/agencyResponseTypes';
+import { AgencyResponseType, AgencyResponseTypeLabels } from '@/constants/agencyResponseTypes';
 import { enumReverseLookup } from '@/utilities/helperFunctions';
 
 interface IAgencySearchTable {
@@ -86,9 +87,43 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
       field: 'Response',
       headerName: 'Response',
       flex: 0.4,
+      minWidth: 125,
       editable: edit,
       type: 'singleSelect',
       valueOptions: Object.keys(AgencyResponseType).filter((key) => isNaN(Number(key))),
+      renderCell: (params) => {
+        // If the agency is disabled or SendEmail is false, and the response is Unsubscribe, disable the cell
+        // This provides a visual cue that the agency cannot be set to subscribe
+        // Works in tandem with the isCellEditable function below
+        if (params.row.Name === 'Finance') console.log('params.row', params.row);
+        const isDisabled =
+          (params.row.IsDisabled || !params.row.SendEmail) &&
+          params.row.Response === AgencyResponseTypeLabels[AgencyResponseType.Unsubscribe];
+        if (isDisabled) {
+          return (
+            <Tooltip title="Cannot subscribe an agency that is disabled, has notifications disabled, or does not have a valid email.">
+              <Box
+                sx={{
+                  color: theme.palette.text.disabled,
+                  opacity: 0.6,
+                }}
+              >
+                {params.value || ''}
+              </Box>
+            </Tooltip>
+          );
+        }
+        return (
+          <Box
+            sx={{
+              color: 'inherit',
+              opacity: 1,
+            }}
+          >
+            {params.value || ''}
+          </Box>
+        );
+      },
     },
   ];
   return (
@@ -97,6 +132,7 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
       editMode="row"
       hideFooter
       disableRowSelectionOnClick
+      disableColumnResize
       columns={[...columns, ...(props.additionalColumns ?? [])]}
       sx={{
         ...props.sx,
@@ -105,6 +141,22 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
         },
       }}
       rows={props.rows}
+      isCellEditable={(params) => {
+        // Prevent editing Response column if agency is disabled or SendEmail is false AND response is Unsubscribe
+        // This allows the user to see the response but not change it
+        // Works in tandem with the renderCell function above
+        if (params.field === 'Response') {
+          if (
+            (params.row.IsDisabled || !params.row.SendEmail) &&
+            params.row.Response === AgencyResponseTypeLabels[AgencyResponseType.Unsubscribe]
+          ) {
+            return false;
+          }
+          return edit;
+        }
+        // For other columns, use their editable property
+        return params.colDef.editable === true;
+      }}
       {...props.dataGridProps}
     />
   );
