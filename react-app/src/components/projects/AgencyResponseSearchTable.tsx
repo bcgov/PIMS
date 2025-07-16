@@ -13,7 +13,7 @@ import {
   useTheme,
   Tooltip,
 } from '@mui/material';
-import { GridColDef, DataGrid, DataGridProps } from '@mui/x-data-grid';
+import { GridColDef, DataGrid, DataGridProps, useGridApiRef } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { ISelectMenuItem } from '../form/SelectFormField';
 import { Agency } from '@/hooks/api/useAgencyApi';
@@ -46,6 +46,7 @@ interface IAgencySimpleTable {
 
 export const AgencySimpleTable = (props: IAgencySimpleTable) => {
   const theme = useTheme();
+  const apiRef = useGridApiRef();
   const edit = props.editMode;
   const columns: GridColDef[] = [
     {
@@ -128,6 +129,7 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
   ];
   return (
     <DataGrid
+      apiRef={apiRef}
       getRowId={(row) => row.Id}
       editMode="row"
       hideFooter
@@ -156,6 +158,11 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
         }
         // For other columns, use their editable property
         return params.colDef.editable === true;
+      }}
+      initialState={{
+        sorting: {
+          sortModel: [{ field: 'Name', sort: 'asc' }],
+        },
       }}
       {...props.dataGridProps}
     />
