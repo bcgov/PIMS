@@ -518,6 +518,7 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
             Response: Number(AgencyResponseType[agc.Response]),
             Note: agc.Note,
             ProjectId: initialValues.Id,
+            ReceivedOn: agc.ReceivedOn,
           })),
         ).then(() => postSubmit());
       }}
