@@ -505,7 +505,7 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
   }, [initialValues, lookupData?.Agencies]);
   return (
     <ConfirmDialog
-      dialogProps={{ maxWidth: 'lg' }}
+      dialogProps={{ maxWidth: 'xl' }}
       title={'Edit Agency Interest Responses'}
       open={open}
       confirmButtonProps={{ loading: submitting }}
@@ -524,7 +524,7 @@ export const ProjectAgencyResponseDialog = (props: IProjectAgencyResponseDialog)
       }}
       onCancel={async () => onCancel()}
     >
-      <Box paddingTop={'1rem'}>
+      <Box paddingTop={'1rem'} width={'70vw'} height={'80vh'}>
         <AgencySearchTable
           agencies={activeAgencies as Agency[]}
           options={options}
