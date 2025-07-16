@@ -71,6 +71,8 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
       field: 'Note',
       headerName: 'Note',
       flex: 1,
+      minWidth: 200,
+      maxWidth: 400,
       editable: edit,
       type: 'string',
       renderCell: (params) =>
@@ -83,7 +85,7 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
     {
       field: 'Response',
       headerName: 'Response',
-      flex: 1,
+      flex: 0.4,
       editable: edit,
       type: 'singleSelect',
       valueOptions: Object.keys(AgencyResponseType).filter((key) => isNaN(Number(key))),
@@ -92,7 +94,7 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
   return (
     <DataGrid
       getRowId={(row) => row.Id}
-      autoHeight
+      editMode="row"
       hideFooter
       disableRowSelectionOnClick
       columns={[...columns, ...(props.additionalColumns ?? [])]}
