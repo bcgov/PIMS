@@ -890,9 +890,6 @@ describe('UNIT - Project Services', () => {
 
   describe('updateProjectAgencyResponses', () => {
     jest
-      .spyOn(AppDataSource.getRepository(Agency), 'findOne')
-      .mockImplementation(async () => produceAgency());
-    jest
       .spyOn(AppDataSource.getRepository(ProjectNote), 'find')
       .mockImplementation(async () => [produceNote()]);
     jest
@@ -908,18 +905,153 @@ describe('UNIT - Project Services', () => {
     jest
       .spyOn(AppDataSource.getRepository(ProjectAgencyResponse), 'save')
       .mockImplementation(async () => produceAgencyResponse());
+
     it('should return the list of sent notifications from this update', async () => {
+      const returnAgency = produceAgency({
+        SendEmail: true,
+        Email: 'email@email.com',
+        IsDisabled: false,
+      });
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'findOne')
+        .mockImplementationOnce(async () => returnAgency);
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'find')
+        .mockImplementationOnce(async () => [returnAgency]);
+
       const project = produceProject();
-      const responses = [produceAgencyResponse({ Response: AgencyResponseType.Subscribe })];
+      const responses = [
+        produceAgencyResponse({
+          Response: AgencyResponseType.Subscribe,
+          AgencyId: returnAgency.Id,
+        }),
+      ];
       const user = producePimsRequestUser();
       const result = await projectServices.updateProjectAgencyResponses(
         project.Id,
         responses,
         user,
       );
-      expect(result).toHaveLength(
+      expect(result.sentNotifications).toHaveLength(
         responses.filter((r) => r.Response === AgencyResponseType.Subscribe).length,
       );
+      expect(result.invalidResponseChanges).toBe(0);
+    });
+
+    it('should return a invalid response of 1 if the agency cannot be found', async () => {
+      const returnAgency = produceAgency({
+        SendEmail: true,
+        Email: 'email@email.com',
+        IsDisabled: false,
+      });
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'findOne')
+        .mockImplementationOnce(async () => returnAgency);
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'find')
+        .mockImplementationOnce(async () => []);
+
+      const project = produceProject();
+      const responses = [
+        produceAgencyResponse({
+          Response: AgencyResponseType.Subscribe,
+          AgencyId: returnAgency.Id,
+        }),
+      ];
+      const user = producePimsRequestUser();
+      const result = await projectServices.updateProjectAgencyResponses(
+        project.Id,
+        responses,
+        user,
+      );
+      expect(result.invalidResponseChanges).toBe(1);
+    });
+
+    it('should return a invalid response of 1 if the agency is disabled', async () => {
+      const returnAgency = produceAgency({
+        SendEmail: true,
+        Email: 'email@email.com',
+        IsDisabled: true,
+      });
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'findOne')
+        .mockImplementationOnce(async () => returnAgency);
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'find')
+        .mockImplementationOnce(async () => [returnAgency]);
+
+      const project = produceProject();
+      const responses = [
+        produceAgencyResponse({
+          Response: AgencyResponseType.Subscribe,
+          AgencyId: returnAgency.Id,
+        }),
+      ];
+      const user = producePimsRequestUser();
+      const result = await projectServices.updateProjectAgencyResponses(
+        project.Id,
+        responses,
+        user,
+      );
+      expect(result.invalidResponseChanges).toBe(1);
+    });
+
+    it('should return a invalid response of 1 if the agency has SendEmail disabled', async () => {
+      const returnAgency = produceAgency({
+        SendEmail: false,
+        Email: 'email@email.com',
+        IsDisabled: false,
+      });
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'findOne')
+        .mockImplementationOnce(async () => returnAgency);
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'find')
+        .mockImplementationOnce(async () => [returnAgency]);
+
+      const project = produceProject();
+      const responses = [
+        produceAgencyResponse({
+          Response: AgencyResponseType.Subscribe,
+          AgencyId: returnAgency.Id,
+        }),
+      ];
+      const user = producePimsRequestUser();
+      const result = await projectServices.updateProjectAgencyResponses(
+        project.Id,
+        responses,
+        user,
+      );
+      expect(result.invalidResponseChanges).toBe(1);
+    });
+
+    it('should return a invalid response of 1 if the agency has a blank email', async () => {
+      const returnAgency = produceAgency({
+        SendEmail: true,
+        Email: '',
+        IsDisabled: false,
+      });
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'findOne')
+        .mockImplementationOnce(async () => returnAgency);
+      jest
+        .spyOn(AppDataSource.getRepository(Agency), 'find')
+        .mockImplementationOnce(async () => [returnAgency]);
+
+      const project = produceProject();
+      const responses = [
+        produceAgencyResponse({
+          Response: AgencyResponseType.Subscribe,
+          AgencyId: returnAgency.Id,
+        }),
+      ];
+      const user = producePimsRequestUser();
+      const result = await projectServices.updateProjectAgencyResponses(
+        project.Id,
+        responses,
+        user,
+      );
+      expect(result.invalidResponseChanges).toBe(1);
     });
   });
 });

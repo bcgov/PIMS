@@ -52,9 +52,12 @@ const _updateProjectAgencyResponses = jest
   .fn()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   .mockImplementation((_id: number, responses: ProjectAgencyResponse[], user: User) => {
-    return responses.map((r) =>
-      produceNotificationQueue({ ProjectId: r.ProjectId, ToAgencyId: r.AgencyId }),
-    ) as NotificationQueue[];
+    return {
+      sentNotifications: responses.map((r) =>
+        produceNotificationQueue({ ProjectId: r.ProjectId, ToAgencyId: r.AgencyId }),
+      ) as NotificationQueue[],
+      invalidResponseChanges: 0,
+    };
   });
 
 jest
@@ -426,7 +429,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
       mockRequest.params.projectId = '1';
       await controllers.updateProjectAgencyResponses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(200);
-      expect(mockResponse.sendValue).toHaveLength(1);
+      expect(mockResponse.sendValue.sentNotifications).toHaveLength(1);
     });
 
     it('should return 400 when the body of responses is not properly formatted', async () => {
@@ -439,12 +442,33 @@ describe('UNIT - Testing controllers for users routes.', () => {
     });
 
     it('should return 400 when the projectId is not a number', async () => {
-      mockRequest.body = { responses: [produceAgencyResponse()] };
+      mockRequest.body = {
+        responses: [produceAgencyResponse({ Response: 0 })], // Response 0 is Subscribe
+      };
       mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => true });
       mockRequest.params.projectId = 'a';
       await controllers.updateProjectAgencyResponses(mockRequest, mockResponse);
       expect(mockResponse.statusValue).toBe(400);
       expect(mockResponse.sendValue).toBe('Invalid Project ID');
+    });
+
+    it('should return 400 when some invalid subscribe requests are received', async () => {
+      mockRequest.body = {
+        responses: [produceAgencyResponse({ Response: 0 })], // Response 0 is Subscribe
+      };
+      mockRequest.setPimsUser({ RoleId: Roles.ADMIN, hasOneOfRoles: () => true });
+      mockRequest.params.projectId = '1';
+      _updateProjectAgencyResponses.mockImplementationOnce(() => {
+        return {
+          sentNotifications: [],
+          invalidResponseChanges: 1,
+        };
+      });
+      await controllers.updateProjectAgencyResponses(mockRequest, mockResponse);
+      expect(mockResponse.statusValue).toBe(400);
+      expect(mockResponse.sendValue).toBe(
+        '1 of the responses were not updated due to invalid changes.',
+      );
     });
 
     it('should return 403 when a non-admin attempts to make this change', async () => {
