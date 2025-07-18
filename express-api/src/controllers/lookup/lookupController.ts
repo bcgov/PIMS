@@ -392,6 +392,7 @@ export const lookupAll = async (req: Request, res: Response) => {
     Config: {
       contactEmail: cfg.contact.toEmail,
       bcscIdentifier: cfg.keycloak.client_id,
+      bannerMessage: cfg.contact.frontendBannerMessage,
     },
   };
   return res.status(200).send(returnObj);
