@@ -99,6 +99,7 @@ const Header: React.FC<HeaderProps> = (props) => {
         style={{
           backgroundColor: theme.palette.white.main,
           height: `${offsetHeight}px`,
+          width: '100%',
           display: 'flex',
           flexDirection: 'column',
           position: 'fixed',
@@ -221,7 +222,9 @@ const Header: React.FC<HeaderProps> = (props) => {
                 display: 'flex',
                 justifyContent: 'center',
                 height: 'fit-content',
-                padding: '0.2em 2rem',
+                padding: '0.2em 0.5em',
+                overflow: 'clip',
+                textAlign: 'center',
               }}
             >
               <span>{lookupContext?.data?.Config.bannerMessage}</span>
