@@ -64,7 +64,7 @@ const MapSidebar = (props: MapSidebarProps) => {
   const excelDataMap = getPropertyExportMap();
 
   // Get related data for lookups
-  const { getLookupValueById } = useContext(LookupContext);
+  const { getLookupValueById, data: lookup } = useContext(LookupContext);
 
   // Sets the properties that are in the map's bounds at current view. Resets the page index.
   const definePropertiesInBounds = () => {
@@ -102,7 +102,8 @@ const MapSidebar = (props: MapSidebarProps) => {
         zIndex={1000}
         position={'fixed'}
         right={sidebarOpen ? 0 : '-400px'}
-        height={'calc(100vh - 75px)'}
+        height={`calc(100vh - ${lookup?.Config.headerOffsetHeight}px - 2rem)`}
+        top={`${lookup?.Config.headerOffsetHeight}px`}
         component={Paper}
         width={sidebarWidth}
         overflow={'hidden'}
@@ -273,8 +274,9 @@ const MapSidebar = (props: MapSidebarProps) => {
         id="map-filter-container"
         zIndex={999}
         position={'fixed'}
+        height={`calc(100vh - ${lookup.Config.headerOffsetHeight}px - 2rem)`}
+        top={`${lookup.Config.headerOffsetHeight}px`}
         right={filterOpen && sidebarOpen ? sidebarWidth : '-400px'}
-        height={'calc(100vh - 75px)'}
         component={Paper}
         width={sidebarWidth}
         overflow={'hidden'}

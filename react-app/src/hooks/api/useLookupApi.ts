@@ -61,6 +61,8 @@ export interface LookupAll {
   Config: {
     contactEmail: string;
     bcscIdentifier?: string;
+    bannerMessage?: string;
+    headerOffsetHeight?: number; // The height of the header in pixels, used for layout calculations. Inserted in LookupContext.
   };
 }
 
