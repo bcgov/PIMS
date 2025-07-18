@@ -16,6 +16,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { Roles } from '@/constants/roles';
 import { UserContext } from '@/contexts/userContext';
+import { LookupContext } from '@/contexts/lookupContext';
 
 const AppBrand = () => {
   const theme = useTheme();
@@ -60,8 +61,14 @@ const AppBrand = () => {
   );
 };
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  offsetHeight: number;
+}
+
+const Header: React.FC<HeaderProps> = (props) => {
+  const { offsetHeight } = props;
   const auth = useContext(UserContext);
+  const lookupContext = useContext(LookupContext);
   const { logout, isAuthenticated, login } = useSSO();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -85,121 +92,143 @@ const Header: React.FC = () => {
   };
 
   return (
-    <AppBar
-      elevation={0}
-      component={'nav'}
-      style={{
-        backgroundColor: theme.palette.white.main,
-        height: '74px',
-        display: 'flex',
-        position: 'fixed',
-        justifyContent: 'center',
-        borderBottom: '1px solid',
-        borderBottomColor: theme.palette.gray.main,
-        zIndex: theme.zIndex.drawer + 1,
-      }}
-    >
-      <Toolbar>
-        <AppBrand />
-        <Box flexGrow={1}></Box>
-        <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
-          {isAuthenticated &&
-            auth?.pimsUser?.data?.Status === 'Active' &&
-            auth?.pimsUser?.data?.RoleId && (
-              <>
-                {auth.pimsUser.hasOneOfRoles([Roles.ADMIN]) ? (
-                  <>
-                    <Typography
-                      id="admin-button"
-                      aria-controls={open ? 'admin-menu' : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? 'true' : undefined}
-                      onClick={handleClick}
-                      sx={{
-                        color: '#000',
-                        fontWeight: 500,
-                        '&:hover': {
-                          cursor: 'pointer',
-                        },
-                      }}
-                      variant="h5"
-                    >
-                      Administration
+    <>
+      <AppBar
+        elevation={0}
+        component={'nav'}
+        style={{
+          backgroundColor: theme.palette.white.main,
+          height: `${offsetHeight}px`,
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'fixed',
+          justifyContent: 'center',
+          borderBottom: '1px solid',
+          borderBottomColor: theme.palette.gray.main,
+          zIndex: theme.zIndex.drawer + 1,
+        }}
+      >
+        <Toolbar>
+          <AppBrand />
+          <Box flexGrow={1}></Box>
+          <Box textAlign={'center'} alignItems={'center'} gap={'32px'} display={'flex'}>
+            {isAuthenticated &&
+              auth?.pimsUser?.data?.Status === 'Active' &&
+              auth?.pimsUser?.data?.RoleId && (
+                <>
+                  {auth.pimsUser.hasOneOfRoles([Roles.ADMIN]) ? (
+                    <>
+                      <Typography
+                        id="admin-button"
+                        aria-controls={open ? 'admin-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick}
+                        sx={{
+                          color: '#000',
+                          fontWeight: 500,
+                          '&:hover': {
+                            cursor: 'pointer',
+                          },
+                        }}
+                        variant="h5"
+                      >
+                        Administration
+                      </Typography>
+                      <Menu
+                        id="admin-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'admin-menu-button',
+                        }}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            navigate(
+                              '/admin/agencies?page=0&pageSize=100&columnSortName=Name&columnSortValue=asc',
+                            );
+                            setAnchorEl(undefined);
+                          }}
+                        >
+                          Agencies
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            navigate(
+                              '/admin/adminAreas?columnSortName=Name&columnSortValue=asc&page=0&pageSize=100',
+                            );
+                            setAnchorEl(undefined);
+                          }}
+                        >
+                          Administrative Areas
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            navigate('/admin/bulk');
+                            setAnchorEl(undefined);
+                          }}
+                        >
+                          Bulk Upload
+                        </MenuItem>
+                      </Menu>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  <RouterLink
+                    style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                    to="/properties?columnSortName=UpdatedOn&columnSortValue=desc&page=0&pageSize=100"
+                  >
+                    <Typography fontWeight={500} variant="h5">
+                      Active Inventory
                     </Typography>
-                    <Menu
-                      id="admin-menu"
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      MenuListProps={{
-                        'aria-labelledby': 'admin-menu-button',
-                      }}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          navigate(
-                            '/admin/agencies?page=0&pageSize=100&columnSortName=Name&columnSortValue=asc',
-                          );
-                          setAnchorEl(undefined);
-                        }}
-                      >
-                        Agencies
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          navigate(
-                            '/admin/adminAreas?columnSortName=Name&columnSortValue=asc&page=0&pageSize=100',
-                          );
-                          setAnchorEl(undefined);
-                        }}
-                      >
-                        Administrative Areas
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          navigate('/admin/bulk');
-                          setAnchorEl(undefined);
-                        }}
-                      >
-                        Bulk Upload
-                      </MenuItem>
-                    </Menu>
-                  </>
-                ) : (
-                  <></>
-                )}
-                <RouterLink
-                  style={{ color: theme.palette.black.main, textDecoration: 'none' }}
-                  to="/properties?columnSortName=UpdatedOn&columnSortValue=desc&page=0&pageSize=100"
-                >
-                  <Typography fontWeight={500} variant="h5">
-                    Active Inventory
-                  </Typography>
-                </RouterLink>
-                <RouterLink
-                  style={{ color: theme.palette.black.main, textDecoration: 'none' }}
-                  to="/projects?columnSortName=UpdatedOn&columnSortValue=desc&page=0&pageSize=100"
-                >
-                  <Typography fontWeight={500} variant="h5">
-                    Disposal Projects
-                  </Typography>
-                </RouterLink>
-                <RouterLink
-                  style={{ color: theme.palette.black.main, textDecoration: 'none' }}
-                  to="/users?page=0&pageSize=100&columnSortName=Status&columnSortValue=desc"
-                >
-                  <Typography fontWeight={500} variant="h5">
-                    Users
-                  </Typography>
-                </RouterLink>
-              </>
-            )}
-          <Button onClick={() => handleLoginButton()} color="secondary" variant="contained">
-            {isAuthenticated ? 'Logout' : 'Login'}
-          </Button>
-        </Box>
-      </Toolbar>
-    </AppBar>
+                  </RouterLink>
+                  <RouterLink
+                    style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                    to="/projects?columnSortName=UpdatedOn&columnSortValue=desc&page=0&pageSize=100"
+                  >
+                    <Typography fontWeight={500} variant="h5">
+                      Disposal Projects
+                    </Typography>
+                  </RouterLink>
+                  <RouterLink
+                    style={{ color: theme.palette.black.main, textDecoration: 'none' }}
+                    to="/users?page=0&pageSize=100&columnSortName=Status&columnSortValue=desc"
+                  >
+                    <Typography fontWeight={500} variant="h5">
+                      Users
+                    </Typography>
+                  </RouterLink>
+                </>
+              )}
+            <Button onClick={() => handleLoginButton()} color="secondary" variant="contained">
+              {isAuthenticated ? 'Logout' : 'Login'}
+            </Button>
+          </Box>
+        </Toolbar>
+        {lookupContext?.data?.Config.bannerMessage &&
+          lookupContext?.data?.Config.bannerMessage.length > 0 && (
+            <Box
+              sx={{
+                width: '100%',
+                position: 'relative',
+                fontFamily: theme.typography.fontFamily,
+                color: theme.palette.black.main,
+                backgroundColor: theme.palette.warning.light,
+                alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+                height: 'fit-content',
+                padding: '0.2em 2rem',
+              }}
+            >
+              <span>{lookupContext?.data?.Config.bannerMessage}</span>
+            </Box>
+          )}
+      </AppBar>
+    </>
   );
 };
 

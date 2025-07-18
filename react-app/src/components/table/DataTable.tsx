@@ -631,17 +631,6 @@ export const FilterSearchDataGrid = (props: FilterSearchDataGridProps) => {
           setSearchParamsKey({ page: String(model.page), pageSize: String(model.pageSize) });
         }}
         apiRef={tableApiRef}
-        // initialState={{
-        //   pagination: {
-        //     paginationModel: {
-        //       pageSize: getSearchParamsKey('pageSize')
-        //         ? Number(getSearchParamsKey('pageSize'))
-        //         : DEFAULT_PAGE,
-        //       page: getSearchParamsKey('page') ? Number(getSearchParamsKey('page')) : DEFAULT_PAGE,
-        //     },
-        //   },
-        //   ...props.initialState,
-        // }}
         pageSizeOptions={[10, 20, 30, 100]} // DataGrid max is 100
         disableRowSelectionOnClick
         sx={{
