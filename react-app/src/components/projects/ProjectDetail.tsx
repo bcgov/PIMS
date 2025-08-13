@@ -16,7 +16,6 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import {
   Project,
-  ProjectMetadata,
   ProjectMonetary,
   ProjectNote,
   ProjectTask,
@@ -71,8 +70,6 @@ interface ProjectInfo extends Project {
   NetBookValue: number;
   EstimatedMarketValue: number;
   AppraisedValue: number;
-  EstimatedSalesCost: ProjectMetadata;
-  EstimatedProgramRecoveryFees: ProjectMetadata;
   SurplusDeclaration: boolean;
   TripleBottom: boolean;
   'Fiscal Year of Disposal': number;

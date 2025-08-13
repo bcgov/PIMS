@@ -68,7 +68,6 @@ export interface Project {
   CreatedBy?: User;
   UpdatedOn?: string;
   UpdatedBy?: User;
-  Metadata?: ProjectMetadata;
   Tasks?: ProjectTask[];
   Notifications?: ProjectNotification[];
   StatusHistory?: ProjectStatusHistory[];
@@ -176,57 +175,6 @@ export interface ProjectAgencyResponse {
   Response: number;
   ReceivedOn: Date | null;
   Note: string | null;
-}
-
-export interface ProjectMetadata {
-  // Exemption Fields
-  exemptionRequested?: boolean;
-  exemptionApprovedOn?: Date;
-  // ERP Fields
-  initialNotificationSentOn?: Date;
-  thirtyDayNotificationSentOn?: Date;
-  sixtyDayNotificationSentOn?: Date;
-  ninetyDayNotificationSentOn?: Date;
-  onHoldNotificationSentOn?: Date;
-  interestReceivedOn?: Date;
-  transferredWithinGreOn?: Date;
-  clearanceNotificationSentOn?: Date;
-  // SPL Fields
-  requestForSplReceivedOn?: Date;
-  approvedForSplOn?: Date;
-  marketedOn?: Date;
-  purchaser?: string;
-  offerAcceptedOn?: Date;
-  adjustedOn?: Date;
-  preliminaryFormSignedOn?: Date;
-  finalFormSignedOn?: Date;
-  priorYearAdjustmentOn?: Date;
-  disposedOn?: Date;
-  // Removing from SPL
-  removalFromSplRequestOn?: Date;
-  removalFromSplApprovedOn?: Date;
-  // Financials
-  assessedOn?: Date;
-  appraisedBy?: string;
-  appraisedOn?: Date;
-  salesCost?: number;
-  netProceeds?: number;
-  programCost?: number;
-  gainLoss?: number;
-  sppCapitalization?: number;
-  gainBeforeSpl?: number;
-  ocgFinancialStatement?: number;
-  interestComponent?: number;
-  plannedFutureUse?: string;
-  offerAmount?: number;
-  saleWithLeaseInPlace?: boolean;
-  priorYearAdjustment?: boolean;
-  priorYearAdjustmentAmount?: number;
-  realtor?: string;
-  realtorRate?: string;
-  realtorCommission?: number;
-  preliminaryFormSignedBy?: string;
-  finalFormSignedBy?: string;
 }
 
 // All values optional because it's not clear what filter will be used.
