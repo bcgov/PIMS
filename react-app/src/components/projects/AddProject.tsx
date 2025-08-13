@@ -1,4 +1,4 @@
-import { Box, Grid, InputAdornment, Typography, useTheme } from '@mui/material';
+import { Box, Grid, Typography, useTheme } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { NavigateBackButton } from '../display/DetailViewNavigation';
 import TextFormField from '../form/TextFormField';
@@ -17,6 +17,7 @@ import { MonetaryType } from '@/constants/monetaryTypes';
 import { NoteTypes } from '@/constants/noteTypes';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 import { getFiscalYear } from '@/utilities/helperFunctions';
+import { ProjectFinancialInfoForm } from '@/components/projects/ProjectForms';
 
 const AddProject = () => {
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
@@ -123,95 +124,7 @@ const AddProject = () => {
           </Typography>
         )}
         <Typography variant="h5">Financial Information</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextFormField
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-              fullWidth
-              numeric
-              name={'Assessed'}
-              label={'Assessed value'}
-              rules={{
-                min: {
-                  value: 0.01,
-                  message: 'Must be greater than 0.',
-                },
-              }}
-              required
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextFormField
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-              fullWidth
-              numeric
-              name={'NetBook'}
-              label={'Net Book Value'}
-              rules={{
-                min: {
-                  value: 0.01,
-                  message: 'Must be greater than 0.',
-                },
-              }}
-              required
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextFormField
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-              numeric
-              fullWidth
-              name={'Market'}
-              label={'Estimated market value'}
-              rules={{
-                min: {
-                  value: 0.01,
-                  message: 'Must be greater than 0.',
-                },
-              }}
-              required
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextFormField
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-              numeric
-              fullWidth
-              name={'Appraised'}
-              label={'Appraised value'}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextFormField
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-              numeric
-              fullWidth
-              name={'SalesCost'}
-              label={'Estimated sales cost'}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextFormField
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-              }}
-              numeric
-              fullWidth
-              name={'ProgramCost'}
-              label={'Estimated program recovery fees'}
-            />
-          </Grid>
-        </Grid>
+        <ProjectFinancialInfoForm />
         <Typography variant="h5">Documentation</Typography>
         <Grid container spacing={2}>
           {tasksForAddState.map((task, idx) => (
