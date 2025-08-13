@@ -184,19 +184,15 @@ export const ProjectFinancialInfoForm = () => {
           }}
           numeric
           fullWidth
-          name={'Appraised'}
-          label={'Appraised value'}
-        />
-      </Grid>
-      <Grid item xs={6}>
-        <TextFormField
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-          }}
-          numeric
-          fullWidth
           name={'SalesCost'}
           label={'Estimated sales cost'}
+          rules={{
+            min: {
+              value: 0,
+              message: 'Must be 0 or greater.',
+            },
+          }}
+          required
         />
       </Grid>
       <Grid item xs={6}>
@@ -206,9 +202,8 @@ export const ProjectFinancialInfoForm = () => {
           }}
           numeric
           fullWidth
-          name={'ProgramCost'}
-          label={'Estimated Program Cost'}
-          tooltip="1% of Net Proceeds if Tier 2+"
+          name={'Appraised'}
+          label={'Appraised value'}
         />
       </Grid>
     </Grid>
