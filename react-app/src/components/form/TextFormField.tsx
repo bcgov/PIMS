@@ -1,13 +1,13 @@
 import React from 'react';
-import { Box, TextField, TextFieldProps, Tooltip } from '@mui/material';
+import { TextField, TextFieldProps } from '@mui/material';
 import { Controller, FieldValues, RegisterOptions, useFormContext } from 'react-hook-form';
 import { pidFormatter } from '@/utilities/formatters';
-import { Help } from '@mui/icons-material';
+import FormFieldLabel from '@/components/common/FormFieldLabel';
 
 type TextFormFieldProps = {
   defaultVal?: string;
   name: string;
-  label: string | JSX.Element;
+  label: string;
   tooltip?: string;
   numeric?: boolean;
   isPid?: boolean;
@@ -66,16 +66,7 @@ const TextFormField = (props: TextFormFieldProps) => {
             }}
             value={value ?? defaultVal}
             fullWidth
-            label={
-              <Box display={'inline-flex'} alignItems={'center'}>
-                {`${label} `}
-                {tooltip && (
-                  <Tooltip title={tooltip}>
-                    <Help sx={{ ml: '4px' }} fontSize="small" />
-                  </Tooltip>
-                )}
-              </Box>
-            }
+            label={<FormFieldLabel label={label} tooltip={tooltip} />}
             type={'text'}
             error={!!error && !!error.message}
             helperText={error?.message}
