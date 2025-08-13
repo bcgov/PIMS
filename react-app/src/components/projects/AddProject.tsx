@@ -30,7 +30,6 @@ const AddProject = () => {
       NetBook: 0,
       Market: 0,
       Appraised: 0,
-      ProgramCost: 0,
       SalesCost: 0,
       ExemptionNote: '',
       Approval: false,
@@ -191,7 +190,6 @@ const AddProject = () => {
                 ReportedFiscalYear: getFiscalYear(),
                 ActualFiscalYear: getFiscalYear(),
                 Monetaries: [
-                  { MonetaryTypeId: MonetaryType.PROGRAM_COST, Value: formValues.ProgramCost },
                   { MonetaryTypeId: MonetaryType.SALES_COST, Value: formValues.SalesCost },
                 ],
                 Tasks: formValues.Tasks.filter((a) => a.IsCompleted),
