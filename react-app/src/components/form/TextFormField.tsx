@@ -1,12 +1,14 @@
 import React from 'react';
-import { TextField, TextFieldProps } from '@mui/material';
+import { Box, TextField, TextFieldProps, Tooltip } from '@mui/material';
 import { Controller, FieldValues, RegisterOptions, useFormContext } from 'react-hook-form';
 import { pidFormatter } from '@/utilities/formatters';
+import { Help } from '@mui/icons-material';
 
 type TextFormFieldProps = {
   defaultVal?: string;
   name: string;
-  label: string;
+  label: string | JSX.Element;
+  tooltip?: string;
   numeric?: boolean;
   isPid?: boolean;
   rules?: Omit<
@@ -17,7 +19,18 @@ type TextFormFieldProps = {
 
 const TextFormField = (props: TextFormFieldProps) => {
   const { control, setValue } = useFormContext();
-  const { name, label, rules, numeric, isPid, defaultVal, disabled, onBlur, ...restProps } = props;
+  const {
+    name,
+    label,
+    rules,
+    numeric,
+    isPid,
+    defaultVal,
+    disabled,
+    onBlur,
+    tooltip,
+    ...restProps
+  } = props;
   return (
     <Controller
       control={control}
@@ -53,7 +66,16 @@ const TextFormField = (props: TextFormFieldProps) => {
             }}
             value={value ?? defaultVal}
             fullWidth
-            label={label}
+            label={
+              <Box display={'inline-flex'} alignItems={'center'}>
+                {`${label} `}
+                {tooltip && (
+                  <Tooltip title={tooltip}>
+                    <Help sx={{ ml: '4px' }} fontSize="small" />
+                  </Tooltip>
+                )}
+              </Box>
+            }
             type={'text'}
             error={!!error && !!error.message}
             helperText={error?.message}

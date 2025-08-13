@@ -8,13 +8,16 @@ import {
   FilterOptionsState,
   ListItemText,
   AutocompleteProps,
+  Tooltip,
 } from '@mui/material';
 import { ISelectMenuItem } from './SelectFormField';
 import { Controller, useFormContext } from 'react-hook-form';
+import { Help } from '@mui/icons-material';
 
 type AutocompleteFormProps = {
   name: string;
   label: string | JSX.Element;
+  tooltip?: string;
   required?: boolean;
   allowNestedIndent?: boolean;
   disableOptionsFunction?: (option: ISelectMenuItem) => boolean;
@@ -39,6 +42,7 @@ const AutocompleteFormField = (
     name,
     options,
     label,
+    tooltip,
     sx,
     required,
     allowNestedIndent,
@@ -105,7 +109,16 @@ const AutocompleteFormField = (
               {...params}
               error={!!formState.errors?.[name]}
               required={required}
-              label={label}
+              label={
+                <Box display={'inline-flex'} alignItems={'center'}>
+                  {`${label} `}
+                  {tooltip && (
+                    <Tooltip title={tooltip}>
+                      <Help sx={{ ml: '4px' }} fontSize="small" />
+                    </Tooltip>
+                  )}
+                </Box>
+              }
               helperText={formState.errors?.[name] ? 'This field is required.' : undefined}
             />
           )}
