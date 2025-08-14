@@ -29,6 +29,7 @@ import { MonetaryType } from '@/constants/monetaryTypes';
 import BaseDialog from '../dialog/BaseDialog';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
 import useAgencyOptions from '@/hooks/useAgencyOptions';
+import { ProjectStatus } from '@/constants/projectStatuses';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -186,7 +187,9 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   }, [statusTypes, initialValues]);
 
   useEffect(() => {
-    setApprovedStatus(lookupData?.ProjectStatuses?.find((a) => a.Name === 'Approved for ERP')?.Id);
+    setApprovedStatus(
+      lookupData?.ProjectStatuses?.find((a) => a.Id === ProjectStatus.APPROVED_FOR_ERP)?.Id,
+    );
   }, [lookupData]);
   const status = projectFormMethods.watch('StatusId');
   const requireNotificationAcknowledge =

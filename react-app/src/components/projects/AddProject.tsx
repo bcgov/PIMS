@@ -18,6 +18,7 @@ import { NoteTypes } from '@/constants/noteTypes';
 import useHistoryAwareNavigate from '@/hooks/useHistoryAwareNavigate';
 import { getFiscalYear } from '@/utilities/helperFunctions';
 import { ProjectFinancialInfoForm } from '@/components/projects/ProjectForms';
+import { ProjectStatus } from '@/constants/projectStatuses';
 
 const AddProject = () => {
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
@@ -50,7 +51,7 @@ const AddProject = () => {
       return;
     } else {
       const defaultState = lookupData?.ProjectStatuses.find(
-        (a) => a.Name === 'Required Documentation',
+        (a) => a.Id === ProjectStatus.REQUIRED_DOCUMENTATION,
       );
       const addTasks = lookupData?.Tasks.filter((task) => task.StatusId === defaultState.Id);
       addTasks.push({

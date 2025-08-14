@@ -404,7 +404,7 @@ const ProjectDetail = (props: IProjectDetail) => {
             onEdit={() => setOpenAgencyInterestDialog(true)}
             disableEdit={!isAdmin}
           >
-            {!data?.parsedBody.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
+            {!data?.parsedBody.AgencyResponses?.length ? (
               <Box display={'flex'} justifyContent={'center'}>
                 <Typography>No agencies registered.</Typography>
               </Box>
