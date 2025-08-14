@@ -48,6 +48,8 @@ import { Roles } from '@/constants/roles';
 import { PimsRequestUser } from '@/middleware/userAuthCheck';
 import { User } from '@/typeorm/Entities/User';
 import { ProjectStatusNotification } from '@/typeorm/Entities/ProjectStatusNotification';
+import { ProjectMonetaryType } from '@/constants/projectMonetaryType';
+import { MonetaryType } from '@/typeorm/Entities/MonetaryType';
 
 const projectRepo = AppDataSource.getRepository(Project);
 
@@ -606,7 +608,18 @@ const handleProjectMonetary = async (
   queryRunner: QueryRunner,
 ) => {
   if (newProject?.Monetaries?.length) {
-    const saveTimestamps = newProject.Monetaries.map(
+    // Remove values on incoming project that are pre-calculated fields. We don't save those in case they were manually tampered with.
+    const preCalculatedFields = (
+      await queryRunner.manager.find(MonetaryType, {
+        where: { IsCalculated: true },
+      })
+    ).map((m) => m.Id);
+    const remainingMonetaries = newProject.Monetaries?.filter(
+      (m) => !preCalculatedFields.includes(m.MonetaryTypeId),
+    );
+
+    // Save the remaining monetaries that are not pre-calculated.
+    const saveMonetaries = remainingMonetaries.map(
       async (monetary): Promise<InsertResult | void> => {
         if (monetary.MonetaryTypeId == null) {
           throw new ErrorWithCode('Provided monetary was missing a required field.', 400);
@@ -627,7 +640,35 @@ const handleProjectMonetary = async (
         );
       },
     );
-    return Promise.all(saveTimestamps);
+
+    // Some values are autocalculated based on the existing monetaries.
+    // If the monetaries that trigger these calculations were provided, we must recalculate them.
+    const calculatedMonetaries: Promise<void | InsertResult>[] = [];
+    const netProceeds = newProject.Monetaries.find(
+      (m) => m.MonetaryTypeId === ProjectMonetaryType.NET_PROCEEDS, // Net Proceeds
+    );
+
+    if (netProceeds != null) {
+      const exists = await queryRunner.manager.findOne(ProjectMonetary, {
+        where: { ProjectId: newProject.Id, MonetaryTypeId: ProjectMonetaryType.PROGRAM_COST },
+      });
+      // Program Cost = Net Proceeds @ 1% if Project is Tier2+
+      const programCost = newProject.TierLevelId >= 2 ? netProceeds.Value * 0.01 : 0;
+      calculatedMonetaries.push(
+        queryRunner.manager.upsert(
+          ProjectMonetary,
+          {
+            ProjectId: newProject.Id,
+            Value: programCost,
+            MonetaryTypeId: ProjectMonetaryType.PROGRAM_COST,
+            CreatedById: exists ? exists.CreatedById : newProject.CreatedById,
+            UpdatedById: exists ? newProject.UpdatedById : undefined,
+          },
+          ['ProjectId', 'MonetaryTypeId'],
+        ),
+      );
+    }
+    return Promise.all([...saveMonetaries, ...calculatedMonetaries]);
   }
 };
 
