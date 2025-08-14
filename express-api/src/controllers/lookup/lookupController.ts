@@ -245,6 +245,7 @@ export const lookupAll = async (req: Request, res: Response) => {
       IsOptional: true,
       Description: true,
       StatusId: true,
+      IsCalculated: true,
     },
     order: {
       SortOrder: 'asc',

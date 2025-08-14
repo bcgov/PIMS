@@ -271,6 +271,7 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
                     name={`Monetaries.${idx}.Value`}
                     label={columnNameFormatter(mon.Name)}
                     tooltip={mon.Description}
+                    disabled={mon.IsCalculated}
                   />
                 </Grid>
               ))}
