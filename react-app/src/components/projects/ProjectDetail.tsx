@@ -238,19 +238,18 @@ const ProjectDetail = (props: IProjectDetail) => {
   };
 
   const FinancialInformationData = useMemo(() => {
-    const salesCostType = lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost');
-    const programCostType = lookupData?.MonetaryTypes?.find((a) => a.Name === 'ProgramCost');
+    const monetaryEntries = {};
+    lookupData?.MonetaryTypes?.forEach((mon) => {
+      monetaryEntries[mon.Name] = data?.parsedBody.Monetaries?.find(
+        (a) => a.MonetaryTypeId === mon.Id,
+      )?.Value;
+    });
     return {
       AssessedValue: data?.parsedBody.Assessed,
       NetBookValue: data?.parsedBody.NetBook,
       EstimatedMarketValue: data?.parsedBody.Market,
       AppraisedValue: data?.parsedBody.Appraised,
-      EstimatedSalesCost: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === salesCostType?.Id,
-      )?.Value,
-      EstimatedProgramRecoveryFees: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === programCostType?.Id,
-      )?.Value,
+      ...monetaryEntries,
     };
   }, [data, lookupData]);
 
@@ -385,10 +384,12 @@ const ProjectDetail = (props: IProjectDetail) => {
           loading={isLoading}
           customFormatter={customFormatter}
           values={Object.fromEntries(
-            Object.entries(FinancialInformationData).map(([k, v]) => [
-              k,
-              formatMoney(v != null ? v : 0), //This cast spaghetti sucks but hard to avoid when receiving money as a string from the API.
-            ]),
+            Object.entries(FinancialInformationData)
+              .map(([k, v]) => [
+                k,
+                formatMoney(v != null ? v : 0), //This cast spaghetti sucks but hard to avoid when receiving money as a string from the API.
+              ])
+              .sort(([a], [b]) => a.localeCompare(b)),
           )}
           title={financialInformation}
           id={financialInformation}

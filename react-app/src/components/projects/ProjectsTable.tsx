@@ -165,7 +165,7 @@ const ProjectsTable = () => {
         'Net Proceeds': project.Monetaries.find(
           (m) => m.MonetaryTypeId === MonetaryType.NET_PROCEEDS,
         )?.Value,
-        'Program Cost': project.Monetaries.find(
+        'Estimated Program Cost': project.Monetaries.find(
           (m) => m.MonetaryTypeId === MonetaryType.PROGRAM_COST,
         )?.Value,
         'Gain Loss': project.Monetaries.find((m) => m.MonetaryTypeId === MonetaryType.OCG_GAIN_LOSS)
