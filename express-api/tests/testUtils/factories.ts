@@ -589,6 +589,7 @@ export const produceMonetaryType = (): MonetaryType => {
     IsOptional: false,
     StatusId: faker.number.int(),
     Status: undefined,
+    IsCalculated: false,
     CreatedById: randomUUID(),
     CreatedBy: undefined,
     CreatedOn: new Date(),
