@@ -29,6 +29,7 @@ import { MonetaryType } from '@/constants/monetaryTypes';
 import BaseDialog from '../dialog/BaseDialog';
 import { NotificationQueue } from '@/hooks/api/useProjectNotificationApi';
 import useAgencyOptions from '@/hooks/useAgencyOptions';
+import { ProjectStatus } from '@/constants/projectStatuses';
 
 interface IProjectGeneralInfoDialog {
   initialValues: Project;
@@ -186,7 +187,9 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
   }, [statusTypes, initialValues]);
 
   useEffect(() => {
-    setApprovedStatus(lookupData?.ProjectStatuses?.find((a) => a.Name === 'Approved for ERP')?.Id);
+    setApprovedStatus(
+      lookupData?.ProjectStatuses?.find((a) => a.Id === ProjectStatus.APPROVED_FOR_ERP)?.Id,
+    );
   }, [lookupData]);
   const status = projectFormMethods.watch('StatusId');
   const requireNotificationAcknowledge =
@@ -270,6 +273,8 @@ export const ProjectGeneralInfoDialog = (props: IProjectGeneralInfoDialog) => {
                     key={`${mon.Id}-${idx}`}
                     name={`Monetaries.${idx}.Value`}
                     label={columnNameFormatter(mon.Name)}
+                    tooltip={mon.Description}
+                    disabled={mon.IsCalculated}
                   />
                 </Grid>
               ))}
@@ -330,7 +335,6 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
       Market: 0,
       Appraised: 0,
       SalesCost: 0,
-      ProgramCost: 0,
     },
   });
 
@@ -343,9 +347,6 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
       SalesCost:
         initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === MonetaryType.SALES_COST)
           ?.Value ?? 0,
-      ProgramCost:
-        initialValues?.Monetaries?.find((a) => a.MonetaryTypeId === MonetaryType.PROGRAM_COST)
-          ?.Value ?? 0,
     });
   }, [initialValues, lookupData]);
   return (
@@ -356,7 +357,7 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
       onConfirm={async () => {
         const isValid = await financialFormMethods.trigger();
         if (isValid) {
-          const { Assessed, NetBook, Market, Appraised, ProgramCost, SalesCost } =
+          const { Assessed, NetBook, Market, Appraised, SalesCost } =
             financialFormMethods.getValues();
           submit(initialValues.Id, {
             Id: initialValues.Id,
@@ -368,10 +369,6 @@ export const ProjectFinancialDialog = (props: IProjectFinancialDialog) => {
               {
                 MonetaryTypeId: MonetaryType.SALES_COST,
                 Value: SalesCost,
-              },
-              {
-                MonetaryTypeId: MonetaryType.PROGRAM_COST,
-                Value: ProgramCost,
               },
             ],
             ProjectProperties: initialValues.ProjectProperties,

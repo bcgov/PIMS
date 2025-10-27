@@ -701,6 +701,7 @@ describe('UNIT - Project Services', () => {
         manager: {
           findOne: async () => monetary,
           upsert: async () => [monetary],
+          find: async () => [monetary],
         },
       };
       const result = await projectServices.handleProjectMonetary(project, queryRunner);

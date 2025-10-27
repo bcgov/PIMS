@@ -22,6 +22,9 @@ export class MonetaryType extends BaseEntity {
   @Column('boolean')
   IsOptional: boolean;
 
+  @Column('boolean', { default: false })
+  IsCalculated: boolean;
+
   // Status Relation
   @Column({ name: 'status_id', type: 'int', nullable: true })
   StatusId: number;

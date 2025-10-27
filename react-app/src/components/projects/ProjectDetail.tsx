@@ -16,7 +16,6 @@ import usePimsApi from '@/hooks/usePimsApi';
 import useDataLoader from '@/hooks/useDataLoader';
 import {
   Project,
-  ProjectMetadata,
   ProjectMonetary,
   ProjectNote,
   ProjectTask,
@@ -71,8 +70,6 @@ interface ProjectInfo extends Project {
   NetBookValue: number;
   EstimatedMarketValue: number;
   AppraisedValue: number;
-  EstimatedSalesCost: ProjectMetadata;
-  EstimatedProgramRecoveryFees: ProjectMetadata;
   SurplusDeclaration: boolean;
   TripleBottom: boolean;
   'Fiscal Year of Disposal': number;
@@ -241,19 +238,18 @@ const ProjectDetail = (props: IProjectDetail) => {
   };
 
   const FinancialInformationData = useMemo(() => {
-    const salesCostType = lookupData?.MonetaryTypes?.find((a) => a.Name === 'SalesCost');
-    const programCostType = lookupData?.MonetaryTypes?.find((a) => a.Name === 'ProgramCost');
+    const monetaryEntries = {};
+    lookupData?.MonetaryTypes?.forEach((mon) => {
+      monetaryEntries[mon.Name] = data?.parsedBody.Monetaries?.find(
+        (a) => a.MonetaryTypeId === mon.Id,
+      )?.Value;
+    });
     return {
       AssessedValue: data?.parsedBody.Assessed,
       NetBookValue: data?.parsedBody.NetBook,
       EstimatedMarketValue: data?.parsedBody.Market,
       AppraisedValue: data?.parsedBody.Appraised,
-      EstimatedSalesCost: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === salesCostType?.Id,
-      )?.Value,
-      EstimatedProgramRecoveryFees: data?.parsedBody.Monetaries?.find(
-        (a) => a.MonetaryTypeId === programCostType?.Id,
-      )?.Value,
+      ...monetaryEntries,
     };
   }, [data, lookupData]);
 
@@ -388,10 +384,12 @@ const ProjectDetail = (props: IProjectDetail) => {
           loading={isLoading}
           customFormatter={customFormatter}
           values={Object.fromEntries(
-            Object.entries(FinancialInformationData).map(([k, v]) => [
-              k,
-              formatMoney(v != null ? v : 0), //This cast spaghetti sucks but hard to avoid when receiving money as a string from the API.
-            ]),
+            Object.entries(FinancialInformationData)
+              .map(([k, v]) => [
+                k,
+                formatMoney(v != null ? v : 0), //This cast spaghetti sucks but hard to avoid when receiving money as a string from the API.
+              ])
+              .sort(([a], [b]) => a.localeCompare(b)),
           )}
           title={financialInformation}
           id={financialInformation}
@@ -407,7 +405,7 @@ const ProjectDetail = (props: IProjectDetail) => {
             onEdit={() => setOpenAgencyInterestDialog(true)}
             disableEdit={!isAdmin}
           >
-            {!data?.parsedBody.AgencyResponses?.length ? ( //TODO: Logic will depend on precense of agency responses
+            {!data?.parsedBody.AgencyResponses?.length ? (
               <Box display={'flex'} justifyContent={'center'}>
                 <Typography>No agencies registered.</Typography>
               </Box>
