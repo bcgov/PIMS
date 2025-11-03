@@ -32,6 +32,7 @@ import { downloadExcelFile } from '@/utilities/downloadExcelFile';
 import usePimsApi from '@/hooks/usePimsApi';
 import { SnackBarContext } from '@/contexts/snackbarContext';
 import { getPropertyExportMap } from '@/utilities/getPropertyExportMap';
+import { BannerContext } from '@/contexts/bannerContext';
 
 interface MapSidebarProps {
   properties: PropertyGeo[];
@@ -64,7 +65,8 @@ const MapSidebar = (props: MapSidebarProps) => {
   const excelDataMap = getPropertyExportMap();
 
   // Get related data for lookups
-  const { getLookupValueById, data: lookup } = useContext(LookupContext);
+  const { getLookupValueById } = useContext(LookupContext);
+  const { headerOffsetHeight } = useContext(BannerContext);
 
   // Sets the properties that are in the map's bounds at current view. Resets the page index.
   const definePropertiesInBounds = () => {
@@ -102,8 +104,8 @@ const MapSidebar = (props: MapSidebarProps) => {
         zIndex={1000}
         position={'fixed'}
         right={sidebarOpen ? 0 : '-400px'}
-        height={`calc(100vh - ${lookup?.Config.headerOffsetHeight}px - 2rem)`}
-        top={`${lookup?.Config.headerOffsetHeight}px`}
+        height={`calc(100vh - ${headerOffsetHeight}px - 2rem)`}
+        top={`${headerOffsetHeight}px`}
         component={Paper}
         width={sidebarWidth}
         overflow={'hidden'}
@@ -274,8 +276,8 @@ const MapSidebar = (props: MapSidebarProps) => {
         id="map-filter-container"
         zIndex={999}
         position={'fixed'}
-        height={`calc(100vh - ${lookup.Config.headerOffsetHeight}px - 2rem)`}
-        top={`${lookup.Config.headerOffsetHeight}px`}
+        height={`calc(100vh - ${headerOffsetHeight}px - 2rem)`}
+        top={`${headerOffsetHeight}px`}
         right={filterOpen && sidebarOpen ? sidebarWidth : '-400px'}
         component={Paper}
         width={sidebarWidth}
