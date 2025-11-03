@@ -14,6 +14,7 @@ import useProjectsApi from './api/useProjectsApi';
 import useBCAssessmentApi from '@/hooks/api/useBCAssessmentApi';
 import useLtsaApi from './api/useLtsaApi';
 import useProjectNotificationsApi from './api/useProjectNotificationApi';
+import useBannerApi from '@/hooks/api/useBannerApi';
 
 /**
  * usePimsApi - This stores all the sub-hooks we need to make calls to our API and helps manage authentication state for them.
@@ -38,6 +39,7 @@ const usePimsApi = () => {
   const bcAssessment = useBCAssessmentApi(fetch);
   const ltsa = useLtsaApi(fetch);
   const notifications = useProjectNotificationsApi(fetch);
+  const banner = useBannerApi(fetch);
 
   return {
     users,
@@ -54,6 +56,7 @@ const usePimsApi = () => {
     bcAssessment,
     ltsa,
     notifications,
+    banner,
   };
 };
 

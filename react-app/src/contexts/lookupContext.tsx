@@ -56,9 +56,6 @@ export const LookupContextProvider: React.FC<React.PropsWithChildren> = (props) 
     [data],
   );
 
-  const headerOffsetHeight = data?.Config?.bannerMessage ? 94 : 74; // The height of the header in pixels, used for layout calculations.
-  if (data) data.Config.headerOffsetHeight = headerOffsetHeight; // Ensure the offset height is set in the config.
-
   const contextValue = { data, getLookupValueById, refreshLookup: refreshData };
   if (isLoading) return <CircularProgress sx={{ position: 'fixed', top: '50%', left: '50%' }} />;
   return <LookupContext.Provider value={contextValue}>{props.children}</LookupContext.Provider>;

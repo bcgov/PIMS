@@ -16,7 +16,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
 import { Roles } from '@/constants/roles';
 import { UserContext } from '@/contexts/userContext';
-import { LookupContext } from '@/contexts/lookupContext';
+import { BannerContext } from '@/contexts/bannerContext';
 
 const AppBrand = () => {
   const theme = useTheme();
@@ -68,7 +68,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = (props) => {
   const { offsetHeight } = props;
   const auth = useContext(UserContext);
-  const lookupContext = useContext(LookupContext);
+  const bannerContext = useContext(BannerContext);
   const { logout, isAuthenticated, login } = useSSO();
   const theme = useTheme();
   const navigate = useNavigate();
@@ -209,27 +209,26 @@ const Header: React.FC<HeaderProps> = (props) => {
             </Button>
           </Box>
         </Toolbar>
-        {lookupContext?.data?.Config.bannerMessage &&
-          lookupContext?.data?.Config.bannerMessage.length > 0 && (
-            <Box
-              sx={{
-                width: '100%',
-                position: 'relative',
-                fontFamily: theme.typography.fontFamily,
-                color: theme.palette.black.main,
-                backgroundColor: theme.palette.warning.light,
-                alignItems: 'center',
-                display: 'flex',
-                justifyContent: 'center',
-                height: 'fit-content',
-                padding: '0.2em 0.5em',
-                overflow: 'clip',
-                textAlign: 'center',
-              }}
-            >
-              <span>{lookupContext?.data?.Config.bannerMessage}</span>
-            </Box>
-          )}
+        {bannerContext?.message && bannerContext?.message.length > 0 && (
+          <Box
+            sx={{
+              width: '100%',
+              position: 'relative',
+              fontFamily: theme.typography.fontFamily,
+              color: theme.palette.black.main,
+              backgroundColor: theme.palette.warning.light,
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              height: 'fit-content',
+              padding: '0.2em 0.5em',
+              overflow: 'clip',
+              textAlign: 'center',
+            }}
+          >
+            <span>{bannerContext?.message}</span>
+          </Box>
+        )}
       </AppBar>
     </>
   );
