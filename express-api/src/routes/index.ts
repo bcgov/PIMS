@@ -2,7 +2,7 @@ import ltsaRouter from '@/routes/ltsaRouter';
 import healthRouter from '@/routes/healthRouter';
 import buildingsRouter from '@/routes/buildingsRouter';
 import parcelsRouter from '@/routes/parcelsRouter';
-import lookupRouter from '@/routes/lookupRouter';
+import lookupRouter, { bannerRouter } from '@/routes/lookupRouter';
 import usersRouter from '@/routes/usersRouter';
 import propertiesRouter from '@/routes/propertiesRouter';
 import projectsRouter from '@/routes/projectsRouter';
@@ -26,6 +26,7 @@ const router = {
   reportsRouter,
   toolsRouter,
   agenciesRouter,
+  bannerRouter,
 };
 
 export default router;
