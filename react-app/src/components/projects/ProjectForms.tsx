@@ -159,8 +159,8 @@ export const ProjectFinancialInfoForm = () => {
           label={'Net book value'}
           rules={{
             min: {
-              value: 0.01,
-              message: 'Must be greater than 0.',
+              value: 0,
+              message: 'Must be 0 or greater.',
             },
           }}
           required
