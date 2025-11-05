@@ -19,6 +19,7 @@ const {
   lookupRegionalDistricts,
   lookupProjectStatuses,
   lookupPropertyTypes,
+  lookupBannerMessage,
 } = controllers;
 
 router.route('/regionalDistricts').get(catchErrors(lookupRegionalDistricts));
@@ -35,3 +36,13 @@ router.route('/monetaryTypes').get(catchErrors(lookupMonetaryTypes));
 router.route('/all').get(catchErrors(lookupAll));
 
 export default router;
+
+/**
+ * This is an extra router that needed to be separated so that
+ * the banner message was available outside of authorization.
+ */
+export const bannerRouter = () => {
+  const bannerRouter = express.Router();
+  bannerRouter.route('/').get(catchErrors(lookupBannerMessage));
+  return bannerRouter;
+};

@@ -32,6 +32,7 @@ import LookupContextProvider from '@/contexts/lookupContext';
 import BulkUpload from './pages/BulkUpload';
 import useHistoryAwareNavigate from './hooks/useHistoryAwareNavigate';
 import { useSSO } from '@bcgov/citz-imb-sso-react';
+import BannerContextProvider from '@/contexts/bannerContext';
 
 /**
  * Renders the main router component for the application.
@@ -274,11 +275,13 @@ const App = () => {
     <ThemeProvider theme={appTheme}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <UserContextProvider>
-          <LookupContextProvider>
-            <SnackBarContextProvider>
-              <Router />
-            </SnackBarContextProvider>
-          </LookupContextProvider>
+          <BannerContextProvider>
+            <LookupContextProvider>
+              <SnackBarContextProvider>
+                <Router />
+              </SnackBarContextProvider>
+            </LookupContextProvider>
+          </BannerContextProvider>
         </UserContextProvider>
       </ErrorBoundary>
     </ThemeProvider>
