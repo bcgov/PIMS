@@ -95,7 +95,6 @@ export const AgencySimpleTable = (props: IAgencySimpleTable) => {
         // If the agency is disabled or SendEmail is false, and the response is Unsubscribe, disable the cell
         // This provides a visual cue that the agency cannot be set to subscribe
         // Works in tandem with the isCellEditable function below
-        if (params.row.Name === 'Finance') console.log('params.row', params.row);
         const isDisabled =
           (params.row.IsDisabled || !params.row.SendEmail) &&
           params.row.Response === AgencyResponseTypeLabels[AgencyResponseType.Unsubscribe];
