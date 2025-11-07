@@ -82,9 +82,10 @@ app.use(`/v2`, headerHandler as RequestHandler);
 
 // Unprotected Routes
 app.use(`/v2/health`, router.healthRouter);
+app.use('/v2/banner', router.bannerRouter()); // Intentionally called
 
 // Protected Routes
-// userRequestCheck applied here if same permissions throughout route
+// userAuthCheck applied here if same permissions throughout route
 // These routes must use protectedRoute before userAuthCheck
 app.use(`/v2/ltsa`, protectedRoute(), userAuthCheck(), router.ltsaRouter);
 app.use(

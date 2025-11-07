@@ -95,7 +95,7 @@ export const makeDateOrUndefined = (date: unknown | undefined) => {
  * @returns A list of numbers.
  */
 export const generateNumberList = (start: number, end: number) =>
-  Array.from({ length: end - (start - 1) + 1 }, (_, i) => start - 1 + i);
+  Array.from({ length: end - (start - 1) }, (_, i) => start + i);
 
 /**
  * Returns a fiscal year as only the year it ends.

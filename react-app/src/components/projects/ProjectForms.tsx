@@ -9,7 +9,7 @@ import { LookupContext } from '@/contexts/lookupContext';
 import { Roles } from '@/constants/roles';
 import { useFormContext } from 'react-hook-form';
 import { formatFiscalYear } from '@/utilities/formatters';
-import { generateNumberList } from '@/utilities/helperFunctions';
+import { generateNumberList, getFiscalYear } from '@/utilities/helperFunctions';
 import Help from '@mui/icons-material/Help';
 
 interface IProjectGeneralInfoForm {
@@ -92,8 +92,8 @@ export const ProjectGeneralInfoForm = (props: IProjectGeneralInfoForm) => {
               name={'ActualFiscalYear'}
               label={'Fiscal Year of Disposal'}
               options={generateNumberList(
-                (getValues()['ActualFiscalYear'] ?? new Date().getUTCFullYear()) - 1,
-                new Date().getUTCFullYear() + 1,
+                getValues()['ActualFiscalYear'] ?? getFiscalYear(),
+                getFiscalYear() + 5,
               ).map((year) => ({
                 value: year,
                 label: formatFiscalYear(year),
@@ -159,8 +159,8 @@ export const ProjectFinancialInfoForm = () => {
           label={'Net book value'}
           rules={{
             min: {
-              value: 0.01,
-              message: 'Must be greater than 0.',
+              value: 0,
+              message: 'Must be 0 or greater.',
             },
           }}
           required

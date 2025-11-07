@@ -5,7 +5,7 @@ import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { User } from '@/typeorm/Entities/User';
 import failedEmailCheck from '@/utilities/failedEmailCheck';
 import logger from '@/utilities/winstonLogger';
-import { faker } from '@faker-js/faker/.';
+import { faker } from '@faker-js/faker';
 import { produceNotificationQueue, produceUser } from 'tests/testUtils/factories';
 import nunjucks from 'nunjucks';
 
