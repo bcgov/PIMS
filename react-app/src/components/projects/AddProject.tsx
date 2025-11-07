@@ -153,8 +153,8 @@ const AddProject = () => {
               label={'Net Book Value'}
               rules={{
                 min: {
-                  value: 0.01,
-                  message: 'Must be greater than 0.',
+                  value: 0,
+                  message: 'Must be 0 or greater.',
                 },
               }}
               required
