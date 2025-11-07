@@ -206,6 +206,19 @@ export const lookupTimestampTypes = async (req: Request, res: Response) => {
 };
 
 /**
+ * Route to lookup a potentially-set banner message.
+ * If the ENV for this message is not set, it may return null.
+ * @param {Request}     req Incoming request
+ * @param {Response}    res Outgoing response
+ * @returns {Response}      A 200 status and a banner message string.
+ */
+export const lookupBannerMessage = async (req: Request, res: Response) => {
+  const cfg = getConfig();
+  const bannerMessage = cfg.contact.frontendBannerMessage;
+  return res.status(200).send(bannerMessage);
+};
+
+/**
  * @description Get all entries for frontend lookup context.
  * @param {Request}     req Incoming request
  * @param {Response}    res Outgoing response
@@ -392,6 +405,7 @@ export const lookupAll = async (req: Request, res: Response) => {
     Config: {
       contactEmail: cfg.contact.toEmail,
       bcscIdentifier: cfg.keycloak.client_id,
+      bannerMessage: cfg.contact.frontendBannerMessage,
     },
   };
   return res.status(200).send(returnObj);
