@@ -1,7 +1,7 @@
 #############################################
 #                Base Build                 #
 #############################################
-FROM node:22.9-bullseye-slim as base
+FROM node:22.15-bullseye-slim as base
 
 # Set the working directory to /app
 WORKDIR /app
