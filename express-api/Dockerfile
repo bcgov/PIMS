@@ -22,7 +22,7 @@ RUN npm run build
 #############################################
 #                 Prod Build                #
 #############################################
-FROM node:22.9-bullseye-slim as Prod
+FROM node:22.15-bullseye-slim as Prod
 
 # Set the working directory to /express-api
 WORKDIR /express-api
