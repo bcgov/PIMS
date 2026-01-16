@@ -184,7 +184,7 @@ export const updateAgencyById = async (agencyIn: Agency, user: User) => {
       // Attempt to resend notifications with new info
       const resendResults = await Promise.allSettled(
         affectedNotifications.map((notification) =>
-          notificationServices.resendNotificationWithNewProperties(
+          notificationServices.requeueNotificationWithNewProperties(
             notification,
             user,
             {

@@ -772,13 +772,13 @@ const getNotificationById = async (id: number) => {
 };
 
 /**
- * Takes and existing notification and cancels it, then resends it with new properties.
+ * Takes and existing notification and cancels it, then requeues it with new properties.
  * @param notif The original notification to be cancelled.
  * @param newProperties The new properties of the notification to overwrite before resending.
  * @param requeue True by default. Set to false to stop requeue process.
  * @returns The newly requeued version of the notification.
  */
-const resendNotificationWithNewProperties = async (
+const requeueNotificationWithNewProperties = async (
   notif: NotificationQueue,
   user: User,
   newProperties: Partial<NotificationQueue> = {},
@@ -798,7 +798,7 @@ const resendNotificationWithNewProperties = async (
     if (requeue) {
       const newNotif = await sendNotification({ ...notif, ...newProperties }, user);
       if (newNotif.Status === NotificationStatus.Failed) {
-        const error = `resendNotificationWithNewProperties: Failed to requeue notification Id ${newNotif.Id} (originally ${notif.Id}).`;
+        const error = `requeueNotificationWithNewProperties: Failed to requeue notification Id ${newNotif.Id} (originally ${notif.Id}).`;
         logger.error(error);
         throw new Error(error);
       }
@@ -807,7 +807,7 @@ const resendNotificationWithNewProperties = async (
     const cancelledNotification = await getNotificationById(updatedNotification.Id);
     return cancelledNotification;
   } else {
-    const error = `resendNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully.`;
+    const error = `requeueNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully.`;
     logger.error(error);
     throw new Error(error);
   }
@@ -824,7 +824,7 @@ const notificationServices = {
   getNotificationById,
   cancelNotificationById,
   cancelProjectNotifications,
-  resendNotificationWithNewProperties,
+  requeueNotificationWithNewProperties,
   insertProjectNotificationQueue,
 };
 

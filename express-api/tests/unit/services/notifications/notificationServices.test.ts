@@ -536,7 +536,7 @@ describe('getNotificationById', () => {
   });
 });
 
-describe('resendNotificationWithNewProperties', () => {
+describe('requeueNotificationWithNewProperties', () => {
   it('should return the updated notification if not still pending', async () => {
     const notificationToSend = produceNotificationQueue();
     _getStatusByIdAsync.mockResolvedValueOnce({
@@ -548,7 +548,7 @@ describe('resendNotificationWithNewProperties', () => {
       msgId: randomUUID(),
     });
     const user = produceUser();
-    const result = await notificationServices.resendNotificationWithNewProperties(
+    const result = await notificationServices.requeueNotificationWithNewProperties(
       notificationToSend,
       user,
     );
@@ -573,10 +573,10 @@ describe('resendNotificationWithNewProperties', () => {
     );
     const user = produceUser();
     await expect(
-      notificationServices.resendNotificationWithNewProperties(notificationToSend, user),
+      notificationServices.requeueNotificationWithNewProperties(notificationToSend, user),
     ).rejects.toThrow(
       new Error(
-        'resendNotificationWithNewProperties: Notification Id 1 not cancelled successfully.',
+        'requeueNotificationWithNewProperties: Notification Id 1 not cancelled successfully.',
       ),
     );
   });
@@ -606,10 +606,10 @@ describe('resendNotificationWithNewProperties', () => {
     _sendEmailAsync.mockReturnValueOnce({ status: 'failed' } as IChesStatusResponse);
     const user = produceUser();
     await expect(
-      notificationServices.resendNotificationWithNewProperties(notificationToSend, user),
+      notificationServices.requeueNotificationWithNewProperties(notificationToSend, user),
     ).rejects.toThrow(
       new Error(
-        'resendNotificationWithNewProperties: Failed to requeue notification Id 1 (originally 1).',
+        'requeueNotificationWithNewProperties: Failed to requeue notification Id 1 (originally 1).',
       ),
     );
   });
@@ -647,7 +647,7 @@ describe('resendNotificationWithNewProperties', () => {
     } as IChesStatusResponse);
     const user = produceUser();
     const response = await expect(
-      notificationServices.resendNotificationWithNewProperties(notificationToSend, user),
+      notificationServices.requeueNotificationWithNewProperties(notificationToSend, user),
     );
     expect(response).toBeDefined();
   });
