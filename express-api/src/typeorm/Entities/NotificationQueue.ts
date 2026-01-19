@@ -6,7 +6,7 @@ import { NotificationTemplate } from '@/typeorm/Entities/NotificationTemplate';
 import { Agency } from './Agency';
 
 @Entity()
-@Index(['Status', 'SendOn', 'Subject'])
+@Index(['Status', 'SendOn', 'ProjectId'])
 @Index(['ProjectId', 'TemplateId', 'ToAgencyId'])
 export class NotificationQueue extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int' })

@@ -5,7 +5,11 @@ import { AppDataSource } from '@/appDataSource';
 import { Application } from 'express';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import cron from 'node-cron';
-import failedEmailCheck from '@/utilities/failedEmailCheck';
+import {
+  failedNotificationCheck,
+  sendQueuedNotifications,
+  syncNotificationStatuses,
+} from '@/utilities/notificationChecks';
 import clearIdleConnections from '@/utilities/clearIdleConnections';
 
 const { API_PORT } = constants;
@@ -21,11 +25,25 @@ const startApp = (app: Application) => {
     if (err) logger.error(err);
     logger.info(`Server started on port ${API_PORT}.`);
 
+    // 0 * * * *  == Triggers every hour
+    cron.schedule('0 * * * *', async () => {
+      logger.info('Send queued notifications: Starting');
+      await sendQueuedNotifications();
+      logger.info('Send queued notifications: Completed');
+    });
+
+    // */15 * * * *  == Triggers every 15 mins
+    cron.schedule('*/15 * * * *', async () => {
+      logger.info('Sync notification statuses: Starting');
+      await syncNotificationStatuses();
+      logger.info('Sync notification statuses: Completed');
+    });
+
     // 0 2 * * *  == Triggers every 2:00AM
     cron.schedule('0 2 * * *', async () => {
-      logger.info('Failed email check: Starting');
-      await failedEmailCheck();
-      logger.info('Failed email check: Completed');
+      logger.info('Failed-notification check: Starting');
+      await failedNotificationCheck();
+      logger.info('Failed-notification check: Completed');
     });
 
     // 0 1 * * 6  == Triggers 1:00AM on Saturday

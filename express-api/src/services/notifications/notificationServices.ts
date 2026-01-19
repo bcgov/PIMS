@@ -12,13 +12,14 @@ import chesServices, {
   EmailBody,
   EmailEncoding,
   EmailPriority,
-  IChesStatusResponse,
   IEmail,
 } from '../ches/chesServices';
 import { ProjectAgencyResponse } from '@/typeorm/Entities/ProjectAgencyResponse';
 import logger from '@/utilities/winstonLogger';
 import getConfig from '@/constants/config';
 import { getDaysBetween } from '@/utilities/helperFunctions';
+import { ErrorWithCode } from '@/utilities/customErrors/ErrorWithCode';
+import { isDateTodayOrEarlier } from '@/utilities/dateFunctions';
 
 export interface AccessRequestData {
   FirstName: string;
@@ -393,30 +394,46 @@ const sendNotification = async (
   const query = queryRunner ?? AppDataSource.createQueryRunner();
   let retNotif: NotificationQueue = null;
   try {
-    const email: IEmail = {
-      to: notification.To?.split(';').map((a) => a.trim()) ?? [],
-      cc: notification.Cc?.split(';').map((a) => a.trim()) ?? [],
-      bcc: notification.Bcc?.split(';').map((a) => a.trim()) ?? [],
-      bodyType: EmailBody[notification.BodyType as keyof typeof EmailBody],
-      subject: notification.Subject,
-      body: notification.Body,
-      encoding: EmailEncoding[notification.Encoding as keyof typeof EmailEncoding],
-      priority: EmailPriority[notification.Priority as keyof typeof EmailPriority],
-      tag: notification.Tag,
-      delayTS: notification.SendOn.getTime(),
-    };
-    const response = await chesServices.sendEmailAsync(email, user);
-    if (response) {
-      // Note: Email may be intentionally disabled, thus yielding null response.
-      retNotif = await query.manager.save(NotificationQueue, {
-        ...notification,
-        ChesTransactionId: response.txId as UUID,
-        ChesMessageId: response.messages[0].msgId as UUID,
-      });
+    // Is this notification actually due to be sent?
+    // Only send now if SendOn date is today or earlier.
+    if (isDateTodayOrEarlier(notification.SendOn)) {
+      const email: IEmail = {
+        to: notification.To?.split(';').map((a) => a.trim()) ?? [],
+        cc: notification.Cc?.split(';').map((a) => a.trim()) ?? [],
+        bcc: notification.Bcc?.split(';').map((a) => a.trim()) ?? [],
+        bodyType: EmailBody[notification.BodyType as keyof typeof EmailBody],
+        subject: notification.Subject,
+        body: notification.Body,
+        encoding: EmailEncoding[notification.Encoding as keyof typeof EmailEncoding],
+        priority: EmailPriority[notification.Priority as keyof typeof EmailPriority],
+        tag: notification.Tag,
+      };
+      const response = await chesServices.sendEmailAsync(email, user);
+      if (response) {
+        // Note: Email may be intentionally disabled, thus yielding null response.
+        retNotif = await query.manager.save(NotificationQueue, {
+          ...notification,
+          ChesTransactionId: response.txId as UUID,
+          ChesMessageId: response.messages[0].msgId as UUID,
+          Status: NotificationStatus.Pending,
+          UpdatedById: user?.Id ?? notification.UpdatedById,
+        });
+      } else {
+        retNotif = await query.manager.save(NotificationQueue, {
+          ...notification,
+          Status: NotificationStatus.Failed,
+          UpdatedById: user?.Id ?? notification.UpdatedById,
+        });
+      }
     } else {
+      // This notification has a future SendOn date.
+      // Consider it now Pending, and clear any CHES info
       retNotif = await query.manager.save(NotificationQueue, {
         ...notification,
-        Status: NotificationStatus.Failed,
+        Status: NotificationStatus.Pending,
+        ChesMessageId: null,
+        ChesTransactionId: null,
+        UpdatedById: user?.Id ?? notification.UpdatedById,
       });
     }
   } catch (e) {
@@ -424,6 +441,7 @@ const sendNotification = async (
     retNotif = await query.manager.save(NotificationQueue, {
       ...notification,
       Status: NotificationStatus.Failed,
+      UpdatedById: user?.Id ?? notification.UpdatedById,
     });
   } finally {
     if (queryRunner == null) {
@@ -468,97 +486,99 @@ const convertChesStatusToNotificationStatus = (chesStatus: string): Notification
  * @returns {Promise<NotificationQueue>} The updated notification entity after status update.
  * @throws {Error} If the notification with the provided ID is not found or if status retrieval fails.
  */
-const updateNotificationStatus = async (notificationId: number, user: User) => {
+const syncNotificationWithChes = async (notificationId: number, user: User) => {
   const query = AppDataSource.createQueryRunner();
   const notification = await query.manager.findOne(NotificationQueue, {
     where: { Id: notificationId },
   });
-
-  if (!notification || Object.keys(notification).length === 0) {
-    await query.release();
-    logger.error(`Notification with id ${notificationId} not found.`);
-    throw new Error(`Notification with id ${notificationId} not found.`);
-  }
-
-  const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
-  if (typeof statusResponse?.status === 'string') {
-    const notificationStatus = convertChesStatusToNotificationStatus(statusResponse.status);
-    // If the CHES status is non-standard, don't update the notification.
-    if (notificationStatus === null) {
-      await query.release();
-      return notification;
+  try {
+    if (!notification || Object.keys(notification).length === 0) {
+      logger.error(`Notification with id ${notificationId} not found.`);
+      throw new ErrorWithCode(`Notification with id ${notificationId} not found.`, 404);
     }
-    notification.Status = notificationStatus;
-    notification.UpdatedOn = new Date();
-    notification.UpdatedById = user.Id;
-    const updatedNotification = await query.manager.save(NotificationQueue, notification);
 
-    await query.release();
-    return updatedNotification;
-  } else if (typeof statusResponse?.status === 'number') {
-    // handle 404, 422 code here....
-    switch (statusResponse.status) {
-      case 404: {
-        notification.Status = NotificationStatus.NotFound;
+    // We only try to sync if there's an existing message id from CHES.
+    if (notification.ChesMessageId != null) {
+      const statusResponse = await chesServices.getStatusByIdAsync(notification.ChesMessageId);
+      if (typeof statusResponse?.status === 'string') {
+        const notificationStatus = convertChesStatusToNotificationStatus(statusResponse.status);
+        // If the CHES status is non-standard, don't update the notification.
+        if (notificationStatus === null) {
+          return notification;
+        }
+        notification.Status = notificationStatus;
         notification.UpdatedOn = new Date();
         notification.UpdatedById = user.Id;
         const updatedNotification = await query.manager.save(NotificationQueue, notification);
-        logger.error(`Notification with id ${notificationId} not found on CHES.`);
-        await query.release();
+
         return updatedNotification;
+      } else if (typeof statusResponse?.status === 'number') {
+        // handle 404, 422 code here....
+        switch (statusResponse.status) {
+          case 404: {
+            notification.Status = NotificationStatus.NotFound;
+            notification.UpdatedOn = new Date();
+            notification.UpdatedById = user.Id;
+            const updatedNotification = await query.manager.save(NotificationQueue, notification);
+            logger.error(`Notification with id ${notificationId} not found on CHES.`);
+            return updatedNotification;
+          }
+
+          // This generally only happens when we request a state it's already in.
+          // Only business case for this is cancellation.
+          case 409: {
+            logger.error(
+              `Notification with id ${notificationId} has already been processed, but CHES returned a 409 conflict.`,
+            );
+            notification.Status = NotificationStatus.Cancelled;
+            notification.UpdatedOn = new Date();
+            notification.UpdatedById = user.Id;
+            const updatedNotification = await query.manager.save(NotificationQueue, notification);
+            return updatedNotification;
+          }
+
+          case 422:
+            logger.error(
+              `Notification with id ${notificationId} could not be processed, some of the data could be formatted incorrectly.`,
+            );
+            break;
+
+          case 401:
+            logger.error(
+              `Cannot authorize the request to the CHES server, check your CHES credentials.`,
+            );
+            break;
+
+          case 500:
+            logger.error(
+              `Internal server error while retrieving status for notification with id ${notificationId}.`,
+            );
+            break;
+          default:
+            logger.error(`Received unexpected status code ${statusResponse.status}.`);
+            break;
+        }
+        return notification;
+      } else {
+        logger.error(
+          `Failed to retrieve status for notification with id ${notificationId}. Response: ${JSON.stringify(
+            statusResponse,
+          )}`,
+        );
+        throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
       }
-
-      // This generally only happens when we request a state it's already in.
-      // Only business case for this is cancellation.
-      case 409: {
-        logger.error(
-          `Notification with id ${notificationId} has already been processed, but CHES returned a 409 conflict.`,
-        );
-        notification.Status = NotificationStatus.Cancelled;
-        notification.UpdatedOn = new Date();
-        notification.UpdatedById = user.Id;
-        const updatedNotification = await query.manager.save(NotificationQueue, notification);
-        await query.release();
-        return updatedNotification;
-      }
-
-      case 422:
-        logger.error(
-          `Notification with id ${notificationId} could not be processed, some of the data could be formatted incorrectly.`,
-        );
-        break;
-
-      case 401:
-        logger.error(
-          `Cannot authorize the request to the CHES server, check your CHES credentials.`,
-        );
-        break;
-
-      case 500:
-        logger.error(
-          `Internal server error while retrieving status for notification with id ${notificationId}.`,
-        );
-        break;
-      default:
-        logger.error(`Received unexpected status code ${statusResponse.status}.`);
-        break;
     }
+  } catch {
+    logger.error(`Failed to sync notification status for notification id: ${notification.Id}`);
+  } finally {
     await query.release();
-    return notification;
-  } else {
-    await query.release();
-    logger.error(
-      `Failed to retrieve status for notification with id ${notificationId}. Response: ${JSON.stringify(
-        statusResponse,
-      )}`,
-    );
-    throw new Error(`Failed to retrieve status for notification with id ${notificationId}.`);
   }
+  return notification;
 };
 
 /**
  * Retrieves project notifications in the queue based on the provided filter.
- * Updates notifications in Pending or Accepted status by calling 'updateNotificationStatus'.
+ * Updates notifications in Pending or Accepted status by calling 'syncNotificationWithChes'.
  * Returns a PageModel of NotificationQueue items with updated statuses.
  * @param filter - The filter object containing projectId, page, and pageSize.
  * @param user - The user initiating the notification updates.
@@ -585,7 +605,7 @@ const getProjectNotificationsInQueue = async (
       notification.Status === NotificationStatus.Pending ||
       notification.Status === NotificationStatus.Accepted
     ) {
-      const updatedNotification = updateNotificationStatus(notification.Id, user);
+      const updatedNotification = syncNotificationWithChes(notification.Id, user);
       updatedNotifications.push(updatedNotification);
     } else {
       updatedNotifications.push(Promise.resolve(notification));
@@ -601,6 +621,16 @@ const getProjectNotificationsInQueue = async (
   return pageModel;
 };
 
+/**
+ * Cancels all notifications for a given project (and optionally agency) that are in Accepted or Pending status.
+ * Updates their status to Cancelled in the NotificationQueue.
+ * Returns a count of succeeded and failed updates.
+ *
+ * @param {number} projectId - The ID of the project whose notifications should be cancelled.
+ * @param {number} agencyId - Optional agency ID to further filter notifications.
+ * @param {QueryRunner} queryRunner - Optional TypeORM QueryRunner for transactional support.
+ * @returns {Promise<{succeeded: number, failed: number}>} - Object with counts of succeeded and failed cancellations.
+ */
 const cancelProjectNotifications = async (
   projectId: number,
   agencyId?: number,
@@ -614,25 +644,16 @@ const cancelProjectNotifications = async (
         { ProjectId: projectId, Status: NotificationStatus.Pending, ToAgencyId: agencyId },
       ],
     });
-    const chesCancelPromises = notifications.map((notification) => {
-      return chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
-    });
-    const chesCancelResolved = await Promise.allSettled(chesCancelPromises);
-    const cancelledMessageIds = chesCancelResolved
-      .filter((a) => a.status === 'fulfilled' && a.value.status === 'cancelled')
-      .map((c) => (c as PromiseFulfilledResult<IChesStatusResponse>).value.msgId);
-    await query.manager.update(
+    const notificationIds = notifications.map((n) => n.Id);
+    const updateResult = await query.manager.update(
       NotificationQueue,
-      { ChesMessageId: In(cancelledMessageIds) },
-      { Status: convertChesStatusToNotificationStatus('cancelled') },
+      { Id: In(notificationIds) },
+      { Status: NotificationStatus.Cancelled },
     );
+    // updateResult.affected is the number of rows updated
     return {
-      succeeded: chesCancelResolved.filter(
-        (c) => c.status === 'fulfilled' && c.value.status === 'cancelled',
-      ).length,
-      failed: chesCancelResolved.filter(
-        (c) => c.status === 'rejected' || c.value?.status !== 'cancelled',
-      ).length,
+      succeeded: updateResult.affected || 0,
+      failed: notificationIds.length - (updateResult.affected || 0),
     };
   } catch (e) {
     logger.error(
@@ -748,23 +769,30 @@ const generateProjectWatchNotifications = async (
   return notificationsInserted;
 };
 
+/**
+ * Cancels a notification in the queue by setting state to cancelled.
+ * No longer relies on CHES because we handle our own queue.
+ * @param id The id of the notification in the queue.
+ * @param user The requesting user.
+ * @returns Updated information of notification.
+ */
 const cancelNotificationById = async (id: number, user: User) => {
   const notification = await AppDataSource.getRepository(NotificationQueue).findOne({
     where: { Id: id },
   });
-  const chesResult = await chesServices.cancelEmailByIdAsync(notification.ChesMessageId);
-  if (chesResult.status === 'cancelled') {
-    return await AppDataSource.getRepository(NotificationQueue).save({
-      Id: notification.Id,
-      Status: NotificationStatus.Cancelled,
-      UpdatedById: user.Id,
-    });
-  } else {
-    logger.warn(
-      `notificationServices.cancelNotificationById: Failed to cancel notification Id ${id} on CHES. Response: ${JSON.stringify(chesResult)}`,
+  // Only cancellable if the status is pending.
+  if (notification.Status != NotificationStatus.Pending) {
+    throw new ErrorWithCode(
+      `Cannot cancel notification not in pending state. Notification ID: ${id}`,
+      403,
     );
-    return notification;
   }
+  // Set local queue's status to cancelled.
+  return await AppDataSource.getRepository(NotificationQueue).save({
+    Id: notification.Id,
+    Status: NotificationStatus.Cancelled,
+    UpdatedById: user.Id,
+  });
 };
 
 const getNotificationById = async (id: number) => {
@@ -784,33 +812,30 @@ const requeueNotificationWithNewProperties = async (
   newProperties: Partial<NotificationQueue> = {},
   requeue: boolean = true,
 ) => {
-  const system = await AppDataSource.getRepository(User).findOne({ where: { Username: 'system' } });
-  // Update notification status from CHES
-  const updatedNotification = await updateNotificationStatus(notif.Id, system);
-  // If it's no longer pending, could already be Completed or Cancelled. Don't do anything.
-  if (updatedNotification.Status !== NotificationStatus.Pending) return updatedNotification;
+  // CHES status no longer matters in this check
+  // because we don't leave notifications in Pending with CHES anymore
+  // No matter what status it is in our database, we're going to overwrite it
+  // then attempt a send, which will handle the queue or send-immediately logic.
 
-  // Cancel the notification
-  await chesServices.cancelEmailByIdAsync(notif.ChesMessageId);
-  const postCancelNotification = await updateNotificationStatus(notif.Id, system);
-  if (postCancelNotification.Status === NotificationStatus.Cancelled) {
-    // Cancelled successfully, then requeue with new properties
-    if (requeue) {
-      const newNotif = await sendNotification({ ...notif, ...newProperties }, user);
-      if (newNotif.Status === NotificationStatus.Failed) {
-        const error = `requeueNotificationWithNewProperties: Failed to requeue notification Id ${newNotif.Id} (originally ${notif.Id}).`;
-        logger.error(error);
-        throw new Error(error);
-      }
-      return newNotif;
-    }
-    const cancelledNotification = await getNotificationById(updatedNotification.Id);
-    return cancelledNotification;
-  } else {
-    const error = `requeueNotificationWithNewProperties: Notification Id ${notif.Id} not cancelled successfully.`;
+  // First make sure there's no connection to previously-sent CHES notifications.
+  const cancelledNotif = await AppDataSource.getRepository(NotificationQueue).save({
+    ...notif,
+    ChesMessageId: null,
+    ChesTransactionId: null,
+    Status: NotificationStatus.Cancelled,
+  });
+  // Potentially don't requeue.
+  if (!requeue) {
+    return cancelledNotif;
+  }
+  // Then send/queue the new notification.
+  const newNotif = await sendNotification({ ...cancelledNotif, ...newProperties }, user);
+  if (newNotif.Status === NotificationStatus.Failed) {
+    const error = `requeueNotificationWithNewProperties: Failed to requeue notification Id ${newNotif.Id} (originally ${notif.Id}).`;
     logger.error(error);
     throw new Error(error);
   }
+  return newNotif;
 };
 
 const notificationServices = {
@@ -818,7 +843,7 @@ const notificationServices = {
   generateAccessRequestNotification,
   generateProjectWatchNotifications,
   sendNotification,
-  updateNotificationStatus,
+  syncNotificationWithChes,
   getProjectNotificationsInQueue,
   convertChesStatusToNotificationStatus,
   getNotificationById,
