@@ -3,18 +3,18 @@ import chesServices, { IEmailSentResponse } from '@/services/ches/chesServices';
 import notificationServices from '@/services/notifications/notificationServices';
 import { NotificationQueue } from '@/typeorm/Entities/NotificationQueue';
 import { User } from '@/typeorm/Entities/User';
-import failedEmailCheck from '@/utilities/failedEmailCheck';
 import logger from '@/utilities/winstonLogger';
 import { faker } from '@faker-js/faker';
 import { produceNotificationQueue, produceUser } from 'tests/testUtils/factories';
 import nunjucks from 'nunjucks';
+import { failedNotificationCheck } from '@/utilities/notificationChecks';
 
 const _notificationFindSpy = jest
   .spyOn(AppDataSource.getRepository(NotificationQueue), 'find')
   .mockImplementation(async () => [produceNotificationQueue({}, true)]);
 
 const _notificationServicesUpdateSpy = jest
-  .spyOn(notificationServices, 'updateNotificationStatus')
+  .spyOn(notificationServices, 'syncNotificationWithChes')
   .mockImplementation(async () => produceNotificationQueue());
 
 const _userFindSpy = jest
@@ -41,7 +41,7 @@ describe('UNIT - failedEmailCheck', () => {
     jest.clearAllMocks();
   });
   it('should attempt to send an email if notifications are outstanding', async () => {
-    await failedEmailCheck();
+    await failedNotificationCheck();
     expect(_notificationServicesUpdateSpy).toHaveBeenCalledTimes(1);
     expect(_notificationFindSpy).toHaveBeenCalledTimes(2);
     expect(_userFindSpy).toHaveBeenCalledTimes(1);
@@ -51,7 +51,7 @@ describe('UNIT - failedEmailCheck', () => {
 
   it('should report an error if the email failed to send', async () => {
     _chesSendEmailAsyncSpy.mockImplementationOnce(async () => null);
-    await failedEmailCheck();
+    await failedNotificationCheck();
     expect(_loggerErrorSpy).toHaveBeenCalledWith(
       'Error in failedEmailCheck: Email was attempted but not sent. This feature could be disabled.',
     );
