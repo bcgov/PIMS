@@ -8,7 +8,8 @@ import {
   produceUser,
 } from '../../../testUtils/factories';
 import { faker } from '@faker-js/faker';
-import { SSOIdirUser, SSOUser } from '@bcgov/citz-imb-sso-express';
+import type { SSOIdirUser } from '@bcgov/citz-imb-sso-js-core';
+import type { SSOUser } from '@/middleware/keycloak/ssoUser';
 import { Roles } from '@/constants/roles';
 import { UUID } from 'crypto';
 
@@ -123,7 +124,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     it('should return the internal user corresponding to this keycloak', async () => {
       const kcUser = produceSSO();
       _normalizeKeycloakUser.mockImplementationOnce(() => ({
-        guid: (kcUser as SSOIdirUser).idir_user_guid,
+        guid: (kcUser as unknown as SSOIdirUser).idir_user_guid,
       }));
       mockRequest.user = kcUser;
       await getSelf(mockRequest, mockResponse);
@@ -133,7 +134,7 @@ describe('UNIT - Testing controllers for users routes.', () => {
     it('should return no data', async () => {
       const kcUser = produceSSO();
       _normalizeKeycloakUser.mockImplementationOnce(() => ({
-        guid: (kcUser as SSOIdirUser).idir_user_guid,
+        guid: (kcUser as unknown as SSOIdirUser).idir_user_guid,
       }));
       _getUser.mockImplementationOnce(() => null);
       mockRequest.user = kcUser;

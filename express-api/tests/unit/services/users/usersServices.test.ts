@@ -4,7 +4,7 @@ import { IKeycloakRole } from '@/services/keycloak/IKeycloakRole';
 import userServices from '@/services/users/usersServices';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { User } from '@/typeorm/Entities/User';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import type { SSOUser } from '@/middleware/keycloak/ssoUser';
 import { faker } from '@faker-js/faker';
 import { produceAgency, produceUser, produceSSO } from 'tests/testUtils/factories';
 import { DeepPartial } from 'typeorm';

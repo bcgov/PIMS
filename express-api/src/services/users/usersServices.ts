@@ -1,6 +1,6 @@
 import { User, UserStatus } from '@/typeorm/Entities/User';
 import { AppDataSource } from '@/appDataSource';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { SSOUser } from '@/middleware/keycloak/ssoUser';
 import { DeepPartial, FindOptionsOrderValue, In } from 'typeorm';
 import { Agency } from '@/typeorm/Entities/Agency';
 import { randomUUID, UUID } from 'crypto';

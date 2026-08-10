@@ -1,4 +1,4 @@
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { SSOUser } from '@/middleware/keycloak/ssoUser';
 import { Roles } from '@/constants/roles';
 import userServices, { getUser } from '@/services/users/usersServices';
 import { PimsRequestUser } from '@/middleware/userAuthCheck';

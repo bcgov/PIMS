@@ -4,11 +4,11 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
-import { protectedRoute, sso } from '@bcgov/citz-imb-sso-express';
+import protectedRoute from '@/middleware/keycloak/protectedRoute';
+import authRouter from '@/middleware/keycloak/authRouter';
 import router from '@/routes';
 import middleware from '@/middleware';
 import constants from '@/constants';
-import { SSO_OPTIONS } from '@/middleware/keycloak/keycloakOptions';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import errorHandler from '@/middleware/errorHandler';
@@ -60,8 +60,8 @@ const { headerHandler, morganMiddleware } = middleware;
 // Logging Middleware
 app.use(morganMiddleware);
 
-// SSO initialization
-sso(app, SSO_OPTIONS);
+// SSO authentication routes (consumed by the @bcgov/citz-imb-sso-react package)
+app.use('/auth', authRouter);
 
 // Nunjucks configuration
 const nj = nunjucks.configure('src/notificationTemplates', {

@@ -1,6 +1,6 @@
 import userServices from '@/services/users/usersServices';
 import { Request, Response } from 'express';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { SSOUser } from '@/middleware/keycloak/ssoUser';
 import { UserFiltering, UserFilteringSchema } from '@/controllers/users/usersSchema';
 import { z } from 'zod';
 import notificationServices from '@/services/notifications/notificationServices';
