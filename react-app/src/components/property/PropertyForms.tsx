@@ -118,8 +118,72 @@ export const GeneralInformationForm = (props: IGeneralInformationForm) => {
   const MapMoveEvents = (props: { onMoveHandler: (latlng: LatLng) => void }) => {
     const map = useMap();
     useMapEvents({
-      move: () => {
+      move: () => {},
+      moveend: () => {
         props.onMoveHandler(map.getCenter());
+        const formValues = formContext.getValues();
+        // Use Parcel Layer to set PID and PIN if they are not set
+        if (
+          true
+          // formValues['PID'] == null ||
+          // formValues['PIN'] == null ||
+          // formValues['AdministrativeAreaId'] == null
+        ) {
+          const latlng = map.getCenter();
+          api.parcelLayer.getParcelByLatLng(new LatLng(latlng.lat, latlng.lng)).then((response) => {
+            if (response.features.length) {
+              const feature = response.features[0];
+              const properties = feature.properties;
+              console.log(properties);
+              if (properties.PID_FORMATTED) {
+                formContext.setValue('PID', properties.PID_FORMATTED);
+              } else {
+                formContext.setValue('PID', '');
+              }
+              if (properties.PIN) {
+                formContext.setValue('PIN', properties.PIN);
+              } else {
+                formContext.setValue('PIN', '');
+              }
+              if (properties.MUNICIPALITY) {
+                const possibleName = properties.MUNICIPALITY.slice(
+                  0,
+                  properties.MUNICIPALITY.indexOf(','),
+                );
+                const possibleAdminArea = lookup.data.AdministrativeAreas.find(
+                  (a) => a.Name === possibleName,
+                );
+                console.log('Possible admin area', possibleAdminArea);
+                if (possibleAdminArea && !possibleAdminArea.IsDisabled) {
+                  formContext.setValue('AdministrativeAreaId', possibleAdminArea.Id);
+                }
+                console.log(
+                  'Setting AdministrativeAreaId to',
+                  properties.MUNICIPALITY.slice(0, properties.MUNICIPALITY.indexOf(',')),
+                );
+              } else {
+                formContext.setValue('AdministrativeAreaId', null);
+              }
+              if (properties.FEATURE_AREA_SQM) {
+                formContext.setValue(
+                  'LandArea',
+                  (properties.FEATURE_AREA_SQM / 10000).toFixed(4),
+                ); // Convert from square meters to hectares
+              } else {
+                formContext.setValue('LandArea', null);
+              }
+            } else {
+              // Clear out autofilled values if no match is found
+              formContext.setValue('PID', '');
+              formContext.setValue('PIN', '');
+              formContext.setValue('AdministrativeAreaId', '');
+              formContext.setValue('LandArea', '');
+            }
+          });
+          // Use Parcel Layer to set AdministrativeAreaId if it is not set and if we have an exact match
+          
+          // Set relevant fields from the form
+        }
       },
     });
     return null;

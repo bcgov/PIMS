@@ -31,7 +31,6 @@ import useUserAgencies from '@/hooks/api/useUserAgencies';
 import useAdministrativeAreaOptions from '@/hooks/useAdministrativeAreaOptions';
 
 const AddProperty = () => {
-  //const years = [new Date().getFullYear(), new Date().getFullYear() - 1];
   const [propertyType, setPropertyType] = useState<PropertyType>('Parcel');
   const [showErrorText, setShowErrorText] = useState(false);
   const { goToFromStateOrSetRoute } = useHistoryAwareNavigate();
