@@ -10,7 +10,7 @@ export interface UserCheckOptions {
 
 /**
  * Middleware function to check user authentication and authorization.
- * Must be preceeded by protectedRoute (from SSO packages) at some point.
+ * Must be preceded by protectedRoute at some point.
  *
  * @param options.requiredRoles - A list of Roles needed to pass this check.
  * @returns Express RequestHandler function to perform user authentication checks.
