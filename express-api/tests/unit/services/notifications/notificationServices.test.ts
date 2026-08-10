@@ -232,7 +232,7 @@ describe('updateNotificationStatus', () => {
     const notifQueue = produceNotificationQueue();
     notifQueue.ChesMessageId = randomUUID();
 
-    const result = await notificationServices.updateNotificationStatus(notifQueue.Id, user);
+    const result = await notificationServices.syncNotificationWithChes(notifQueue.Id, user);
 
     expect(result.Status).toBe(NotificationStatus.Completed);
     expect(result.UpdatedById).toBe(user.Id);
@@ -242,7 +242,7 @@ describe('updateNotificationStatus', () => {
     const user = produceUser();
     _notifQueueFindOne.mockImplementationOnce(async () => null);
 
-    await expect(notificationServices.updateNotificationStatus(1, user)).rejects.toThrow(
+    await expect(notificationServices.syncNotificationWithChes(1, user)).rejects.toThrow(
       'Notification with id 1 not found.',
     );
   });
@@ -258,7 +258,7 @@ describe('updateNotificationStatus', () => {
       createdTS: Date.now(),
       msgId: randomUUID(),
     });
-    const response = await notificationServices.updateNotificationStatus(
+    const response = await notificationServices.syncNotificationWithChes(
       notification.Id,
       produceUser(),
     );
@@ -277,7 +277,7 @@ describe('updateNotificationStatus', () => {
       createdTS: Date.now(),
       msgId: randomUUID(),
     });
-    const response = await notificationServices.updateNotificationStatus(
+    const response = await notificationServices.syncNotificationWithChes(
       notification.Id,
       produceUser(),
     );
@@ -298,7 +298,7 @@ describe('updateNotificationStatus', () => {
       msgId: randomUUID(),
     });
 
-    const response = await notificationServices.updateNotificationStatus(notifQueue.Id, user);
+    const response = await notificationServices.syncNotificationWithChes(notifQueue.Id, user);
 
     expect(response.Status).toBe(NotificationStatus.NotFound);
     expect(response.UpdatedById).toBe(user.Id);
@@ -320,7 +320,7 @@ describe('updateNotificationStatus', () => {
 
     const loggerErrorSpy = jest.spyOn(logger, 'error');
 
-    const response = await notificationServices.updateNotificationStatus(notifQueue.Id, user);
+    const response = await notificationServices.syncNotificationWithChes(notifQueue.Id, user);
 
     expect(response.Status).toBe(notifQueue.Status);
     expect(loggerErrorSpy).toHaveBeenCalledWith(
@@ -344,7 +344,7 @@ describe('updateNotificationStatus', () => {
 
     const loggerErrorSpy = jest.spyOn(logger, 'error');
 
-    const response = await notificationServices.updateNotificationStatus(notifQueue.Id, user);
+    const response = await notificationServices.syncNotificationWithChes(notifQueue.Id, user);
 
     expect(response.Status).toBe(notifQueue.Status);
     expect(loggerErrorSpy).toHaveBeenCalledWith(
@@ -368,7 +368,7 @@ describe('updateNotificationStatus', () => {
 
     const loggerErrorSpy = jest.spyOn(logger, 'error');
 
-    const response = await notificationServices.updateNotificationStatus(notifQueue.Id, user);
+    const response = await notificationServices.syncNotificationWithChes(notifQueue.Id, user);
 
     expect(response.Status).toBe(notifQueue.Status);
     expect(loggerErrorSpy).toHaveBeenCalledWith(
@@ -395,7 +395,7 @@ describe('updateNotificationStatus', () => {
     mockFindOne.mockResolvedValueOnce(mockNotification);
 
     // Expect the updateNotificationStatus to throw an error
-    await expect(notificationServices.updateNotificationStatus(1, user)).rejects.toThrow(
+    await expect(notificationServices.syncNotificationWithChes(1, user)).rejects.toThrow(
       'Failed to retrieve status for notification with id 1.',
     );
   });
@@ -536,7 +536,7 @@ describe('getNotificationById', () => {
   });
 });
 
-describe('resendNotificationWithNewProperties', () => {
+describe('requeueNotificationWithNewProperties', () => {
   it('should return the updated notification if not still pending', async () => {
     const notificationToSend = produceNotificationQueue();
     _getStatusByIdAsync.mockResolvedValueOnce({
@@ -548,7 +548,7 @@ describe('resendNotificationWithNewProperties', () => {
       msgId: randomUUID(),
     });
     const user = produceUser();
-    const result = await notificationServices.resendNotificationWithNewProperties(
+    const result = await notificationServices.requeueNotificationWithNewProperties(
       notificationToSend,
       user,
     );
@@ -573,10 +573,10 @@ describe('resendNotificationWithNewProperties', () => {
     );
     const user = produceUser();
     await expect(
-      notificationServices.resendNotificationWithNewProperties(notificationToSend, user),
+      notificationServices.requeueNotificationWithNewProperties(notificationToSend, user),
     ).rejects.toThrow(
       new Error(
-        'resendNotificationWithNewProperties: Notification Id 1 not cancelled successfully.',
+        'requeueNotificationWithNewProperties: Notification Id 1 not cancelled successfully.',
       ),
     );
   });
@@ -606,10 +606,10 @@ describe('resendNotificationWithNewProperties', () => {
     _sendEmailAsync.mockReturnValueOnce({ status: 'failed' } as IChesStatusResponse);
     const user = produceUser();
     await expect(
-      notificationServices.resendNotificationWithNewProperties(notificationToSend, user),
+      notificationServices.requeueNotificationWithNewProperties(notificationToSend, user),
     ).rejects.toThrow(
       new Error(
-        'resendNotificationWithNewProperties: Failed to requeue notification Id 1 (originally 1).',
+        'requeueNotificationWithNewProperties: Failed to requeue notification Id 1 (originally 1).',
       ),
     );
   });
@@ -647,7 +647,7 @@ describe('resendNotificationWithNewProperties', () => {
     } as IChesStatusResponse);
     const user = produceUser();
     const response = await expect(
-      notificationServices.resendNotificationWithNewProperties(notificationToSend, user),
+      notificationServices.requeueNotificationWithNewProperties(notificationToSend, user),
     );
     expect(response).toBeDefined();
   });

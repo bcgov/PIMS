@@ -54,7 +54,7 @@ jest
   .spyOn(AppDataSource.getRepository(NotificationQueue), 'find')
   .mockImplementation(async () => [produceNotificationQueue()]);
 const _resendNotificationsMock = jest
-  .spyOn(notificationServices, 'resendNotificationWithNewProperties')
+  .spyOn(notificationServices, 'requeueNotificationWithNewProperties')
   .mockImplementation(async () => produceNotificationQueue());
 
 // Project-related mocks

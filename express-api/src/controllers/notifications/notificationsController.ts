@@ -61,20 +61,13 @@ export const resendNotificationById = async (req: Request, res: Response) => {
   if (!notification) {
     return res.status(404).send('Notification not found.');
   }
-  // Cancel the original notification first if it's still Pending!
-  if (notification.Status === NotificationStatus.Pending) {
-    const resultantNotification = await notificationServices.cancelNotificationById(
-      notification.Id,
-      user,
-    );
-    if (resultantNotification.Status !== NotificationStatus.Cancelled) {
-      return res
-        .status(500)
-        .send(`Failed to cancel original notification: ${notification.Id}. Resend aborted.`);
-    }
-  }
+  // NOTE: Originally, we would cancel the original notification first if it's still Pending.
+  // But now that we don't leave Pending notifications in CHES's queue,
+  // resending a Pending notification is equal to doing nothing on our part.
+  // sendNotification should handle that case.
+
   const resultantNotification = await notificationServices.sendNotification(notification, user);
-  const updatedNotification = await notificationServices.updateNotificationStatus(
+  const updatedNotification = await notificationServices.syncNotificationWithChes(
     resultantNotification.Id,
     user,
   );

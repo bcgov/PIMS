@@ -48,7 +48,7 @@ jest.mock('@/services/notifications/notificationServices', () => ({
       ChesMessageId: randomUUID(),
       ChesTransactionId: randomUUID(),
     }),
-  updateNotificationStatus: (id: number) => _updateNotifStatus(id),
+  syncNotificationWithChes: (id: number) => _updateNotifStatus(id),
 }));
 
 jest.mock('@/services/projects/projectsServices', () => ({
