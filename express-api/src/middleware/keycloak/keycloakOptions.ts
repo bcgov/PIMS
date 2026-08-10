@@ -1,12 +1,17 @@
-import { SSOOptions, SSOUser } from '@bcgov/citz-imb-sso-express';
+import { SSOUser } from '@/middleware/keycloak/ssoUser';
 import logger from '@/utilities/winstonLogger';
 import { AppDataSource } from '@/appDataSource';
 import { User } from '@/typeorm/Entities/User';
 
 const users = AppDataSource.getRepository(User);
 
+export interface SSOOptions {
+  afterUserLogin: (user: SSOUser) => Promise<void>;
+  afterUserLogout: (user: SSOUser) => void;
+}
+
 /**
- * Defined by SSO package. See package GitHub repo for options.
+ * Hooks called by the auth controllers on login and logout.
  */
 export const SSO_OPTIONS: SSOOptions = {
   afterUserLogin: async (user: SSOUser) => {

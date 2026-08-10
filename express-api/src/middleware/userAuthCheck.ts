@@ -1,7 +1,7 @@
 import { AppDataSource } from '@/appDataSource';
 import { Roles } from '@/constants/roles';
 import { User } from '@/typeorm/Entities/User';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { SSOUser } from '@/middleware/keycloak/ssoUser';
 import { NextFunction, RequestHandler, Response } from 'express';
 
 export interface UserCheckOptions {

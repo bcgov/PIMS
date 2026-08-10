@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import { UUID, randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import { Role as RolesEntity } from '@/typeorm/Entities/Role';
-import { SSOUser } from '@bcgov/citz-imb-sso-express';
+import { SSOUser } from '@/middleware/keycloak/ssoUser';
 import { Parcel } from '@/typeorm/Entities/Parcel';
 import { Building } from '@/typeorm/Entities/Building';
 import {
