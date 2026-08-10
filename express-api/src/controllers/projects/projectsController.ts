@@ -215,11 +215,21 @@ export const updateProjectAgencyResponses = async (req: Request, res: Response) 
     return res.status(403).send('Projects only editable by Administrator role.');
   }
 
-  const notificationsSent = await projectServices.updateProjectAgencyResponses(
+  const updateResults = await projectServices.updateProjectAgencyResponses(
     projectId,
     req.body.responses,
     req.pimsUser,
   );
 
-  return res.status(200).send(notificationsSent);
+  // Let requestor know if any of the responses were not updated due to invalid changes.
+  // This can happen if they are trying to subscribe an agency that is disabled, has no email, or has opted out of notifications.
+  if (updateResults.invalidResponseChanges > 0) {
+    return res
+      .status(400)
+      .send(
+        `${updateResults.invalidResponseChanges} of the responses were not updated due to invalid changes.`,
+      );
+  }
+
+  return res.status(200).send(updateResults);
 };

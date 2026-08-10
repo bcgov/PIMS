@@ -677,8 +677,9 @@ const generateProjectWatchNotifications = async (
           const agency = await query.manager.findOne(Agency, {
             where: { Id: response.AgencyId },
           });
-          //No use in queueing an email for an agency with no email address or that doesn't want notifications
-          if (agency?.SendEmail && agency?.Email && agency?.Email.length) {
+          // No use in queueing an email for an agency with no email address or that doesn't want notifications
+          // Don't queue notifications for disabled agencies either.
+          if (agency?.SendEmail && agency?.Email && agency?.Email.length && !agency.IsDisabled) {
             const dateInERP = project.ApprovedOn;
             const daysSinceThisStatus = getDaysBetween(dateInERP, new Date());
             const statusNotifs = await query.manager.find(ProjectStatusNotification, {

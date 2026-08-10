@@ -276,6 +276,7 @@ const AgencyDetail = ({ onClose }: IAgencyDetail) => {
               SendEmail,
             }).then(() => {
               refreshData();
+              refreshLookup();
               setOpenNotificationsDialog(false);
             });
           }

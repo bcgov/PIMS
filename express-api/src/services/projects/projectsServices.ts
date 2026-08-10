@@ -800,7 +800,7 @@ const updateProjectAgencyResponses = async (
   id: number,
   updatedResponses: Partial<ProjectAgencyResponse>[],
   user: User,
-): Promise<NotificationQueue[]> => {
+): Promise<{ sentNotifications: NotificationQueue[]; invalidResponseChanges: number }> => {
   if (!(await projectRepo.exists({ where: { Id: id } }))) {
     throw new ErrorWithCode('Project matching this internal ID not found.', 404);
   }
@@ -851,14 +851,39 @@ const updateProjectAgencyResponses = async (
     },
     { DeletedById: user.Id, DeletedOn: new Date() },
   );
+  // Are any of the agencies involved disabled, not wanting notifications, or missing an email?
+  // We can't allow them to subcribe.
+  const relevantAgencies = await AppDataSource.getRepository(Agency).find({
+    where: {
+      Id: In(updatedResponses.map((r) => r.AgencyId)),
+    },
+  });
+  const validReponses = updatedResponses.filter((resp) => {
+    // Only worry about this if subscribing.
+    if (resp.Response === AgencyResponseType.Subscribe) {
+      const agency = relevantAgencies.find((a) => a.Id === resp.AgencyId);
+      // If agency is not found, skip it.
+      if (!agency) return false;
+      // If agency is disabled, skip it.
+      if (agency.IsDisabled) return false;
+      // If agency does not want notifications, skip it.
+      if (!agency.SendEmail) return false;
+      // If agency does not have an email, skip it.
+      if (!agency.Email || agency.Email.trim() === '') return false;
+    }
+    // Otherwise, keep the response.
+    return true;
+  });
+
   // Save the remaining updated responses as current
   await AppDataSource.getRepository(ProjectAgencyResponse).save(
-    updatedResponses.map(
+    validReponses.map(
       (resp) =>
         ({
           ...resp,
           ProjectId: id,
           CreatedById: user.Id,
+          UpdatedById: user.Id,
           DeletedById: null,
           DeletedOn: null,
         }) as ProjectAgencyResponse,
@@ -867,7 +892,7 @@ const updateProjectAgencyResponses = async (
 
   // Identify which incoming responses are different than original ones on the project
   // This counts deleted ones as unsubscribed
-  const changedResponses = await getAgencyResponseChanges(originalResponses, updatedResponses);
+  const changedResponses = await getAgencyResponseChanges(originalResponses, validReponses);
   // For each of these changed/new responses, queue for send or cancel the notification as needed
   // Notifications are cancelled in this function, but only ones to send are returned in the list
   const notifsToSend = await notificationServices.generateProjectWatchNotifications(
@@ -876,9 +901,13 @@ const updateProjectAgencyResponses = async (
   );
 
   // Send new notifcations
-  return await Promise.all(
+  const sentNotifications = await Promise.all(
     notifsToSend.map((notif) => notificationServices.sendNotification(notif, user)),
   );
+  return {
+    sentNotifications,
+    invalidResponseChanges: updatedResponses.length - validReponses.length,
+  };
 };
 
 /**
