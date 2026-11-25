@@ -1,6 +1,7 @@
 import type { JestConfigWithTsJest } from 'ts-jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
-import { compilerOptions } from './tsconfig.json';
+import tsconfig from './tsconfig.json' with { type: 'json'};
+const { compilerOptions } = tsconfig; 
 
 const jestConfig: JestConfigWithTsJest = {
   testEnvironment: 'jsdom',
@@ -27,7 +28,7 @@ const jestConfig: JestConfigWithTsJest = {
   snapshotResolver: './tests/snapshotResolver.ts',
   randomize: true, // Randomizes order of tests
   roots: ['.'],
-  modulePaths: [compilerOptions.baseUrl], // <-- This will be set to 'baseUrl' value
+  modulePaths: ['./'], // <-- This will be set to 'baseUrl' value
   moduleNameMapper: {
     // FIXME: The mapper matches the first occurrence, so image and css files are not getting matched properly.
     ...pathsToModuleNameMapper(compilerOptions.paths),
